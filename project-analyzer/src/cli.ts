@@ -140,6 +140,71 @@ program
     }
   });
 
+// Cleanup command - analyze completion status
+program
+  .command('cleanup [path]')
+  .description('Analyze TODOs for completion and generate cleanup report')
+  .option('-o, --output <path>', 'Output file path')
+  .option('-f, --format <format>', 'Output format (json, markdown, summary)', 'markdown')
+  .option('--min-confidence <number>', 'Minimum confidence level (0-100)', '70')
+  .option('--use-git', 'Use git history for enhanced detection', false)
+  .action(async (pathArg, options) => {
+    const rootPath = path.resolve(pathArg || process.cwd());
+
+    console.log(`🧹 Analyzing TODOs for completion: ${rootPath}`);
+
+    try {
+      // Import completion modules
+      const { analyzeCompletions, getTopCleanupCandidates } = await import('./core/completionDetector');
+      const { formatCompletionReportAsMarkdown, formatCompletionSummary, formatCompletionReportAsJSON, formatCleanupCandidates } = await import('./formatters/completionFormatter');
+
+      // Perform scan
+      const result = await scanTodos({ rootPath });
+
+      // Analyze completions
+      console.log('🔍 Analyzing completion indicators...');
+      const completionReport = analyzeCompletions(result.todos, rootPath);
+
+      // Get top cleanup candidates
+      const topCandidates = getTopCleanupCandidates(completionReport, 10);
+
+      // Format output
+      let formatted: string;
+      switch (options.format) {
+        case 'json':
+          formatted = formatCompletionReportAsJSON(completionReport);
+          break;
+        case 'summary':
+          formatted = formatCompletionSummary(completionReport);
+          break;
+        default:
+          formatted = formatCompletionReportAsMarkdown(completionReport);
+          formatted += '\n' + formatCleanupCandidates(topCandidates);
+      }
+
+      // Write or print output
+      if (options.output) {
+        writeOutput(formatted, options.output);
+      } else {
+        console.log('\n' + formatted);
+      }
+
+      // Print summary to console
+      const stats = completionReport;
+      console.log('\n📊 Cleanup Analysis Complete:');
+      console.log(`   Total TODOs analyzed: ${stats.totalTodos}`);
+      console.log(`   Likely completed: ${stats.likelyCompleted}`);
+      console.log(`   Probably completed: ${stats.probablyCompleted}`);
+      console.log(`   Possibly completed: ${stats.possiblyCompleted}`);
+      console.log(`   Active tasks: ${stats.activeCount}`);
+      console.log(`   Potential cleanup: ${stats.likelyCompleted + stats.probablyCompleted} TODOs`);
+
+    } catch (error) {
+      console.error('❌ Error during cleanup analysis:', error);
+      process.exit(1);
+    }
+  });
+
 // Watch command (placeholder for future implementation)
 program
   .command('watch [path]')
