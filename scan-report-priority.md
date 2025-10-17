@@ -1,0 +1,461 @@
+# TODO Scan Report
+
+**Repository:** /Users/michaelevans/project-analyst-manager-Claude skills
+**Scan Date:** 10/17/2025, 11:38:47 AM
+**Total TODOs:** 211
+
+## Summary
+
+### By Priority
+- 🔴 High: 14
+- 🟡 Medium: 187
+- 🟢 Low: 10
+
+### By Type
+- TODO: 40
+- Unchecked Task: 139
+- FIXME: 9
+- BUG: 3
+- HACK: 3
+- OPTIMIZE: 2
+- REFACTOR: 2
+- NOTE: 5
+- XXX: 2
+- Action Item: 2
+- Incomplete Note: 4
+
+**Files Scanned:** 30
+**Scan Duration:** 84ms
+
+## TODOs
+
+### 🔴 High Priority
+
+- 🔴 **[FIXME]** This doesn't handle empty lists
+  - 📁 pilot_implementation_plan.md:107
+- 🔴 **[FIXME]** Handle edge cases
+  - 📁 pilot_implementation_plan.md:487
+- 🔴 **[FIXME]** Database connection is not properly closed
+  - 📁 project-analyzer/examples/sample.js:8
+- 🔴 **[BUG]** SQL injection vulnerability here
+  - 📁 project-analyzer/examples/sample.js:13
+- 🔴 **[Action Item]** Refactor legacy authentication code
+  - 📁 project-analyzer/examples/tasks.md:17
+- 🔴 **[Action Item]** Update deprecated dependencies
+  - 📁 project-analyzer/examples/tasks.md:18
+- 🔴 **[FIXME]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:32
+- 🔴 **[BUG]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:44
+- 🔴 **[FIXME]** Critical bug here';
+  - 📁 project-analyzer/tests/patterns.test.ts:28
+- 🔴 **[FIXME]** This is broken
+  - 📁 project-analyzer/tests/scanner.test.ts:29
+- 🔴 **[FIXME]** Race condition here
+  - 📁 project-analyzer/tests/scanner.test.ts:85
+- 🔴 **[FIXME]** High priority
+  - 📁 project-analyzer/tests/scanner.test.ts:102
+- 🔴 **[BUG]** High priority
+  - 📁 project-analyzer/tests/scanner.test.ts:104
+- 🔴 **[FIXME]** Bug 1
+  - 📁 project-analyzer/tests/scanner.test.ts:172
+
+### 🟡 Medium Priority
+
+- 🟡 **[TODO]** Coverage**: 90%+ tracked as issues
+  - 📁 IMPLEMENTATION_SUMMARY.md:106
+- 🟡 **[Unchecked Task]** All unit tests pass
+  - 📁 IMPLEMENTATION_SUMMARY.md:138
+- 🟡 **[Unchecked Task]** Test on empty repository
+  - 📁 IMPLEMENTATION_SUMMARY.md:139
+- 🟡 **[Unchecked Task]** Test on repository with TODOs only
+  - 📁 IMPLEMENTATION_SUMMARY.md:140
+- 🟡 **[Unchecked Task]** Test on repository with tasks only
+  - 📁 IMPLEMENTATION_SUMMARY.md:141
+- 🟡 **[Unchecked Task]** Test duplicate detection
+  - 📁 IMPLEMENTATION_SUMMARY.md:142
+- 🟡 **[Unchecked Task]** Test state persistence
+  - 📁 IMPLEMENTATION_SUMMARY.md:143
+- 🟡 **[Unchecked Task]** Verify report generation
+  - 📁 IMPLEMENTATION_SUMMARY.md:144
+- 🟡 **[Unchecked Task]** Verify created issues are correct
+  - 📁 IMPLEMENTATION_SUMMARY.md:147
+- 🟡 **[Unchecked Task]** Verify no duplicates
+  - 📁 IMPLEMENTATION_SUMMARY.md:148
+- 🟡 **[Unchecked Task]** Verify labels are appropriate
+  - 📁 IMPLEMENTATION_SUMMARY.md:149
+- 🟡 **[Unchecked Task]** Verify file/line references
+  - 📁 IMPLEMENTATION_SUMMARY.md:150
+- 🟡 **[Unchecked Task]** Verify state file created
+  - 📁 IMPLEMENTATION_SUMMARY.md:151
+- 🟡 **[Unchecked Task]** Verify re-running doesn't duplicate
+  - 📁 IMPLEMENTATION_SUMMARY.md:152
+- 🟡 **[TODO]** /task parsing
+  - 📁 pilot_implementation_plan.md:32
+- 🟡 **[TODO]** Add validation for negative prices
+  - 📁 pilot_implementation_plan.md:106
+- 🟡 **[TODO]** Implement discount calculation feature
+  - 📁 pilot_implementation_plan.md:111
+- 🟡 **[Unchecked Task]** Implement user login
+  - 📁 pilot_implementation_plan.md:119
+- 🟡 **[Unchecked Task]** Add password reset functionality
+  - 📁 pilot_implementation_plan.md:120
+- 🟡 **[Unchecked Task]** Integrate Stripe
+  - 📁 pilot_implementation_plan.md:124
+- 🟡 **[Unchecked Task]** Add invoice generation
+  - 📁 pilot_implementation_plan.md:125
+- 🟡 **[Unchecked Task]** Support multiple currencies
+  - 📁 pilot_implementation_plan.md:126
+- 🟡 **[Unchecked Task]** Python project structure created
+  - 📁 pilot_implementation_plan.md:136
+- 🟡 **[Unchecked Task]** Virtual environment configured with all dependencies
+  - 📁 pilot_implementation_plan.md:137
+- 🟡 **[Unchecked Task]** Test repository created with sample TODOs
+  - 📁 pilot_implementation_plan.md:138
+- 🟡 **[Unchecked Task]** GitHub token configured and tested
+  - 📁 pilot_implementation_plan.md:139
+- 🟡 **[Unchecked Task]** Can authenticate to GitHub API successfully
+  - 📁 pilot_implementation_plan.md:140
+- 🟡 **[TODO]** Implement this function
+  - 📁 pilot_implementation_plan.md:486
+- 🟡 **[Unchecked Task]** Implement login
+  - 📁 pilot_implementation_plan.md:509
+- 🟡 **[Unchecked Task]** Password reset
+  - 📁 pilot_implementation_plan.md:511
+- 🟡 **[Unchecked Task]** Stripe integration
+  - 📁 pilot_implementation_plan.md:514
+- 🟡 **[Unchecked Task]** Scanner finds all relevant files in test repo
+  - 📁 pilot_implementation_plan.md:550
+- 🟡 **[Unchecked Task]** Parser correctly identifies TODOs in code
+  - 📁 pilot_implementation_plan.md:551
+- 🟡 **[Unchecked Task]** Parser correctly parses markdown task lists
+  - 📁 pilot_implementation_plan.md:552
+- 🟡 **[Unchecked Task]** All unit tests pass
+  - 📁 pilot_implementation_plan.md:553
+- 🟡 **[Unchecked Task]** Can extract at least 5 items from test repository
+  - 📁 pilot_implementation_plan.md:554
+- 🟡 **[Unchecked Task]** Can authenticate to GitHub API
+  - 📁 pilot_implementation_plan.md:943
+- 🟡 **[Unchecked Task]** Can fetch existing issues from test repo
+  - 📁 pilot_implementation_plan.md:944
+- 🟡 **[Unchecked Task]** State tracker prevents duplicate processing
+  - 📁 pilot_implementation_plan.md:945
+- 🟡 **[Unchecked Task]** State persists across sessions
+  - 📁 pilot_implementation_plan.md:946
+- 🟡 **[Unchecked Task]** All unit tests pass
+  - 📁 pilot_implementation_plan.md:947
+- 🟡 **[TODO]** , NOTE
+  - 📁 pilot_implementation_plan.md:1037
+- 🟡 **[TODO]** Implement user authentication\n# This is critical for the next release'
+  - 📁 pilot_implementation_plan.md:1270
+- 🟡 **[Unchecked Task]** Can create labels in test repository
+  - 📁 pilot_implementation_plan.md:1279
+- 🟡 **[Unchecked Task]** Can create issues from TODOs
+  - 📁 pilot_implementation_plan.md:1280
+- 🟡 **[Unchecked Task]** Can create issues from task lists
+  - 📁 pilot_implementation_plan.md:1281
+- 🟡 **[Unchecked Task]** Labels are applied correctly
+  - 📁 pilot_implementation_plan.md:1282
+- 🟡 **[Unchecked Task]** Issue formatting is clear and useful
+  - 📁 pilot_implementation_plan.md:1283
+- 🟡 **[Unchecked Task]** At least 3 test issues created successfully
+  - 📁 pilot_implementation_plan.md:1284
+- 🟡 **[TODO]** Comments by File
+  - 📁 pilot_implementation_plan.md:1367
+- 🟡 **[TODO]** s:** {len(todos)}\n"
+  - 📁 pilot_implementation_plan.md:1459
+- 🟡 **[Unchecked Task]** Can run full analysis on test repository
+  - 📁 pilot_implementation_plan.md:1730
+- 🟡 **[Unchecked Task]** Reports are generated correctly
+  - 📁 pilot_implementation_plan.md:1731
+- 🟡 **[Unchecked Task]** Issues are created successfully
+  - 📁 pilot_implementation_plan.md:1732
+- 🟡 **[Unchecked Task]** State is tracked properly (re-run doesn't create duplicates)
+  - 📁 pilot_implementation_plan.md:1733
+- 🟡 **[Unchecked Task]** End-to-end workflow functions without errors
+  - 📁 pilot_implementation_plan.md:1734
+- 🟡 **[Unchecked Task]** Logging system captures all operations
+  - 📁 pilot_implementation_plan.md:1875
+- 🟡 **[Unchecked Task]** API calls have retry logic
+  - 📁 pilot_implementation_plan.md:1876
+- 🟡 **[Unchecked Task]** File encoding errors are handled gracefully
+  - 📁 pilot_implementation_plan.md:1877
+- 🟡 **[Unchecked Task]** Rate limits are respected
+  - 📁 pilot_implementation_plan.md:1878
+- 🟡 **[Unchecked Task]** Error messages are clear and actionable
+  - 📁 pilot_implementation_plan.md:1879
+- 🟡 **[Unchecked Task]** Duplicate detection prevents redundant issues
+  - 📁 pilot_implementation_plan.md:2151
+- 🟡 **[Unchecked Task]** Similarity scoring is accurate
+  - 📁 pilot_implementation_plan.md:2152
+- 🟡 **[Unchecked Task]** Related items can be grouped
+  - 📁 pilot_implementation_plan.md:2153
+- 🟡 **[Unchecked Task]** False positives are minimal (<10%)
+  - 📁 pilot_implementation_plan.md:2154
+- 🟡 **[Unchecked Task]** Skipped duplicates are logged clearly
+  - 📁 pilot_implementation_plan.md:2155
+- 🟡 **[Unchecked Task]** All expected TODOs were found
+  - 📁 pilot_implementation_plan.md:2231
+- 🟡 **[Unchecked Task]** Task lists were parsed correctly
+  - 📁 pilot_implementation_plan.md:2232
+- 🟡 **[Unchecked Task]** No duplicate issues were created
+  - 📁 pilot_implementation_plan.md:2233
+- 🟡 **[Unchecked Task]** Labels are applied appropriately
+  - 📁 pilot_implementation_plan.md:2234
+- 🟡 **[Unchecked Task]** Issue descriptions are clear and useful
+  - 📁 pilot_implementation_plan.md:2235
+- 🟡 **[Unchecked Task]** File/line references are accurate
+  - 📁 pilot_implementation_plan.md:2236
+- 🟡 **[Unchecked Task]** State file is updated correctly
+  - 📁 pilot_implementation_plan.md:2237
+- 🟡 **[Unchecked Task]** Successfully analyzed both production repositories
+  - 📁 pilot_implementation_plan.md:2247
+- 🟡 **[Unchecked Task]** Created issues are high quality
+  - 📁 pilot_implementation_plan.md:2248
+- 🟡 **[Unchecked Task]** No critical bugs encountered
+  - 📁 pilot_implementation_plan.md:2249
+- 🟡 **[Unchecked Task]** Performance is acceptable (< 2 minutes per repo)
+  - 📁 pilot_implementation_plan.md:2250
+- 🟡 **[Unchecked Task]** Users can easily understand created issues
+  - 📁 pilot_implementation_plan.md:2251
+- 🟡 **[Unchecked Task]** SKILL.md files are complete and clear
+  - 📁 pilot_implementation_plan.md:2614
+- 🟡 **[Unchecked Task]** Integration instructions work for new users
+  - 📁 pilot_implementation_plan.md:2615
+- 🟡 **[Unchecked Task]** Common workflows are documented
+  - 📁 pilot_implementation_plan.md:2616
+- 🟡 **[Unchecked Task]** Claude Code can successfully invoke the skills
+  - 📁 pilot_implementation_plan.md:2617
+- 🟡 **[Unchecked Task]** Troubleshooting guide covers common issues
+  - 📁 pilot_implementation_plan.md:2618
+- 🟡 **[Unchecked Task]** Update existing issues
+  - 📁 pilot_implementation_plan.md:2718
+- 🟡 **[Unchecked Task]** Parse specifications and map to code
+  - 📁 pilot_implementation_plan.md:2719
+- 🟡 **[Unchecked Task]** Calculate implementation percentage
+  - 📁 pilot_implementation_plan.md:2720
+- 🟡 **[Unchecked Task]** Reorganize documentation automatically
+  - 📁 pilot_implementation_plan.md:2721
+- 🟡 **[Unchecked Task]** Link related issues
+  - 📁 pilot_implementation_plan.md:2722
+- 🟡 **[Unchecked Task]** Project board automation
+  - 📁 pilot_implementation_plan.md:2725
+- 🟡 **[Unchecked Task]** Sprint planning assistance
+  - 📁 pilot_implementation_plan.md:2726
+- 🟡 **[Unchecked Task]** Technical debt tracking
+  - 📁 pilot_implementation_plan.md:2727
+- 🟡 **[Unchecked Task]** Cross-repository dependencies
+  - 📁 pilot_implementation_plan.md:2728
+- 🟡 **[TODO]** /task parsing
+  - 📁 pilot_implementation_plan.md:2778
+- 🟡 **[TODO]** Add rate limiting to prevent brute force attacks
+  - 📁 pilot_implementation_plan.md:3050
+- 🟡 **[Unchecked Task]** All documentation is complete
+  - 📁 pilot_implementation_plan.md:3308
+- 🟡 **[Unchecked Task]** Code is clean and well-formatted
+  - 📁 pilot_implementation_plan.md:3309
+- 🟡 **[Unchecked Task]** All tests pass
+  - 📁 pilot_implementation_plan.md:3310
+- 🟡 **[Unchecked Task]** Pilot review conducted
+  - 📁 pilot_implementation_plan.md:3311
+- 🟡 **[Unchecked Task]** Phase 2 roadmap created
+  - 📁 pilot_implementation_plan.md:3312
+- 🟡 **[Unchecked Task]** Test with empty repository
+  - 📁 pilot_implementation_plan.md:3345
+- 🟡 **[Unchecked Task]** Test with repository containing only TODOs
+  - 📁 pilot_implementation_plan.md:3346
+- 🟡 **[Unchecked Task]** Test with repository containing only tasks
+  - 📁 pilot_implementation_plan.md:3347
+- 🟡 **[Unchecked Task]** Test with repository containing both
+  - 📁 pilot_implementation_plan.md:3348
+- 🟡 **[Unchecked Task]** Test with repository that has existing issues
+  - 📁 pilot_implementation_plan.md:3349
+- 🟡 **[Unchecked Task]** Test duplicate detection
+  - 📁 pilot_implementation_plan.md:3350
+- 🟡 **[Unchecked Task]** Test state persistence
+  - 📁 pilot_implementation_plan.md:3351
+- 🟡 **[Unchecked Task]** Test report generation
+  - 📁 pilot_implementation_plan.md:3352
+- 🟡 **[Unchecked Task]** Test with invalid GitHub token
+  - 📁 pilot_implementation_plan.md:3353
+- 🟡 **[Unchecked Task]** Test with nonexistent repository
+  - 📁 pilot_implementation_plan.md:3354
+- 🟡 **[Unchecked Task]** Test with rate-limited API
+  - 📁 pilot_implementation_plan.md:3355
+- 🟡 **[Unchecked Task]** Test performance with large repository (1000+ files)
+  - 📁 pilot_implementation_plan.md:3356
+- 🟡 **[Unchecked Task]** Verify created issues are correct
+  - 📁 pilot_implementation_plan.md:3359
+- 🟡 **[Unchecked Task]** Verify no duplicates
+  - 📁 pilot_implementation_plan.md:3360
+- 🟡 **[Unchecked Task]** Verify labels are appropriate
+  - 📁 pilot_implementation_plan.md:3361
+- 🟡 **[Unchecked Task]** Verify file/line references are accurate
+  - 📁 pilot_implementation_plan.md:3362
+- 🟡 **[Unchecked Task]** Verify reports are readable
+  - 📁 pilot_implementation_plan.md:3363
+- 🟡 **[Unchecked Task]** Verify state file is created
+  - 📁 pilot_implementation_plan.md:3364
+- 🟡 **[Unchecked Task]** Verify re-running doesn't create duplicates
+  - 📁 pilot_implementation_plan.md:3365
+- 🟡 **[TODO]** Reduction**: 90%+ of TODOs tracked as issues
+  - 📁 pilot_implementation_plan.md:3443
+- 🟡 **[TODO]** Parser
+  - 📁 pilot_implementation_plan.md:3702
+- 🟡 **[Unchecked Task]** Parse planning docs for specifications and requirements
+  - 📁 project_manager_skill_plan.md:54
+- 🟡 **[Unchecked Task]** Map specifications to actual code implementation
+  - 📁 project_manager_skill_plan.md:55
+- 🟡 **[Unchecked Task]** Identify partially implemented features
+  - 📁 project_manager_skill_plan.md:56
+- 🟡 **[Unchecked Task]** Analyze code structure and dependencies
+  - 📁 project_manager_skill_plan.md:57
+- 🟡 **[Unchecked Task]** Calculate implementation percentage for features
+  - 📁 project_manager_skill_plan.md:58
+- 🟡 **[Unchecked Task]** Reorganize docs (move to proper folders, archive old content)
+  - 📁 project_manager_skill_plan.md:61
+- 🟡 **[Unchecked Task]** Create issues with implementation details and code references
+  - 📁 project_manager_skill_plan.md:62
+- 🟡 **[Unchecked Task]** Link related issues
+  - 📁 project_manager_skill_plan.md:63
+- 🟡 **[Unchecked Task]** Update existing issues with progress
+  - 📁 project_manager_skill_plan.md:64
+- 🟡 **[Unchecked Task]** Cross-repository dependency analysis
+  - 📁 project_manager_skill_plan.md:68
+- 🟡 **[Unchecked Task]** Sprint/milestone planning suggestions
+  - 📁 project_manager_skill_plan.md:69
+- 🟡 **[Unchecked Task]** Technical debt identification
+  - 📁 project_manager_skill_plan.md:70
+- 🟡 **[Unchecked Task]** Code quality metrics integration
+  - 📁 project_manager_skill_plan.md:71
+- 🟡 **[Unchecked Task]** Interactive dashboard generation
+  - 📁 project_manager_skill_plan.md:74
+- 🟡 **[Unchecked Task]** Milestone creation and management
+  - 📁 project_manager_skill_plan.md:75
+- 🟡 **[Unchecked Task]** Project board automation
+  - 📁 project_manager_skill_plan.md:76
+- 🟡 **[Unchecked Task]** Weekly sprint planning suggestions
+  - 📁 project_manager_skill_plan.md:77
+- 🟡 **[TODO]** Implement user authentication system
+  - 📁 project-analyzer/examples/sample.js:5
+- 🟡 **[REFACTOR]** Split this method into smaller functions
+  - 📁 project-analyzer/examples/sample.js:23
+- 🟡 **[XXX]** Need to add email validation
+  - 📁 project-analyzer/examples/sample.js:26
+- 🟡 **[TODO]** Add these fields:
+  - 📁 project-analyzer/examples/sample.js:28
+- 🟡 **[Unchecked Task]** Set up CI/CD pipeline
+  - 📁 project-analyzer/examples/tasks.md:6
+- 🟡 **[Unchecked Task]** Configure production database
+  - 📁 project-analyzer/examples/tasks.md:7
+- 🟡 **[Unchecked Task]** Implement authentication
+  - 📁 project-analyzer/examples/tasks.md:8
+- 🟡 **[Unchecked Task]** Add unit tests for UserService
+  - 📁 project-analyzer/examples/tasks.md:11
+- 🟡 **[Unchecked Task]** Create API documentation
+  - 📁 project-analyzer/examples/tasks.md:12
+- 🟡 **[Incomplete Note]** [TBD]
+  - 📁 project-analyzer/examples/tasks.md:22
+- 🟡 **[Incomplete Note]** [WIP]
+  - 📁 project-analyzer/examples/tasks.md:23
+- 🟡 **[TODO]** Future Features
+  - 📁 project-analyzer/examples/tasks.md:25
+- 🟡 **[TODO]** Scanner**: Identifies TODO, FIXME, HACK, BUG, and other task markers in code
+  - 📁 project-analyzer/README.md:8
+- 🟡 **[TODO]** ` - TODO sections
+  - 📁 project-analyzer/README.md:92
+- 🟡 **[Incomplete Note]** [TBD]
+  - 📁 project-analyzer/README.md:94
+- 🟡 **[Incomplete Note]** [WIP]
+  - 📁 project-analyzer/README.md:94
+- 🟡 **[TODO]** Scan Report
+  - 📁 project-analyzer/README.md:135
+- 🟡 **[TODO]** s
+  - 📁 project-analyzer/README.md:142
+- 🟡 **[TODO]** pattern definitions
+  - 📁 project-analyzer/README.md:217
+- 🟡 **[TODO]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:26
+- 🟡 **[REFACTOR]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:56
+- 🟡 **[XXX]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:68
+- 🟡 **[TODO]** Scan Report');
+  - 📁 project-analyzer/src/formatters/outputFormatter.ts:35
+- 🟡 **[TODO]** s
+  - 📁 project-analyzer/src/formatters/outputFormatter.ts:61
+- 🟡 **[TODO]** s');
+  - 📁 project-analyzer/src/formatters/outputFormatter.ts:62
+- 🟡 **[TODO]** Fix this bug',
+  - 📁 project-analyzer/tests/patterns.test.ts:11
+- 🟡 **[TODO]** Implement feature',
+  - 📁 project-analyzer/tests/patterns.test.ts:12
+- 🟡 **[TODO]** Refactor this */  ',
+  - 📁 project-analyzer/tests/patterns.test.ts:13
+- 🟡 **[TODO]** Add tests',
+  - 📁 project-analyzer/tests/patterns.test.ts:14
+- 🟡 **[TODO]** Update docs -->'
+  - 📁 project-analyzer/tests/patterns.test.ts:15
+- 🟡 **[TODO]** Implement this function
+  - 📁 project-analyzer/tests/scanner.test.ts:27
+- 🟡 **[TODO]** Should be ignored');
+  - 📁 project-analyzer/tests/scanner.test.ts:66
+- 🟡 **[TODO]** Should be found');
+  - 📁 project-analyzer/tests/scanner.test.ts:69
+- 🟡 **[TODO]** Add error handling
+  - 📁 project-analyzer/tests/scanner.test.ts:83
+- 🟡 **[TODO]** Medium priority
+  - 📁 project-analyzer/tests/scanner.test.ts:101
+- 🟡 **[TODO]** Test todo');
+  - 📁 project-analyzer/tests/scanner.test.ts:119
+- 🟡 **[TODO]** New todo',
+  - 📁 project-analyzer/tests/scanner.test.ts:141
+- 🟡 **[TODO]** Existing todo',
+  - 📁 project-analyzer/tests/scanner.test.ts:152
+- 🟡 **[TODO]** Task 1
+  - 📁 project-analyzer/tests/scanner.test.ts:170
+- 🟡 **[TODO]** Task 2
+  - 📁 project-analyzer/tests/scanner.test.ts:171
+- 🟡 **[Unchecked Task]** Can scan repository
+  - 📁 ROADMAP.md:104
+- 🟡 **[Unchecked Task]** Can parse TODOs and tasks
+  - 📁 ROADMAP.md:105
+- 🟡 **[Unchecked Task]** Can create GitHub issues
+  - 📁 ROADMAP.md:106
+- 🟡 **[Unchecked Task]** State prevents duplicates
+  - 📁 ROADMAP.md:107
+- 🟡 **[Unchecked Task]** Reports are generated
+  - 📁 ROADMAP.md:108
+- 🟡 **[Unchecked Task]** Tested on production repositories
+  - 📁 ROADMAP.md:122
+- 🟡 **[Unchecked Task]** Zero duplicate issues created
+  - 📁 ROADMAP.md:123
+- 🟡 **[Unchecked Task]** Performance < 2 min per repo
+  - 📁 ROADMAP.md:124
+- 🟡 **[Unchecked Task]** All documentation complete
+  - 📁 ROADMAP.md:125
+- 🟡 **[Unchecked Task]** Users can operate independently
+  - 📁 ROADMAP.md:126
+
+### 🟢 Low Priority
+
+- 🟢 **[HACK]** Temporary workaround for timeout issues
+  - 📁 project-analyzer/examples/sample.js:16
+- 🟢 **[OPTIMIZE]** This query could use indexing
+  - 📁 project-analyzer/examples/sample.js:19
+- 🟢 **[NOTE]** Password should be hashed before storage
+  - 📁 project-analyzer/examples/sample.js:25
+- 🟢 **[NOTE]** s
+  - 📁 project-analyzer/examples/tasks.md:20
+- 🟢 **[HACK]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:38
+- 🟢 **[OPTIMIZE]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:50
+- 🟢 **[NOTE]** ?\s*(.+?)(?:\*\/|-->)?$/gmi,
+  - 📁 project-analyzer/src/core/patterns.ts:62
+- 🟢 **[NOTE]** Consider refactoring
+  - 📁 project-analyzer/tests/scanner.test.ts:32
+- 🟢 **[NOTE]** Low priority
+  - 📁 project-analyzer/tests/scanner.test.ts:103
+- 🟢 **[HACK]** Low priority
+  - 📁 project-analyzer/tests/scanner.test.ts:105

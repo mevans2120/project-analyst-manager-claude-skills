@@ -1,0 +1,264 @@
+{
+  "todos": [
+    {
+      "type": "TODO",
+      "content": "Implement user authentication system",
+      "file": "sample.js",
+      "line": 5,
+      "priority": "medium",
+      "category": "code",
+      "rawText": "// TODO: Implement user authentication system",
+      "id": "todo-1760726465564-0",
+      "hash": "1a8130b0d783d9ddf19f0f02a4de841f"
+    },
+    {
+      "type": "FIXME",
+      "content": "Database connection is not properly closed",
+      "file": "sample.js",
+      "line": 8,
+      "priority": "high",
+      "category": "code",
+      "rawText": "// FIXME: Database connection is not properly closed",
+      "id": "todo-1760726465564-1",
+      "hash": "48d1b0ff059fe0d01fa7765ba7d5ac80"
+    },
+    {
+      "type": "BUG",
+      "content": "SQL injection vulnerability here",
+      "file": "sample.js",
+      "line": 13,
+      "priority": "high",
+      "category": "code",
+      "rawText": "// BUG: SQL injection vulnerability here",
+      "id": "todo-1760726465564-2",
+      "hash": "e95b1cffd6f01408258352568ed3f859"
+    },
+    {
+      "type": "HACK",
+      "content": "Temporary workaround for timeout issues",
+      "file": "sample.js",
+      "line": 16,
+      "priority": "low",
+      "category": "code",
+      "rawText": "// HACK: Temporary workaround for timeout issues",
+      "id": "todo-1760726465564-3",
+      "hash": "759ad39bee16ee6540dcadb3ccf57c49"
+    },
+    {
+      "type": "OPTIMIZE",
+      "content": "This query could use indexing",
+      "file": "sample.js",
+      "line": 19,
+      "priority": "low",
+      "category": "code",
+      "rawText": "// OPTIMIZE: This query could use indexing",
+      "id": "todo-1760726465564-4",
+      "hash": "db6bf1f728a1502b0a5ad0d37c96bd3a"
+    },
+    {
+      "type": "REFACTOR",
+      "content": "Split this method into smaller functions",
+      "file": "sample.js",
+      "line": 23,
+      "priority": "medium",
+      "category": "code",
+      "rawText": "// REFACTOR: Split this method into smaller functions",
+      "id": "todo-1760726465564-5",
+      "hash": "d652fa5c720620599e1a23b242afcde0"
+    },
+    {
+      "type": "NOTE",
+      "content": "Password should be hashed before storage",
+      "file": "sample.js",
+      "line": 25,
+      "priority": "low",
+      "category": "code",
+      "rawText": "// NOTE: Password should be hashed before storage",
+      "id": "todo-1760726465564-6",
+      "hash": "02d2be2c4f183413fea13d06ad32dd25"
+    },
+    {
+      "type": "XXX",
+      "content": "Need to add email validation",
+      "file": "sample.js",
+      "line": 26,
+      "priority": "medium",
+      "category": "code",
+      "rawText": "// XXX: Need to add email validation",
+      "id": "todo-1760726465564-7",
+      "hash": "93ad8b0e761dc6317769cdcb2e38004c"
+    },
+    {
+      "type": "TODO",
+      "content": "Add these fields:",
+      "file": "sample.js",
+      "line": 28,
+      "priority": "medium",
+      "category": "code",
+      "rawText": "/* TODO: Add these fields:",
+      "id": "todo-1760726465564-8",
+      "hash": "cb607ba72f33fac9500b854a0b7c6f23"
+    },
+    {
+      "type": "TODO",
+      "content": "Add new method for password reset functionality",
+      "file": "sample.js",
+      "line": 37,
+      "priority": "medium",
+      "category": "code",
+      "rawText": "// TODO: Add new method for password reset functionality",
+      "id": "todo-1760726465564-9",
+      "hash": "4badaf81b96d19bf99cbdfced6380247"
+    },
+    {
+      "type": "Unchecked Task",
+      "content": "Set up CI/CD pipeline",
+      "file": "tasks.md",
+      "line": 6,
+      "priority": "medium",
+      "category": "markdown",
+      "rawText": "- [ ] Set up CI/CD pipeline",
+      "id": "todo-1760726465564-10",
+      "hash": "e108fb18a0b3d5c0375c4efea603a691"
+    },
+    {
+      "type": "Unchecked Task",
+      "content": "Configure production database",
+      "file": "tasks.md",
+      "line": 7,
+      "priority": "medium",
+      "category": "markdown",
+      "rawText": "- [ ] Configure production database",
+      "id": "todo-1760726465564-11",
+      "hash": "44a2bc9569f4fd7390731ada794badc9"
+    },
+    {
+      "type": "Unchecked Task",
+      "content": "Implement authentication",
+      "file": "tasks.md",
+      "line": 8,
+      "priority": "medium",
+      "category": "markdown",
+      "rawText": "- [ ] Implement authentication",
+      "id": "todo-1760726465564-12",
+      "hash": "fc001008a16c11eb4f4049e946779b17"
+    },
+    {
+      "type": "Unchecked Task",
+      "content": "Add unit tests for UserService",
+      "file": "tasks.md",
+      "line": 11,
+      "priority": "medium",
+      "category": "markdown",
+      "rawText": "- [ ] Add unit tests for UserService",
+      "id": "todo-1760726465564-13",
+      "hash": "459c0cbf160467ddf1087d5365473f5f"
+    },
+    {
+      "type": "Unchecked Task",
+      "content": "Create API documentation",
+      "file": "tasks.md",
+      "line": 12,
+      "priority": "medium",
+      "category": "markdown",
+      "rawText": "- [ ] Create API documentation",
+      "id": "todo-1760726465564-14",
+      "hash": "28ac93ebd3f2bef604e54dc4253e4a33"
+    },
+    {
+      "type": "Action Item",
+      "content": "Refactor legacy authentication code",
+      "file": "tasks.md",
+      "line": 17,
+      "priority": "high",
+      "category": "markdown",
+      "rawText": "Action Item 1: Refactor legacy authentication code",
+      "id": "todo-1760726465564-15",
+      "hash": "c4ac997eea1cacd219699fa8095571d3"
+    },
+    {
+      "type": "Action Item",
+      "content": "Update deprecated dependencies",
+      "file": "tasks.md",
+      "line": 18,
+      "priority": "high",
+      "category": "markdown",
+      "rawText": "Action Item 2: Update deprecated dependencies",
+      "id": "todo-1760726465564-16",
+      "hash": "ec74895c23dfe1470637ed75577a4069"
+    },
+    {
+      "type": "NOTE",
+      "content": "s",
+      "file": "tasks.md",
+      "line": 20,
+      "priority": "low",
+      "category": "code",
+      "rawText": "# Notes",
+      "id": "todo-1760726465564-17",
+      "hash": "631cb9d03188f57f56f9c0b315d1bcd1"
+    },
+    {
+      "type": "Incomplete Note",
+      "content": "[TBD]",
+      "file": "tasks.md",
+      "line": 22,
+      "priority": "medium",
+      "category": "markdown",
+      "rawText": "[TBD]",
+      "id": "todo-1760726465564-18",
+      "hash": "aeb9ff4391b09c53b528ef8dbbe3936b"
+    },
+    {
+      "type": "Incomplete Note",
+      "content": "[WIP]",
+      "file": "tasks.md",
+      "line": 23,
+      "priority": "medium",
+      "category": "markdown",
+      "rawText": "[WIP]",
+      "id": "todo-1760726465564-19",
+      "hash": "46e0d0de7a3f43f5df204d297064cffe"
+    },
+    {
+      "type": "TODO",
+      "content": "Future Features",
+      "file": "tasks.md",
+      "line": 25,
+      "priority": "medium",
+      "category": "code",
+      "rawText": "# TODO: Future Features",
+      "id": "todo-1760726465564-20",
+      "hash": "a31b71d62be19a1172ecfa938f74410f"
+    }
+  ],
+  "summary": {
+    "totalTodos": 21,
+    "byPriority": {
+      "high": 4,
+      "medium": 13,
+      "low": 4
+    },
+    "byType": {
+      "TODO": 4,
+      "FIXME": 1,
+      "BUG": 1,
+      "HACK": 1,
+      "OPTIMIZE": 1,
+      "REFACTOR": 1,
+      "NOTE": 2,
+      "XXX": 1,
+      "Unchecked Task": 5,
+      "Action Item": 2,
+      "Incomplete Note": 2
+    },
+    "byFile": {
+      "sample.js": 10,
+      "tasks.md": 11
+    },
+    "filesScanned": 2,
+    "scanDuration": 14
+  },
+  "scanDate": "2025-10-17T18:41:05.563Z",
+  "rootPath": "/Users/michaelevans/project-analyst-manager-Claude skills/project-analyzer/examples"
+}
