@@ -28,6 +28,7 @@ program
   .option('--exclude <patterns...>', 'Exclude file patterns (glob)')
   .option('--no-gitignore', 'Don\'t use .gitignore')
   .option('--include-completed', 'Include completed tasks')
+  .option('--exclude-archives', 'Exclude TODOs from archive directories')
   .option('--compact', 'Compact JSON output')
   .option('--state-file <path>', 'Path to state file for tracking processed TODOs')
   .option('--only-new', 'Only show new TODOs not in state file')
@@ -51,6 +52,7 @@ program
         excludePatterns: options.exclude,
         useGitignore: options.gitignore !== false,
         includeCompleted: options.includeCompleted,
+        excludeArchives: options.excludeArchives,
         groupByFile: options.groupBy === 'file'
       });
 
@@ -147,6 +149,7 @@ program
   .option('-o, --output <path>', 'Output file path')
   .option('-f, --format <format>', 'Output format (json, markdown, summary)', 'markdown')
   .option('--min-confidence <number>', 'Minimum confidence level (0-100)', '70')
+  .option('--exclude-archives', 'Exclude TODOs from archive directories')
   .option('--use-git', 'Use git history for enhanced detection', false)
   .action(async (pathArg, options) => {
     const rootPath = path.resolve(pathArg || process.cwd());
@@ -159,7 +162,10 @@ program
       const { formatCompletionReportAsMarkdown, formatCompletionSummary, formatCompletionReportAsJSON, formatCleanupCandidates } = await import('./formatters/completionFormatter');
 
       // Perform scan
-      const result = await scanTodos({ rootPath });
+      const result = await scanTodos({
+        rootPath,
+        excludeArchives: options.excludeArchives
+      });
 
       // Analyze completions
       console.log('🔍 Analyzing completion indicators...');
@@ -218,6 +224,7 @@ program
   .command('report [path]')
   .description('Generate a comprehensive report')
   .option('-o, --output-dir <dir>', 'Output directory for reports', './reports')
+  .option('--exclude-archives', 'Exclude TODOs from archive directories')
   .action(async (pathArg, options) => {
     const rootPath = path.resolve(pathArg || process.cwd());
     const outputDir = path.resolve(options.outputDir);
@@ -231,7 +238,10 @@ program
       }
 
       // Perform scan
-      const result = await scanTodos({ rootPath });
+      const result = await scanTodos({
+        rootPath,
+        excludeArchives: options.excludeArchives
+      });
       const processedResult = processScanResults(result);
 
       // Generate multiple formats

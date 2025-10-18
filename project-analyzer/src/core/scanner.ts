@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as crypto from 'crypto';
 import { TodoItem, TodoPattern, getPatternsForFile } from './patterns';
 import { traverseFiles, readFileSafely, TraversalOptions } from '../utils/fileTraversal';
+import { isInArchivedPath } from './completionPatterns';
 
 export interface ScanOptions extends Partial<TraversalOptions> {
   rootPath: string;
@@ -14,6 +15,7 @@ export interface ScanOptions extends Partial<TraversalOptions> {
   includeCompleted?: boolean;
   groupByFile?: boolean;
   generateHash?: boolean;
+  excludeArchives?: boolean;
 }
 
 export interface ScanResult {
@@ -115,6 +117,7 @@ export async function scanTodos(options: ScanOptions): Promise<ScanResult> {
     includeCompleted = false,
     groupByFile = false,
     generateHash = true,
+    excludeArchives = false,
     ...traversalOptions
   } = options;
 
@@ -148,10 +151,15 @@ export async function scanTodos(options: ScanOptions): Promise<ScanResult> {
     }
   }
 
-  // Filter out completed tasks if requested
+  // Filter out archived TODOs if requested
   let filteredTodos = allTodos;
+  if (excludeArchives) {
+    filteredTodos = filteredTodos.filter(todo => !isInArchivedPath(todo.file));
+  }
+
+  // Filter out completed tasks if requested
   if (!includeCompleted) {
-    filteredTodos = allTodos.filter(todo => {
+    filteredTodos = filteredTodos.filter(todo => {
       // Check if it's a completed markdown task
       if (todo.type === 'Unchecked Task') {
         return true; // Keep unchecked tasks

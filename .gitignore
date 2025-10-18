@@ -31,3 +31,16 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+# Node modules
+node_modules/
+
+# Backup directories
+.claude-backup-*/
+
+# Test outputs
+test-reports/
+*.test-report.*
+
+# Project state files
+.project-state.json
