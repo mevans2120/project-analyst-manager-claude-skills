@@ -15,17 +15,24 @@ const { execSync } = require('child_process');
  */
 function getGitStatus(workingDirectory) {
   try {
+    // Validate working directory exists
+    if (!workingDirectory) {
+      throw new Error('Working directory not provided');
+    }
+
     // Check if we're in a git repo
     execSync('git rev-parse --git-dir', {
       cwd: workingDirectory,
-      stdio: 'pipe'
+      stdio: 'pipe',
+      timeout: 5000 // 5 second timeout
     });
 
     // Get modified, added, and untracked files
     const status = execSync('git status --porcelain', {
       cwd: workingDirectory,
       encoding: 'utf8',
-      stdio: 'pipe'
+      stdio: 'pipe',
+      timeout: 5000 // 5 second timeout
     });
 
     const lines = status.trim().split('\n').filter(l => l);
@@ -43,6 +50,7 @@ function getGitStatus(workingDirectory) {
       untrackedCount: files.filter(f => f.status.includes('??')).length
     };
   } catch (error) {
+    console.error('Git status error:', error.message);
     return { hasChanges: false, files: [], error: error.message };
   }
 }

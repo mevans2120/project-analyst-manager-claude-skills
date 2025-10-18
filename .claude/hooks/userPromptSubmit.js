@@ -25,8 +25,17 @@ async function main() {
       result
     });
   } catch (error) {
+    // Enhanced error logging
+    console.error('UserPromptSubmit hook error:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Working directory:', process.cwd());
+
     // Write error to stdout
-    writeError(error);
+    writeError({
+      message: error.message,
+      stack: error.stack,
+      cwd: process.cwd()
+    });
     process.exit(1);
   }
 }

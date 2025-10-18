@@ -84,9 +84,6 @@ async function executeHook(hookPath, context) {
     // Load the original hook implementation
     const hook = require(hookPath);
 
-    // Initialize memory store if needed
-    const memoryStore = await initializeMemoryStore();
-
     // Capture logger output
     let logOutput = [];
     const captureLogger = {
