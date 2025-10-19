@@ -42,7 +42,7 @@ export interface ProcessedTodo extends TodoItem {
 /**
  * Generate a unique hash for a TODO item
  */
-function generateTodoHash(todo: TodoItem): string {
+export function generateTodoHash(todo: TodoItem): string {
   const content = `${todo.file}:${todo.line}:${todo.type}:${todo.content}`;
   return crypto.createHash('md5').update(content).digest('hex');
 }
