@@ -83,7 +83,7 @@ export async function detectFeatureImplementation(
   }
 
   // 4. Calculate confidence and status
-  const confidence = calculateImplementationConfidence(evidence);
+  const confidence = calculateImplementationConfidence(evidence, feature.description, rootPath);
   const status = determineStatus(confidence);
 
   // 5. Create detection result

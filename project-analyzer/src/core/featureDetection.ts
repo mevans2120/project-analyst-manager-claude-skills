@@ -413,48 +413,147 @@ export function extractKeywords(feature: string): string[] {
 }
 
 /**
+ * Check if files contain specific implementation patterns
+ */
+export function checkImplementationPatterns(
+  filesFound: string[],
+  featureDescription: string,
+  rootPath: string
+): { foundPatterns: number; totalChecked: number } {
+  let foundPatterns = 0;
+  let totalChecked = 0;
+
+  // Extract keywords from feature description for pattern matching
+  const keywords = extractKeywords(featureDescription);
+
+  for (const relativePath of filesFound.slice(0, 5)) { // Check max 5 files
+    try {
+      // Try to construct full path
+      let fullPath = relativePath;
+      if (!fs.existsSync(fullPath)) {
+        fullPath = path.join(rootPath, relativePath.replace(/^\//, ''));
+      }
+
+      if (!fs.existsSync(fullPath)) {
+        continue;
+      }
+
+      const content = fs.readFileSync(fullPath, 'utf-8').toLowerCase();
+      totalChecked++;
+
+      // Check if file contains relevant keywords
+      for (const keyword of keywords.slice(0, 3)) { // Check top 3 keywords
+        if (content.includes(keyword.toLowerCase())) {
+          foundPatterns++;
+          break; // Count each file once
+        }
+      }
+
+      // Bonus: Check for specific implementation patterns based on file type
+      if (fullPath.endsWith('.css') || fullPath.endsWith('.scss')) {
+        // CSS files: look for keyframes, animations
+        if (content.includes('@keyframes') || content.includes('animation:')) {
+          foundPatterns++;
+        }
+      } else if (fullPath.endsWith('.tsx') || fullPath.endsWith('.jsx')) {
+        // React files: look for className, component usage
+        if (content.includes('classname=') || content.includes('animate-')) {
+          foundPatterns++;
+        }
+      } else if (fullPath.endsWith('.ts') || fullPath.endsWith('.js')) {
+        // JS/TS files: look for function definitions, exports
+        if (content.includes('export') || content.includes('function')) {
+          foundPatterns++;
+        }
+      }
+    } catch (error) {
+      // Ignore read errors
+      continue;
+    }
+  }
+
+  return { foundPatterns, totalChecked };
+}
+
+/**
  * Calculate implementation confidence based on evidence
  */
-export function calculateImplementationConfidence(evidence: ImplementationEvidence): number {
-  let score = 0;
-  let weight = 0;
+export function calculateImplementationConfidence(
+  evidence: ImplementationEvidence,
+  featureDescription: string = '',
+  rootPath: string = ''
+): number {
+  // Hard evidence (files exist, tests found, actually used) = implemented
+  // Only use fuzzy code patterns if we have no hard evidence
 
-  // Files found (highest confidence)
-  if (evidence.filesFound.length > 0) {
-    score += 80 * evidence.filesFound.length;
-    weight += evidence.filesFound.length;
+  const hasFiles = evidence.filesFound.length > 0;
+  const hasTests = evidence.testsFound.length > 0;
+  const hasUsage = evidence.usageDetected.length > 0;
+
+  // NEW: Check if files contain actual implementation patterns
+  let patternBonus = 0;
+  if (hasFiles && rootPath && featureDescription) {
+    const { foundPatterns, totalChecked } = checkImplementationPatterns(
+      evidence.filesFound,
+      featureDescription,
+      rootPath
+    );
+    if (totalChecked > 0) {
+      // Add up to +10 bonus for finding patterns in files
+      patternBonus = Math.round((foundPatterns / totalChecked) * 10);
+    }
   }
 
-  // Tests found (very high confidence)
-  if (evidence.testsFound.length > 0) {
-    score += 90 * evidence.testsFound.length;
-    weight += evidence.testsFound.length;
+  // Strategy 1: If we have files + usage OR files + tests = very confident
+  if (hasFiles && (hasUsage || hasTests)) {
+    let score = 80; // Base for files existing
+
+    if (hasUsage) {
+      score += Math.min(evidence.usageDetected.length * 5, 15); // +5 per usage, max +15
+    }
+
+    if (hasTests) {
+      score += 10; // +10 for test coverage
+    }
+
+    // Add pattern bonus
+    score += patternBonus;
+
+    return Math.min(score, 100);
   }
 
-  // Usage detected (high confidence)
-  if (evidence.usageDetected.length > 0) {
-    score += 70 * Math.min(evidence.usageDetected.length, 3); // Cap at 3 usages
-    weight += Math.min(evidence.usageDetected.length, 3);
+  // Strategy 2: Files exist but no usage/tests = maybe implemented, maybe unused
+  if (hasFiles) {
+    const baseScore = 60; // Moderate confidence - files exist but aren't clearly used
+    return Math.min(baseScore + patternBonus, 80); // Can get up to 80% with patterns
   }
 
-  // Code patterns found (medium confidence)
+  // Strategy 3: No files, but lots of usage/imports = likely different file name
+  if (hasUsage) {
+    return 50 + Math.min(evidence.usageDetected.length * 5, 20); // Up to 70%
+  }
+
+  // Strategy 4: Only fuzzy code pattern matches = low confidence
   if (evidence.codePatterns.length > 0) {
     const avgPatternConfidence = evidence.codePatterns.reduce((sum, p) => sum + p.confidence, 0) / evidence.codePatterns.length;
-    score += avgPatternConfidence * Math.min(evidence.codePatterns.length, 5);
-    weight += Math.min(evidence.codePatterns.length, 5);
+    return Math.min(Math.round(avgPatternConfidence * 0.8), 40); // Max 40% for keywords alone
   }
 
-  const confidence = weight > 0 ? Math.min(score / weight, 100) : 0;
-  return Math.round(confidence);
+  // Strategy 5: No evidence at all
+  return 0;
 }
 
 /**
  * Determine implementation status based on confidence
+ *
+ * New philosophy:
+ * - Status = Does it exist? (binary)
+ * - Confidence = How well implemented? (quality metric)
  */
 export function determineStatus(confidence: number): 'implemented' | 'partial' | 'missing' {
-  if (confidence >= 70) return 'implemented';
-  if (confidence >= 40) return 'partial';
-  return 'missing';
+  if (confidence >= 40) return 'implemented'; // Any real evidence = implemented
+  if (confidence > 0) return 'partial';       // Only fuzzy matches = partial
+  return 'missing';                           // No evidence = missing
 }
 
 /**

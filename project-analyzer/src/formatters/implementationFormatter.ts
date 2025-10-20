@@ -68,33 +68,93 @@ export function formatImplementationReportAsMarkdown(report: ImplementationRepor
       lines.push('');
       lines.push(`**Plan:** ${planName}`);
       lines.push(`**Status:** ${detection.status} (${detection.confidence}% confidence)`);
-      lines.push(`**Recommendation:** ${detection.recommendation}`);
       lines.push('');
 
+      // Show evidence found
+      lines.push('**Evidence Found:**');
+      const evidenceItems: string[] = [];
       if (detection.evidence.filesFound.length > 0) {
-        lines.push('**Files Found:**');
-        for (const file of detection.evidence.filesFound) {
-          lines.push(`- ${file}`);
+        evidenceItems.push(`✅ ${detection.evidence.filesFound.length} file(s) exist`);
+      }
+      if (detection.evidence.usageDetected.length > 0) {
+        evidenceItems.push(`✅ ${detection.evidence.usageDetected.length} import(s) detected`);
+      }
+      if (detection.evidence.testsFound.length > 0) {
+        evidenceItems.push(`✅ ${detection.evidence.testsFound.length} test(s) found`);
+      }
+      if (detection.evidence.codePatterns.length > 0) {
+        evidenceItems.push(`🔍 ${detection.evidence.codePatterns.length} keyword match(es)`);
+      }
+
+      if (evidenceItems.length > 0) {
+        for (const item of evidenceItems) {
+          lines.push(`- ${item}`);
         }
+      } else {
+        lines.push('- ❌ No evidence found');
+      }
+      lines.push('');
+
+      // Show what's missing (why not "implemented")
+      if (detection.status === 'partial') {
+        lines.push('**Why Partial?**');
+        const missing: string[] = [];
+        if (detection.evidence.filesFound.length === 0) {
+          missing.push('⚠️ Planned files not found or file names don\'t match');
+        }
+        if (detection.evidence.usageDetected.length === 0 && detection.evidence.filesFound.length > 0) {
+          missing.push('⚠️ Files exist but no imports detected (might not be used)');
+        }
+        if (detection.evidence.testsFound.length === 0) {
+          missing.push('⚠️ No test coverage detected');
+        }
+        if (detection.evidence.codePatterns.length > 0 && detection.evidence.filesFound.length === 0) {
+          missing.push('⚠️ Only found keyword matches, no concrete files');
+        }
+
+        for (const item of missing) {
+          lines.push(`- ${item}`);
+        }
+        lines.push('');
+      }
+
+      // Show detailed evidence (collapsed by default in MD viewers)
+      if (detection.evidence.filesFound.length > 0) {
+        lines.push('<details>');
+        lines.push('<summary>Files Found</summary>');
+        lines.push('');
+        for (const file of detection.evidence.filesFound) {
+          lines.push(`- \`${file}\``);
+        }
+        lines.push('');
+        lines.push('</details>');
         lines.push('');
       }
 
       if (detection.evidence.usageDetected.length > 0) {
-        lines.push('**Usage Detected:**');
-        for (const usage of detection.evidence.usageDetected.slice(0, 3)) {
-          lines.push(`- ${usage.file}:${usage.line} - \`${usage.importStatement}\``);
+        lines.push('<details>');
+        lines.push('<summary>Usage Detected</summary>');
+        lines.push('');
+        for (const usage of detection.evidence.usageDetected.slice(0, 5)) {
+          lines.push(`- \`${usage.file}:${usage.line}\` - \`${usage.importStatement}\``);
         }
-        if (detection.evidence.usageDetected.length > 3) {
-          lines.push(`- ... and ${detection.evidence.usageDetected.length - 3} more`);
+        if (detection.evidence.usageDetected.length > 5) {
+          lines.push(`- ... and ${detection.evidence.usageDetected.length - 5} more`);
         }
+        lines.push('');
+        lines.push('</details>');
         lines.push('');
       }
 
       if (detection.evidence.testsFound.length > 0) {
-        lines.push('**Tests Found:**');
+        lines.push('<details>');
+        lines.push('<summary>Tests Found</summary>');
+        lines.push('');
         for (const test of detection.evidence.testsFound) {
-          lines.push(`- ${test}`);
+          lines.push(`- \`${test}\``);
         }
+        lines.push('');
+        lines.push('</details>');
         lines.push('');
       }
 
