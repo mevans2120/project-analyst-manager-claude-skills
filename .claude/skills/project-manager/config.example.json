@@ -1,0 +1,23 @@
+{
+  "github": {
+    "owner": "your-username",
+    "repo": "your-repository",
+    "defaultLabels": ["auto-created"],
+    "issueTitlePrefix": "[PM]"
+  },
+  "stateFile": ".project-state.json",
+  "reporting": {
+    "outputPath": "docs/reports",
+    "schedule": "daily"
+  },
+  "labels": {
+    "TODO": ["feature", "priority-medium"],
+    "FIXME": ["bug", "priority-high"],
+    "BUG": ["bug", "priority-high"],
+    "HACK": ["tech-debt", "priority-low"],
+    "OPTIMIZE": ["enhancement", "priority-low"],
+    "REFACTOR": ["refactor", "priority-medium"],
+    "NOTE": ["documentation", "priority-low"],
+    "XXX": ["needs-review", "priority-medium"]
+  }
+}
