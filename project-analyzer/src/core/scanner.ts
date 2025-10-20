@@ -56,6 +56,56 @@ function generateTodoId(todo: TodoItem, index: number): string {
 }
 
 /**
+ * Check if TODO content is actionable and specific enough
+ */
+function isQualityTodo(content: string): boolean {
+  const trimmed = content.trim();
+
+  // Minimum length requirement (at least 10 characters for meaningful content)
+  if (trimmed.length < 10) {
+    return false;
+  }
+
+  // Filter out truncated/garbage content
+  const garbagePatterns = [
+    /^[^a-zA-Z0-9]*$/,  // Only special characters
+    /^ing$/i,            // Just "ing"
+    /^\*+:?\s*$/,        // Just asterisks/colons
+    /^[:\s]*$/,          // Just colons/whitespace
+    /^\.{3,}$/,          // Just ellipsis
+    /^\s*\*+\s*:?\s*$/   // Just formatting markers
+  ];
+
+  for (const pattern of garbagePatterns) {
+    if (pattern.test(trimmed)) {
+      return false;
+    }
+  }
+
+  // Filter out vague, non-actionable TODOs
+  const vaguePatterns = [
+    /^[\*:\s]*improve code quality[\*:\s]*$/i,
+    /^[\*:\s]*improve code[\*:\s]*$/i,
+    /^[\*:\s]*improve code while keeping tests green[\*:\s]*$/i,
+    /^fix this$/i,
+    /^update$/i,
+    /^refactor$/i,
+    /^optimize$/i,
+    /^clean up$/i,
+    /^todo$/i,
+    /^send to (error tracking|external logging|logging) service/i  // Too vague - doesn't specify WHAT to send
+  ];
+
+  for (const pattern of vaguePatterns) {
+    if (pattern.test(trimmed)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
  * Extract TODO items from file content
  */
 function extractTodosFromContent(
@@ -74,6 +124,12 @@ function extractTodosFromContent(
     while ((match = pattern.regex.exec(content)) !== null) {
       const matchedText = match[0];
       const todoContent = match[1] || matchedText;
+      const trimmedContent = todoContent.trim();
+
+      // Quality filter: Skip low-quality or truncated TODOs
+      if (!isQualityTodo(trimmedContent)) {
+        continue;
+      }
 
       // Find line number
       const position = match.index;
@@ -90,7 +146,7 @@ function extractTodosFromContent(
 
       todos.push({
         type: pattern.name,
-        content: todoContent.trim(),
+        content: trimmedContent,
         file: filePath,
         line: lineNumber,
         priority: pattern.priority,
@@ -151,8 +207,13 @@ export async function scanTodos(options: ScanOptions): Promise<ScanResult> {
     }
   }
 
+  // CRITICAL: Always filter out .project-analyzer directory TODOs (should never happen, but extra safety)
+  let filteredTodos = allTodos.filter(todo => {
+    return !todo.file.includes('.project-analyzer/') &&
+           !todo.file.startsWith('.project-analyzer');
+  });
+
   // Filter out archived TODOs if requested
-  let filteredTodos = allTodos;
   if (excludeArchives) {
     filteredTodos = filteredTodos.filter(todo => !isInArchivedPath(todo.file));
   }
