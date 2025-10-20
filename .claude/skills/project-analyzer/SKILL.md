@@ -180,9 +180,62 @@ If the analyzer fails:
 3. Verify the project is built (`npm run build`)
 4. Check for permission issues on the target directory
 
+## Report Storage Best Practices
+
+When analyzing a repository, organize reports for easy access and version control:
+
+### Recommended Structure
+
+```
+<repository-root>/
+├── docs/
+│   └── reports/
+│       ├── README.md                  # Usage guide
+│       ├── todo-summary-latest.md     # Quick stats (version controlled)
+│       └── todo-analysis-latest.md    # Full details (version controlled)
+└── .project-analyzer/                 # Hidden state directory
+    ├── state.json                     # Gitignored (changes frequently)
+    └── scans/                         # Gitignored (dated archives)
+        ├── scan-2025-10-20.md
+        └── ...
+```
+
+### Setup Commands
+
+```bash
+# Create reports directory
+mkdir -p <repo-path>/docs/reports
+
+# Generate latest reports
+npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-analysis-latest.md -f markdown -g priority
+npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-summary-latest.md -f summary
+
+# Add to .gitignore
+echo "# Project Analyzer (state changes frequently, reports are tracked)" >> <repo-path>/.gitignore
+echo ".project-analyzer/state.json" >> <repo-path>/.gitignore
+echo ".project-analyzer/scans/" >> <repo-path>/.gitignore
+```
+
+### Why This Structure?
+
+- **Easy to find**: Reports live in `docs/reports/` alongside other documentation
+- **Version controlled**: Track TODO progress over time via git history
+- **No bloat**: State files are gitignored, only meaningful summaries are tracked
+- **Consistent naming**: Always `*-latest.md` for current analysis
+- **Professional**: Follows common documentation conventions
+
+### Report README Template
+
+Create `<repo>/docs/reports/README.md` with:
+- Links to latest reports
+- Instructions for updating
+- Explanation of report contents
+- Last updated timestamp
+
 ## Tips for Best Results
 
 - Run completion analysis on old projects with lots of historical TODOs
 - Use priority grouping when presenting to users - they care most about high priority
 - Combine with project-manager skill for end-to-end automation
 - For large repos, consider using `--exclude node_modules` to speed up scanning
+- Store reports in `docs/reports/` for easy access and version control
