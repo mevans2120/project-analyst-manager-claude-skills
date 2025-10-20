@@ -50,5 +50,8 @@ node_modules/
 test-reports/
 *.test-report.*
 
+# Project analyzer output
+.project-analyzer/
+
 # Project state files
 .project-state.json

@@ -12,6 +12,45 @@ import { formatOutput, writeOutput, generateReportFilename, OutputFormat } from 
 
 const program = new Command();
 
+/**
+ * Get the default output directory for a project
+ */
+function getProjectAnalyzerDir(rootPath: string): string {
+  return path.join(rootPath, '.project-analyzer');
+}
+
+/**
+ * Get the default scans directory for a project
+ */
+function getProjectScansDir(rootPath: string): string {
+  return path.join(getProjectAnalyzerDir(rootPath), 'scans');
+}
+
+/**
+ * Ensure project analyzer directory exists
+ */
+function ensureProjectDirExists(rootPath: string): void {
+  const analyzerDir = getProjectAnalyzerDir(rootPath);
+  const scansDir = getProjectScansDir(rootPath);
+
+  if (!fs.existsSync(analyzerDir)) {
+    fs.mkdirSync(analyzerDir, { recursive: true });
+  }
+  if (!fs.existsSync(scansDir)) {
+    fs.mkdirSync(scansDir, { recursive: true });
+  }
+}
+
+/**
+ * Generate default output path for a scan
+ */
+function getDefaultOutputPath(rootPath: string, format: string): string {
+  const scansDir = getProjectScansDir(rootPath);
+  const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const extension = format === 'json' ? 'json' : format === 'csv' ? 'csv' : 'md';
+  return path.join(scansDir, `scan-${timestamp}.${extension}`);
+}
+
 program
   .name('project-analyzer')
   .description('Analyze repositories to identify TODOs, specifications, and implementation gaps')
@@ -45,6 +84,9 @@ program
         process.exit(1);
       }
 
+      // Ensure project analyzer directory exists
+      ensureProjectDirExists(rootPath);
+
       // Perform scan
       const result = await scanTodos({
         rootPath,
@@ -60,8 +102,9 @@ program
       const processedResult = processScanResults(result);
 
       // Handle state file and new TODOs filtering
+      const statePath = options.stateFile || path.join(getProjectAnalyzerDir(rootPath), 'state.json');
+
       if (options.stateFile || options.onlyNew) {
-        const statePath = options.stateFile || path.join(rootPath, '.project-state.json');
         const previousHashes = loadPreviousState(statePath);
 
         if (options.onlyNew) {
@@ -70,13 +113,10 @@ program
           processedResult.summary.totalTodos = newTodos.length;
           console.log(`🆕 Found ${newTodos.length} new TODO(s)`);
         }
-
-        // Save state if requested
-        if (options.stateFile) {
-          saveState(statePath, processedResult.todos);
-          console.log(`💾 State saved to: ${statePath}`);
-        }
       }
+
+      // Always save state to track processed TODOs
+      saveState(statePath, processedResult.todos);
 
       // Format output
       const formatted = formatOutput(processedResult, {
@@ -85,12 +125,13 @@ program
         compact: options.compact
       });
 
-      // Write or print output
-      if (options.output) {
-        writeOutput(formatted, options.output);
-      } else {
-        console.log('\n' + formatted);
-      }
+      // Determine output path
+      const outputPath = options.output || getDefaultOutputPath(rootPath, options.format);
+
+      // Write output
+      writeOutput(formatted, outputPath);
+      console.log(`✅ Output written to: ${outputPath}`);
+      console.log(`💾 State saved to: ${statePath}`);
 
       // Print summary to console
       console.log('\n📊 Scan Complete:');

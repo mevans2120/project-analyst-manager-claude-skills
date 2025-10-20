@@ -58,7 +58,17 @@ function loadGitignore(rootPath: string): ReturnType<typeof ignore> {
     '*.class',
     '*.jar',
     '*.war',
-    '*.ear'
+    '*.ear',
+    // Project analyzer output directory - MUST NEVER SCAN THIS
+    '.project-analyzer',
+    '.project-analyzer/**',
+    // Common report/scan output patterns
+    'old-reports',
+    'old-reports/**',
+    '**/codymd-reports',
+    '**/codymd-reports/**',
+    '**/test-reports',
+    '**/test-reports/**'
   ]);
 
   return ig;
@@ -115,6 +125,12 @@ export async function traverseFiles(options: TraversalOptions): Promise<FileInfo
       const matches = await glob(pattern, globOptions);
 
       for (const filePath of matches) {
+        // CRITICAL: Never scan these directories - check absolute path first
+        const analyzerDir = path.join(rootPath, '.project-analyzer');
+        if (filePath.startsWith(analyzerDir + path.sep) || filePath === analyzerDir) {
+          continue;
+        }
+
         // Check if file should be ignored
         if (shouldIgnore(filePath, ig, rootPath)) {
           continue;
