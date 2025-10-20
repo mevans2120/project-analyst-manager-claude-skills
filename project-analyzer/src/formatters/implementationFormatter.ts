@@ -48,6 +48,21 @@ export function formatImplementationReportAsMarkdown(report: ImplementationRepor
     lines.push(`- ⚠️  Partial: ${planProgress.partial}`);
     lines.push(`- ❌ Missing: ${planProgress.missing}`);
     lines.push('');
+
+    // Show open items inline
+    if (planProgress.missing > 0) {
+      const planMissingItems = report.detections.filter(
+        d => d.status === 'missing' && path.basename(d.planDocument) === planProgress.plan
+      );
+
+      if (planMissingItems.length > 0) {
+        lines.push('**Open Items:**');
+        for (const item of planMissingItems) {
+          lines.push(`- ❌ ${item.feature.description}`);
+        }
+        lines.push('');
+      }
+    }
   }
 
   // Open Items (Missing Features)
