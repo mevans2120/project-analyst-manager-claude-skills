@@ -279,6 +279,77 @@ program
     }
   });
 
+// Feature analysis command
+program
+  .command('features [path]')
+  .description('Analyze planning documents and detect feature implementation')
+  .option('-o, --output <path>', 'Output file path')
+  .option('-f, --format <format>', 'Output format (json, markdown, csv, summary)', 'markdown')
+  .option('--min-confidence <number>', 'Minimum confidence level (0-100)', '0')
+  .option('--planning-paths <paths...>', 'Directories to search for planning documents', ['docs', 'memory-bank'])
+  .option('--include-checked', 'Include features already marked as checked', false)
+  .action(async (pathArg, options) => {
+    const rootPath = path.resolve(pathArg || process.cwd());
+
+    console.log(`🔍 Analyzing feature implementation: ${rootPath}`);
+
+    try {
+      // Import feature detection modules
+      const { analyzeImplementation } = await import('./core/featureDetector');
+      const {
+        formatImplementationReportAsMarkdown,
+        formatImplementationReportAsJSON,
+        formatImplementationReportAsCSV,
+        formatImplementationSummary
+      } = await import('./formatters/implementationFormatter');
+
+      // Ensure project analyzer directory exists
+      ensureProjectDirExists(rootPath);
+
+      // Perform feature analysis
+      const report = await analyzeImplementation({
+        rootPath,
+        planningPaths: options.planningPaths,
+        minConfidence: parseInt(options.minConfidence),
+        includeChecked: options.includeChecked
+      });
+
+      // Format output
+      let formatted: string;
+      switch (options.format) {
+        case 'json':
+          formatted = formatImplementationReportAsJSON(report);
+          break;
+        case 'csv':
+          formatted = formatImplementationReportAsCSV(report);
+          break;
+        case 'summary':
+          formatted = formatImplementationSummary(report);
+          break;
+        default:
+          formatted = formatImplementationReportAsMarkdown(report);
+      }
+
+      // Determine output path
+      if (options.output) {
+        const outputPath = addDateToFilename(options.output);
+        writeOutput(formatted, outputPath);
+        console.log(`✅ Output written to: ${outputPath}`);
+      } else {
+        // Print to console if no output file specified
+        console.log('\n' + formatted);
+      }
+
+      // Print summary to console
+      console.log(formatImplementationSummary(report));
+
+    } catch (error) {
+      console.error('❌ Error during feature analysis:', error);
+      console.error(error);
+      process.exit(1);
+    }
+  });
+
 // Watch command (placeholder for future implementation)
 program
   .command('watch [path]')
