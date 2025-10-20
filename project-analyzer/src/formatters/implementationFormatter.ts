@@ -50,24 +50,68 @@ export function formatImplementationReportAsMarkdown(report: ImplementationRepor
     lines.push('');
   }
 
-  // Top Unimplemented Features
-  lines.push('## Top Priority: Unimplemented Features');
-  lines.push('');
+  // Open Items (Missing Features)
+  const missingFeatures = report.detections.filter(d => d.status === 'missing');
 
-  const topUnimplemented = getTopUnimplementedFeatures(report, 15);
+  if (missingFeatures.length > 0) {
+    lines.push('## 🔴 Open Items (Not Yet Implemented)');
+    lines.push('');
+    lines.push(`**${missingFeatures.length} feature(s) with no implementation evidence found**`);
+    lines.push('');
+
+    for (const detection of missingFeatures) {
+      const planName = path.basename(detection.planDocument, '.md');
+
+      lines.push(`### ❌ ${detection.feature.description}`);
+      lines.push('');
+      lines.push(`**Plan:** ${planName}`);
+      lines.push(`**Line:** ${detection.feature.line}`);
+      lines.push(`**Status:** ${detection.status} (${detection.confidence}% confidence)`);
+      lines.push('');
+      lines.push('**Evidence Found:**');
+      lines.push('- ❌ No files found');
+      lines.push('- ❌ No imports detected');
+      lines.push('- ❌ No tests found');
+      lines.push('- ❌ No code patterns found');
+      lines.push('');
+      lines.push(`**Action Required:** This feature appears to be completely unimplemented.`);
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+    }
+  } else {
+    lines.push('## 🎉 Open Items');
+    lines.push('');
+    lines.push('**All features have implementation evidence!** No missing features detected.');
+    lines.push('');
+  }
+
+  // Low Confidence Features (Partial/Needs Review)
+  const lowConfidence = report.detections
+    .filter(d => d.status === 'implemented' && d.confidence < 60)
+    .sort((a, b) => a.confidence - b.confidence)
+    .slice(0, 15);
+
+  if (lowConfidence.length > 0) {
+    lines.push('## ⚠️ Low Confidence Features (May Need Review)');
+    lines.push('');
+    lines.push(`**${lowConfidence.length} feature(s) marked as implemented but with low confidence (<60%)**`);
+    lines.push('');
+  }
+
+  const topUnimplemented = lowConfidence;
 
   if (topUnimplemented.length === 0) {
-    lines.push('🎉 All features appear to be implemented!');
+    lines.push('🎉 All features have high confidence scores!');
     lines.push('');
   } else {
     for (const detection of topUnimplemented) {
-      const statusIcon = detection.status === 'partial' ? '⚠️' : '❌';
       const planName = path.basename(detection.planDocument, '.md');
 
-      lines.push(`### ${statusIcon} ${detection.feature.description}`);
+      lines.push(`### ⚠️ ${detection.feature.description}`);
       lines.push('');
       lines.push(`**Plan:** ${planName}`);
-      lines.push(`**Status:** ${detection.status} (${detection.confidence}% confidence)`);
+      lines.push(`**Confidence:** ${detection.confidence}%`);
       lines.push('');
 
       // Show evidence found
@@ -95,15 +139,15 @@ export function formatImplementationReportAsMarkdown(report: ImplementationRepor
       }
       lines.push('');
 
-      // Show what's missing (why not "implemented")
-      if (detection.status === 'partial') {
-        lines.push('**Why Partial?**');
+      // Show what's missing (why low confidence)
+      if (detection.confidence < 60) {
+        lines.push('**Why Low Confidence?**');
         const missing: string[] = [];
         if (detection.evidence.filesFound.length === 0) {
           missing.push('⚠️ Planned files not found or file names don\'t match');
         }
         if (detection.evidence.usageDetected.length === 0 && detection.evidence.filesFound.length > 0) {
-          missing.push('⚠️ Files exist but no imports detected (might not be used)');
+          missing.push('⚠️ Files exist but no imports detected (might not be actively used)');
         }
         if (detection.evidence.testsFound.length === 0) {
           missing.push('⚠️ No test coverage detected');
