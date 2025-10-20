@@ -51,6 +51,26 @@ function getDefaultOutputPath(rootPath: string, format: string): string {
   return path.join(scansDir, `scan-${timestamp}.${extension}`);
 }
 
+/**
+ * Add date timestamp to a filename if it doesn't already have one
+ * Example: "todo-analysis.md" -> "todo-analysis-2025-10-20.md"
+ */
+function addDateToFilename(filePath: string): string {
+  const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const dir = path.dirname(filePath);
+  const ext = path.extname(filePath);
+  const basename = path.basename(filePath, ext);
+
+  // Check if filename already has a date pattern (YYYY-MM-DD)
+  const datePattern = /\d{4}-\d{2}-\d{2}/;
+  if (datePattern.test(basename)) {
+    return filePath; // Already has a date
+  }
+
+  const newBasename = `${basename}-${timestamp}${ext}`;
+  return path.join(dir, newBasename);
+}
+
 program
   .name('project-analyzer')
   .description('Analyze repositories to identify TODOs, specifications, and implementation gaps')
@@ -126,7 +146,12 @@ program
       });
 
       // Determine output path
-      const outputPath = options.output || getDefaultOutputPath(rootPath, options.format);
+      let outputPath = options.output || getDefaultOutputPath(rootPath, options.format);
+
+      // Add date to filename if user provided a custom output path
+      if (options.output) {
+        outputPath = addDateToFilename(outputPath);
+      }
 
       // Write output
       writeOutput(formatted, outputPath);
@@ -231,7 +256,9 @@ program
 
       // Write or print output
       if (options.output) {
-        writeOutput(formatted, options.output);
+        const outputPath = addDateToFilename(options.output);
+        writeOutput(formatted, outputPath);
+        console.log(`✅ Output written to: ${outputPath}`);
       } else {
         console.log('\n' + formatted);
       }

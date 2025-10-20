@@ -191,8 +191,10 @@ When analyzing a repository, organize reports for easy access and version contro
 ├── docs/
 │   └── reports/
 │       ├── README.md                  # Usage guide
-│       ├── todo-summary-latest.md     # Quick stats (version controlled)
-│       └── todo-analysis-latest.md    # Full details (version controlled)
+│       ├── todo-summary-2025-10-20.md # Quick stats (version controlled)
+│       ├── todo-analysis-2025-10-20.md # Full details (version controlled)
+│       ├── todo-summary-2025-10-21.md # Next day's scan
+│       └── ...
 └── .project-analyzer/                 # Hidden state directory
     ├── state.json                     # Gitignored (changes frequently)
     └── scans/                         # Gitignored (dated archives)
@@ -206,9 +208,12 @@ When analyzing a repository, organize reports for easy access and version contro
 # Create reports directory
 mkdir -p <repo-path>/docs/reports
 
-# Generate latest reports
-npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-analysis-latest.md -f markdown -g priority
-npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-summary-latest.md -f summary
+# Generate dated reports (date automatically added to filenames)
+npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-analysis.md -f markdown -g priority
+# Creates: todo-analysis-2025-10-20.md
+
+npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-summary.md -f summary
+# Creates: todo-summary-2025-10-20.md
 
 # Add to .gitignore
 echo "# Project Analyzer (state changes frequently, reports are tracked)" >> <repo-path>/.gitignore
@@ -216,12 +221,14 @@ echo ".project-analyzer/state.json" >> <repo-path>/.gitignore
 echo ".project-analyzer/scans/" >> <repo-path>/.gitignore
 ```
 
+**Note:** The analyzer automatically adds the current date (YYYY-MM-DD) to output filenames unless the filename already contains a date pattern. This makes it easy to track historical analyses while keeping commands simple.
+
 ### Why This Structure?
 
 - **Easy to find**: Reports live in `docs/reports/` alongside other documentation
 - **Version controlled**: Track TODO progress over time via git history
 - **No bloat**: State files are gitignored, only meaningful summaries are tracked
-- **Consistent naming**: Always `*-latest.md` for current analysis
+- **Dated filenames**: Each analysis has a unique date stamp for easy tracking
 - **Professional**: Follows common documentation conventions
 
 ### Report README Template
