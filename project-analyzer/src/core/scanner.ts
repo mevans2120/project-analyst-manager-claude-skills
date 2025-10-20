@@ -102,6 +102,31 @@ function isQualityTodo(content: string): boolean {
     }
   }
 
+  // Filter out testing/verification checklist items (not actual features/work)
+  const testingChecklistPatterns = [
+    /^run\s+`?npm\s+(run\s+)?(test|lint|build|start|dev)/i,       // Run npm commands
+    /^run\s+`.*`\s*-\s*(no errors?|success)/i,                     // Run X - no errors/success
+    /^test\s+.*\s+manually$/i,                                     // Test X manually
+    /^verify\s+(no\s+)?/i,                                         // Verify X
+    /^check\s+(that\s+)?/i,                                        // Check X
+    /^ensure\s+(that\s+)?/i,                                       // Ensure X
+    /\s+(pass|passes|successful)$/i,                               // ... passes/successful
+    /^all\s+(automated\s+)?tests?\s+pass/i,                        // All tests pass
+    /^(no\s+)?(console\s+)?errors?(\s+or\s+warnings?)?$/i,        // No errors/warnings
+    /lighthouse\s+(performance\s+)?score/i,                        // Lighthouse score
+    /maintained\s+or\s+improved$/i,                                // ... maintained or improved
+    /^git\s+commit\s+created/i,                                    // Git commit created
+    /^documentation\s+updated?$/i,                                 // Documentation updated
+    /^update\s+memory\s+bank/i,                                    // Update memory bank
+    /^consider\s+adding\s+(unit\s+)?tests/i                        // Consider adding tests
+  ];
+
+  for (const pattern of testingChecklistPatterns) {
+    if (pattern.test(trimmed)) {
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -211,6 +236,34 @@ export async function scanTodos(options: ScanOptions): Promise<ScanResult> {
   let filteredTodos = allTodos.filter(todo => {
     return !todo.file.includes('.project-analyzer/') &&
            !todo.file.startsWith('.project-analyzer');
+  });
+
+  // Filter out testing/verification checklist items (post-processing)
+  filteredTodos = filteredTodos.filter(todo => {
+    const content = todo.content.toLowerCase();
+
+    // Testing/verification patterns - match various formats
+    // Format: "Unit tests pass: `npm test`" or "Run `npm test`"
+    if (content.match(/`npm\s+(run\s+)?(test|lint|build|start|dev|audit)`/i)) {
+      return false;
+    }
+    // Format: "Run something - no errors"
+    if (content.match(/^run\s+.*\s*-\s*(no errors?|successful)/i)) return false;
+    // Format: "Test X manually" or "Test X page"
+    if (content.match(/^test\s+.*\s+(manually|page)/i)) return false;
+    // Format: "All tests pass", "Build succeeds", "Tests pass"
+    if (content.match(/(tests?\s+pass|build\s+succeeds?|lint\s+passes?)/i)) return false;
+    // Format: "No errors", "No lint errors", "Zero vulnerabilities"
+    if (content.match(/(no\s+(typescript\s+|eslint\s+|lint\s+)?errors?|zero.*vulnerabilities)/i)) return false;
+    if (content.match(/^verify\s+(no\s+)?/i)) return false;
+    if (content.match(/lighthouse\s+score/i)) return false;
+    if (content.match(/^git\s+commit\s+created/i)) return false;
+    if (content.match(/^documentation\s+updated?$/i)) return false;
+    if (content.match(/^update\s+memory\s+bank/i)) return false;
+    if (content.match(/^consider\s+adding\s+(unit\s+)?tests/i)) return false;
+    if (content.match(/^(check|ensure)\s+/i)) return false;
+
+    return true;
   });
 
   // Filter out archived TODOs if requested
