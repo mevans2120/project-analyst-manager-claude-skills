@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Roadmap - Project Management Suite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: #161b22;
+      padding: 30px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border: 1px solid #30363d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    h1 {
+      color: #58a6ff;
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .status-badge {
+      background: #238636;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #8b949e;
+      width: 100%;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .section {
+      background: #161b22;
+      padding: 25px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border: 1px solid #30363d;
+    }
+
+    h2 {
+      color: #58a6ff;
+      font-size: 18px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .current-feature {
+      background: linear-gradient(135deg, #1c2128 0%, #22272e 100%);
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 4px solid #58a6ff;
+      margin-bottom: 15px;
+    }
+
+    .current-feature h3 {
+      color: #58a6ff;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .feature-meta {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #8b949e;
+      flex-wrap: wrap;
+    }
+
+    .feature-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .progress-bar {
+      background: #21262d;
+      height: 8px;
+      border-radius: 4px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: #58a6ff;
+      height: 100%;
+      transition: width 0.3s ease;
+      border-radius: 4px;
+    }
+
+    .feature-value {
+      background: #1c2128;
+      padding: 12px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 14px;
+      border-left: 3px solid #58a6ff;
+    }
+
+    .feature-value strong {
+      color: #58a6ff;
+    }
+
+    .blocking {
+      background: #1c2128;
+      padding: 12px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 14px;
+      border-left: 3px solid #f85149;
+    }
+
+    .blocking strong {
+      color: #f85149;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #8b949e;
+    }
+
+    .empty-state-emoji {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .feature-list {
+      margin-top: 15px;
+    }
+
+    .feature-category {
+      margin-bottom: 25px;
+    }
+
+    .feature-category h3 {
+      color: #c9d1d9;
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-count {
+      background: #21262d;
+      color: #8b949e;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .feature-item {
+      background: #1c2128;
+      padding: 14px 16px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      border-left: 3px solid #30363d;
+      transition: all 0.2s;
+    }
+
+    .feature-item:hover {
+      background: #22272e;
+      transform: translateX(2px);
+    }
+
+    .feature-item.shipped {
+      border-left-color: #3fb950;
+      opacity: 0.85;
+    }
+
+    .feature-item.in-progress {
+      border-left-color: #58a6ff;
+      background: #1c2838;
+    }
+
+    .feature-item.next-up {
+      border-left-color: #d29922;
+    }
+
+    .feature-item.backlog {
+      border-left-color: #6e7681;
+      opacity: 0.7;
+    }
+
+    .feature-item .name {
+      font-size: 14px;
+      color: #c9d1d9;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .feature-item .category {
+      font-size: 12px;
+      color: #8b949e;
+    }
+
+    .feature-item .value {
+      font-size: 13px;
+      color: #8b949e;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    .priority-queue {
+      list-style: none;
+    }
+
+    .priority-item {
+      background: #1c2128;
+      padding: 18px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-left: 4px solid #d29922;
+      transition: all 0.2s;
+    }
+
+    .priority-item:hover {
+      background: #22272e;
+      transform: translateX(2px);
+    }
+
+    .priority-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .priority-item .number {
+      color: #d29922;
+      font-size: 20px;
+      font-weight: bold;
+      margin-right: 12px;
+      min-width: 30px;
+    }
+
+    .priority-item .feature-name {
+      color: #58a6ff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .priority-item .reason {
+      font-size: 14px;
+      color: #c9d1d9;
+      margin-bottom: 6px;
+      padding-left: 42px;
+    }
+
+    .priority-item .blocks {
+      font-size: 13px;
+      color: #8b949e;
+      padding-left: 42px;
+    }
+
+    .priority-item .blocks.blocked {
+      color: #f85149;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: #238636;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: #2ea043;
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      background: #21262d;
+      color: #c9d1d9;
+    }
+
+    .btn.secondary:hover {
+      background: #30363d;
+    }
+
+    .expand-toggle {
+      color: #58a6ff;
+      cursor: pointer;
+      font-size: 13px;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #1c2128;
+      border-radius: 4px;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .expand-toggle:hover {
+      background: #22272e;
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .help-text {
+      color: #8b949e;
+      font-size: 14px;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      header {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      .stats {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .actions {
+        width: 100%;
+      }
+
+      .btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <div>
+        <h1>📦 Product Roadmap</h1>
+        <p style="color: #8b949e; font-size: 14px; margin-top: 5px;" id="project-phase">Loading...</p>
+        <div class="stats">
+          <div class="stat">✅ Shipped: <strong id="stat-shipped">0</strong></div>
+          <div class="stat">🏗️ In Progress: <strong id="stat-progress">0</strong></div>
+          <div class="stat">🔜 Next Up: <strong id="stat-next">0</strong></div>
+          <div class="stat">📋 Backlog: <strong id="stat-backlog">0</strong></div>
+        </div>
+      </div>
+      <div class="status-badge">
+        <span id="status-icon">🟢</span>
+        <span id="status-text">Active</span>
+      </div>
+    </header>
+
+    <!-- 1. CURRENT -->
+    <div class="section">
+      <h2>🚀 Current</h2>
+      <p class="help-text">What you're building right now</p>
+      <div id="current-features"></div>
+    </div>
+
+    <!-- 2. ALL FEATURES -->
+    <div class="section">
+      <h2>📦 All Features</h2>
+      <p class="help-text">Organized by status - drag features between categories in data.js</p>
+      <div class="feature-list" id="feature-list">
+        <p style="color: #8b949e;">Loading...</p>
+      </div>
+    </div>
+
+    <!-- 3. PRIORITY QUEUE -->
+    <div class="section">
+      <h2>⚡ Priority Queue</h2>
+      <p class="help-text">What's next, in order of priority</p>
+      <ul class="priority-queue" id="priority-queue">
+        <li>Loading...</li>
+      </ul>
+    </div>
+
+    <!-- 4. QUICK ACTIONS -->
+    <div class="section">
+      <h2>🎬 Quick Actions</h2>
+      <div class="actions">
+        <a class="btn secondary" href="../INTEGRATED-ROADMAP.md" target="_blank">
+          📋 View Full Roadmap
+        </a>
+        <a class="btn secondary" href="https://github.com/mevans2120/project-analyst-manager-claude-skills" target="_blank">
+          🔗 GitHub Repository
+        </a>
+        <a class="btn secondary" href="README.md" target="_blank">
+          📖 How to Update
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    // Render dashboard
+    function renderDashboard() {
+      // Header
+      document.getElementById('project-phase').textContent =
+        `${productRoadmap.project.name} | ${productRoadmap.project.phase}`;
+
+      // Stats
+      document.getElementById('stat-shipped').textContent = productRoadmap.stats.shipped;
+      document.getElementById('stat-progress').textContent = productRoadmap.stats.inProgress;
+      document.getElementById('stat-next').textContent = productRoadmap.stats.nextUp;
+      document.getElementById('stat-backlog').textContent = productRoadmap.stats.backlog;
+
+      // Status badge
+      if (productRoadmap.stats.inProgress > 0) {
+        document.getElementById('status-icon').textContent = '🟢';
+        document.getElementById('status-text').textContent = 'Active';
+      } else if (productRoadmap.stats.shipped > 0) {
+        document.getElementById('status-icon').textContent = '🟡';
+        document.getElementById('status-text').textContent = 'Ready';
+      } else {
+        document.getElementById('status-icon').textContent = '⚪';
+        document.getElementById('status-text').textContent = 'Not Started';
+      }
+
+      // Current features
+      renderCurrentFeatures();
+
+      // All features
+      renderFeatureList();
+
+      // Priority queue
+      renderPriorityQueue();
+    }
+
+    function renderCurrentFeatures() {
+      const currentDiv = document.getElementById('current-features');
+
+      if (productRoadmap.current.length === 0) {
+        currentDiv.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-emoji">🎯</div>
+            <p><strong>Ready to start!</strong></p>
+            <p style="margin-top: 10px;">Move a feature from "Next Up" to the current array in data.js</p>
+          </div>
+        `;
+      } else {
+        currentDiv.innerHTML = productRoadmap.current.map(feature => `
+          <div class="current-feature">
+            <h3>${feature.name}</h3>
+            <div class="feature-meta">
+              <span>📁 ${feature.category}</span>
+              ${feature.priority ? `<span>🎯 ${feature.priority}</span>` : ''}
+            </div>
+            ${feature.progress !== undefined ? `
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${feature.progress}%"></div>
+              </div>
+              <p style="color: #8b949e; font-size: 13px; margin-top: 5px;">${feature.progress}% Complete</p>
+            ` : ''}
+            ${feature.value ? `
+              <div class="feature-value">
+                <strong>💡 Value:</strong> ${feature.value}
+              </div>
+            ` : ''}
+            ${feature.blockers && feature.blockers.length > 0 ? `
+              <div class="blocking">
+                <strong>🚧 Blockers:</strong> ${feature.blockers.join(', ')}
+              </div>
+            ` : ''}
+            ${feature.notes ? `
+              <p style="color: #8b949e; font-size: 14px; margin-top: 10px; font-style: italic;">${feature.notes}</p>
+            ` : ''}
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderFeatureList() {
+      const featureListDiv = document.getElementById('feature-list');
+      const features = productRoadmap.features;
+
+      let html = '';
+
+      // In Progress
+      if (features.inProgress && features.inProgress.length > 0) {
+        html += `
+          <div class="feature-category">
+            <h3>
+              🏗️ In Progress
+              <span class="feature-count">${features.inProgress.length}</span>
+            </h3>
+            ${renderFeatures(features.inProgress, 'in-progress')}
+          </div>
+        `;
+      }
+
+      // Next Up
+      if (features.nextUp && features.nextUp.length > 0) {
+        html += `
+          <div class="feature-category">
+            <h3>
+              🔜 Next Up
+              <span class="feature-count">${features.nextUp.length}</span>
+            </h3>
+            ${renderFeatures(features.nextUp, 'next-up')}
+          </div>
+        `;
+      }
+
+      // Shipped
+      if (features.shipped && features.shipped.length > 0) {
+        html += `
+          <div class="feature-category">
+            <h3>
+              ✅ Shipped
+              <span class="feature-count">${features.shipped.length}</span>
+            </h3>
+            ${renderFeatures(features.shipped.slice(0, 3), 'shipped')}
+            ${features.shipped.length > 3 ? `
+              <div class="expand-toggle" onclick="toggleExpand('shipped')">
+                📋 View all ${features.shipped.length} shipped features...
+              </div>
+              <div id="shipped-expanded" class="hidden">
+                ${renderFeatures(features.shipped.slice(3), 'shipped')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+
+      // Backlog
+      if (features.backlog && features.backlog.length > 0) {
+        html += `
+          <div class="feature-category">
+            <h3>
+              📋 Backlog
+              <span class="feature-count">${features.backlog.length}</span>
+            </h3>
+            ${renderFeatures(features.backlog.slice(0, 5), 'backlog')}
+            ${features.backlog.length > 5 ? `
+              <div class="expand-toggle" onclick="toggleExpand('backlog')">
+                📋 View all ${features.backlog.length} backlog features...
+              </div>
+              <div id="backlog-expanded" class="hidden">
+                ${renderFeatures(features.backlog.slice(5), 'backlog')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+
+      featureListDiv.innerHTML = html;
+    }
+
+    function renderFeatures(features, type) {
+      return features.map(f => `
+        <div class="feature-item ${type}">
+          <div class="name">${f.name}</div>
+          <div class="category">${f.category}${f.priority ? ' | ' + f.priority : ''}</div>
+          ${f.value ? `<div class="value">${f.value}</div>` : ''}
+          ${f.shippedDate ? `<div class="category">Shipped: ${f.shippedDate}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderPriorityQueue() {
+      const queueList = document.getElementById('priority-queue');
+      queueList.innerHTML = productRoadmap.priorityQueue.map((item, index) => {
+        const feature = findFeature(item.feature);
+        return `
+          <li class="priority-item">
+            <div class="priority-header">
+              <span class="number">${index + 1}️⃣</span>
+              <span class="feature-name">${feature ? feature.name : item.feature}</span>
+            </div>
+            <div class="reason">💭 ${item.reason}</div>
+            ${item.blocking && item.blocking.length > 0 ? `
+              <div class="blocks">⏭️ Blocking: ${item.blocking.length} feature(s)</div>
+            ` : ''}
+            ${item.blockedBy && item.blockedBy.length > 0 ? `
+              <div class="blocks blocked">🚧 Blocked by: ${item.blockedBy.join(', ')}</div>
+            ` : ''}
+          </li>
+        `;
+      }).join('');
+    }
+
+    function findFeature(id) {
+      const all = [
+        ...productRoadmap.features.shipped,
+        ...productRoadmap.features.inProgress,
+        ...productRoadmap.features.nextUp,
+        ...productRoadmap.features.backlog
+      ];
+      return all.find(f => f.id === id);
+    }
+
+    function toggleExpand(section) {
+      const el = document.getElementById(`${section}-expanded`);
+      el.classList.toggle('hidden');
+
+      const toggle = event.target;
+      if (el.classList.contains('hidden')) {
+        toggle.textContent = toggle.textContent.replace('Hide', 'View all');
+      } else {
+        toggle.textContent = toggle.textContent.replace('View all', 'Hide');
+      }
+    }
+
+    // Render on load
+    renderDashboard();
+  </script>
+</body>
+</html>

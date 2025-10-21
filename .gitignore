@@ -42,6 +42,7 @@ node_modules/
 *.d.ts.map
 !jest.config.js
 !.eslintrc.js
+!dashboard/data.js.template
 
 # Backup directories
 .claude-backup-*/

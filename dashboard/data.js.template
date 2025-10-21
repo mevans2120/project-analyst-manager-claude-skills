@@ -1,0 +1,293 @@
+// dashboard/data.js
+// Update this file to reflect current project status
+
+const productRoadmap = {
+  // Project metadata
+  project: {
+    name: "Project Management Suite",
+    status: "active",
+    phase: "Design Complete - Ready to Build"
+  },
+
+  // What you're working on RIGHT NOW
+  current: [
+    // Nothing started yet - uncomment when you begin
+    // {
+    //   id: "shared-webfetcher",
+    //   name: "WebFetcher - Static HTML Analysis",
+    //   category: "Shared Library",
+    //   priority: "P0",
+    //   progress: 0,
+    //   blockers: [],
+    //   value: "Foundation for all web viewing capabilities",
+    //   notes: "Core component that enables Planner, Analyzer, and Manager to fetch and analyze web pages"
+    // }
+  ],
+
+  // ALL features organized by status
+  features: {
+    // ✅ SHIPPED (What's DONE)
+    shipped: [
+      {
+        id: "design-planner",
+        name: "Project Planner - Complete Design",
+        category: "Design",
+        shippedDate: "2025-10-21",
+        value: "6 comprehensive documents (~34,000 words) covering feature registry, code discovery, and web-based discovery"
+      },
+      {
+        id: "design-shared-web",
+        name: "Shared Web Viewing Architecture",
+        category: "Design",
+        shippedDate: "2025-10-21",
+        value: "Unified library design eliminating code duplication across all skills"
+      },
+      {
+        id: "design-analyzer-web",
+        name: "Analyzer Web Verification Design",
+        category: "Design",
+        shippedDate: "2025-10-21",
+        value: "3-tier verification strategy (URL, functionality, API) for production validation"
+      },
+      {
+        id: "design-manager-screenshots",
+        name: "Manager Screenshot Documentation Design",
+        category: "Design",
+        shippedDate: "2025-10-21",
+        value: "Visual documentation system with multi-viewport capture and AI analysis"
+      },
+      {
+        id: "integrated-roadmap",
+        name: "Integrated Implementation Roadmap",
+        category: "Planning",
+        shippedDate: "2025-10-21",
+        value: "12-15 week implementation plan with parallel workstreams and 225+ planned tests"
+      },
+      {
+        id: "analyzer-v15",
+        name: "Analyzer v1.5 - Enhanced Feature Detection",
+        category: "Analyzer",
+        shippedDate: "2025-10-21",
+        value: "Context-aware descriptions, configuration validation, contextual explanations - 99% accuracy on feature detection"
+      },
+      {
+        id: "manager-v10",
+        name: "Manager v1.0 - GitHub Issue Creation",
+        category: "Manager",
+        shippedDate: "2025-10-17",
+        value: "Automated GitHub issue creation with smart labeling and duplicate prevention"
+      },
+      {
+        id: "analyzer-v10",
+        name: "Analyzer v1.0 - TODO Scanner",
+        category: "Analyzer",
+        shippedDate: "2025-10-17",
+        value: "Scans 20+ file types for TODOs, FIXMEs, BUGs with 1000 files/sec performance"
+      }
+    ],
+
+    // 🏗️ IN PROGRESS (Currently building)
+    inProgress: [
+      // Empty - add here when you start working on something
+    ],
+
+    // 🔜 NEXT UP (Ready to start - no blockers)
+    nextUp: [
+      {
+        id: "shared-webfetcher",
+        name: "WebFetcher - Static HTML Analysis",
+        category: "Shared Library",
+        priority: "P0",
+        dependencies: [],
+        value: "Foundation for all web viewing - enables static site analysis with AI"
+      },
+      {
+        id: "shared-playwright",
+        name: "PlaywrightDriver - Browser Automation",
+        category: "Shared Library",
+        priority: "P0",
+        dependencies: ["shared-webfetcher"],
+        value: "Enables SPA navigation, authentication, and dynamic content analysis"
+      },
+      {
+        id: "planner-registry",
+        name: "CSV Feature Registry",
+        category: "Planner",
+        priority: "P0",
+        dependencies: [],
+        value: "Single source of truth for all product features - core of Planner skill"
+      }
+    ],
+
+    // 📋 BACKLOG (Not started yet)
+    backlog: [
+      {
+        id: "shared-screenshot",
+        name: "ScreenshotCapture - Visual Documentation",
+        category: "Shared Library",
+        priority: "P0",
+        dependencies: ["shared-playwright"],
+        value: "Screenshot management and AI visual analysis for all skills"
+      },
+      {
+        id: "shared-network",
+        name: "NetworkMonitor - API Discovery",
+        category: "Shared Library",
+        priority: "P1",
+        dependencies: ["shared-playwright"],
+        value: "Track API calls to discover backend features"
+      },
+      {
+        id: "shared-extractors",
+        name: "Feature Extractors Suite",
+        category: "Shared Library",
+        priority: "P0",
+        dependencies: ["shared-playwright", "shared-screenshot"],
+        value: "FeatureExtractor, FunctionalityChecker, VisualAnalyzer for all skills"
+      },
+      {
+        id: "planner-code-discovery",
+        name: "Code-Based Feature Discovery",
+        category: "Planner",
+        priority: "P0",
+        dependencies: ["planner-registry"],
+        value: "Analyze React routes, Express endpoints, config files to discover features"
+      },
+      {
+        id: "planner-web-discovery",
+        name: "Web-Based Feature Discovery",
+        category: "Planner",
+        priority: "P1",
+        dependencies: ["shared-extractors", "planner-registry"],
+        value: "Discover features by analyzing live websites and competitor products"
+      },
+      {
+        id: "planner-roadmap-export",
+        name: "Roadmap Export (Markdown/HTML)",
+        category: "Planner",
+        priority: "P2",
+        dependencies: ["planner-registry"],
+        value: "Generate visual roadmaps for stakeholders"
+      },
+      {
+        id: "analyzer-verification",
+        name: "Production Verification (3-tier)",
+        category: "Analyzer",
+        priority: "P1",
+        dependencies: ["shared-extractors"],
+        value: "Verify features work in production - URL, functionality, and API validation"
+      },
+      {
+        id: "analyzer-deployment-verify",
+        name: "Deployment Verification Workflow",
+        category: "Analyzer",
+        priority: "P2",
+        dependencies: ["analyzer-verification"],
+        value: "Compare staging vs production, generate deployment reports"
+      },
+      {
+        id: "manager-screenshots",
+        name: "Screenshot Documentation for Issues",
+        category: "Manager",
+        priority: "P1",
+        dependencies: ["shared-screenshot"],
+        value: "Attach visual evidence to GitHub issues automatically"
+      },
+      {
+        id: "manager-multi-viewport",
+        name: "Multi-Viewport Screenshot Capture",
+        category: "Manager",
+        priority: "P2",
+        dependencies: ["manager-screenshots"],
+        value: "Capture mobile, tablet, desktop views for responsive testing"
+      },
+      {
+        id: "manager-visual-comparison",
+        name: "Before/After Visual Comparison",
+        category: "Manager",
+        priority: "P2",
+        dependencies: ["manager-screenshots"],
+        value: "Detect visual regressions by comparing screenshots"
+      },
+      {
+        id: "manager-ui-scan",
+        name: "Automated UI Bug Detection",
+        category: "Manager",
+        priority: "P2",
+        dependencies: ["shared-extractors"],
+        value: "AI scans UI for visual bugs and auto-creates issues"
+      },
+      {
+        id: "integration-workflow",
+        name: "Complete Planner → Analyzer → Manager Workflow",
+        category: "Integration",
+        priority: "P0",
+        dependencies: ["planner-web-discovery", "analyzer-verification", "manager-screenshots"],
+        value: "End-to-end workflow from feature planning to production validation to issue tracking"
+      },
+      {
+        id: "dashboard-live",
+        name: "Live Interactive Dashboard (This!)",
+        category: "Planner",
+        priority: "P2",
+        dependencies: ["planner-roadmap-export"],
+        value: "Real-time project dashboard with auto-updates"
+      }
+    ]
+  },
+
+  // ⚡ PRIORITY QUEUE (What's next, in order)
+  priorityQueue: [
+    {
+      feature: "shared-webfetcher",
+      reason: "Foundation for all web viewing - highest priority, no dependencies",
+      blockedBy: [],
+      blocking: ["shared-playwright", "planner-web-discovery", "analyzer-verification", "manager-screenshots"]
+    },
+    {
+      feature: "planner-registry",
+      reason: "Core Planner feature, no dependencies - can work in parallel with shared lib",
+      blockedBy: [],
+      blocking: ["planner-code-discovery", "planner-web-discovery"]
+    },
+    {
+      feature: "shared-playwright",
+      reason: "Unblocks 6+ major features across all skills (P0 priority)",
+      blockedBy: ["shared-webfetcher"],
+      blocking: ["shared-screenshot", "shared-network", "shared-extractors", "planner-web-discovery", "analyzer-verification"]
+    },
+    {
+      feature: "planner-code-discovery",
+      reason: "Makes Planner functional for existing codebases",
+      blockedBy: ["planner-registry"],
+      blocking: ["integration-workflow"]
+    },
+    {
+      feature: "shared-extractors",
+      reason: "Completes shared library, enables all advanced features",
+      blockedBy: ["shared-playwright", "shared-screenshot"],
+      blocking: ["planner-web-discovery", "analyzer-verification", "manager-ui-scan", "integration-workflow"]
+    }
+  ],
+
+  // Quick stats (auto-calculated for header)
+  stats: {
+    shipped: 8,
+    inProgress: 0,
+    nextUp: 3,
+    backlog: 15,
+    total: 26
+  }
+};
+
+// Auto-calculate stats
+productRoadmap.stats = {
+  shipped: productRoadmap.features.shipped.length,
+  inProgress: productRoadmap.features.inProgress.length,
+  nextUp: productRoadmap.features.nextUp.length,
+  backlog: productRoadmap.features.backlog.length,
+  total: productRoadmap.features.shipped.length +
+         productRoadmap.features.inProgress.length +
+         productRoadmap.features.nextUp.length +
+         productRoadmap.features.backlog.length
+};
