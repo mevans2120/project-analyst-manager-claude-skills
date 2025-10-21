@@ -32,6 +32,7 @@ const productRoadmap = {
         id: "design-planner",
         name: "Project Planner - Complete Design",
         category: "Design",
+        phase: "Planning",
         shippedDate: "2025-10-21",
         value: "6 comprehensive documents (~34,000 words) covering feature registry, code discovery, and web-based discovery"
       },
@@ -39,6 +40,7 @@ const productRoadmap = {
         id: "design-shared-web",
         name: "Shared Web Viewing Architecture",
         category: "Design",
+        phase: "Planning",
         shippedDate: "2025-10-21",
         value: "Unified library design eliminating code duplication across all skills"
       },
@@ -46,6 +48,7 @@ const productRoadmap = {
         id: "design-analyzer-web",
         name: "Analyzer Web Verification Design",
         category: "Design",
+        phase: "Planning",
         shippedDate: "2025-10-21",
         value: "3-tier verification strategy (URL, functionality, API) for production validation"
       },
@@ -53,6 +56,7 @@ const productRoadmap = {
         id: "design-manager-screenshots",
         name: "Manager Screenshot Documentation Design",
         category: "Design",
+        phase: "Planning",
         shippedDate: "2025-10-21",
         value: "Visual documentation system with multi-viewport capture and AI analysis"
       },
@@ -60,6 +64,7 @@ const productRoadmap = {
         id: "integrated-roadmap",
         name: "Integrated Implementation Roadmap",
         category: "Planning",
+        phase: "Planning",
         shippedDate: "2025-10-21",
         value: "12-15 week implementation plan with parallel workstreams and 225+ planned tests"
       },
@@ -67,6 +72,7 @@ const productRoadmap = {
         id: "analyzer-v15",
         name: "Analyzer v1.5 - Enhanced Feature Detection",
         category: "Analyzer",
+        phase: "Phase 2",
         shippedDate: "2025-10-21",
         value: "Context-aware descriptions, configuration validation, contextual explanations - 99% accuracy on feature detection"
       },
@@ -74,6 +80,7 @@ const productRoadmap = {
         id: "manager-v10",
         name: "Manager v1.0 - GitHub Issue Creation",
         category: "Manager",
+        phase: "Phase 3",
         shippedDate: "2025-10-17",
         value: "Automated GitHub issue creation with smart labeling and duplicate prevention"
       },
@@ -81,6 +88,7 @@ const productRoadmap = {
         id: "analyzer-v10",
         name: "Analyzer v1.0 - TODO Scanner",
         category: "Analyzer",
+        phase: "Phase 2",
         shippedDate: "2025-10-17",
         value: "Scans 20+ file types for TODOs, FIXMEs, BUGs with 1000 files/sec performance"
       }
@@ -97,6 +105,7 @@ const productRoadmap = {
         id: "shared-webfetcher",
         name: "WebFetcher - Static HTML Analysis",
         category: "Shared Library",
+        phase: "Phase 0",
         priority: "P0",
         dependencies: [],
         value: "Foundation for all web viewing - enables static site analysis with AI"
@@ -105,6 +114,7 @@ const productRoadmap = {
         id: "shared-playwright",
         name: "PlaywrightDriver - Browser Automation",
         category: "Shared Library",
+        phase: "Phase 0",
         priority: "P0",
         dependencies: ["shared-webfetcher"],
         value: "Enables SPA navigation, authentication, and dynamic content analysis"
@@ -113,6 +123,7 @@ const productRoadmap = {
         id: "planner-registry",
         name: "CSV Feature Registry",
         category: "Planner",
+        phase: "Phase 1",
         priority: "P0",
         dependencies: [],
         value: "Single source of truth for all product features - core of Planner skill"
@@ -125,6 +136,7 @@ const productRoadmap = {
         id: "shared-screenshot",
         name: "ScreenshotCapture - Visual Documentation",
         category: "Shared Library",
+        phase: "Phase 0",
         priority: "P0",
         dependencies: ["shared-playwright"],
         value: "Screenshot management and AI visual analysis for all skills"
@@ -133,6 +145,7 @@ const productRoadmap = {
         id: "shared-network",
         name: "NetworkMonitor - API Discovery",
         category: "Shared Library",
+        phase: "Phase 0",
         priority: "P1",
         dependencies: ["shared-playwright"],
         value: "Track API calls to discover backend features"
@@ -141,6 +154,7 @@ const productRoadmap = {
         id: "shared-extractors",
         name: "Feature Extractors Suite",
         category: "Shared Library",
+        phase: "Phase 0",
         priority: "P0",
         dependencies: ["shared-playwright", "shared-screenshot"],
         value: "FeatureExtractor, FunctionalityChecker, VisualAnalyzer for all skills"
@@ -149,6 +163,7 @@ const productRoadmap = {
         id: "planner-code-discovery",
         name: "Code-Based Feature Discovery",
         category: "Planner",
+        phase: "Phase 1",
         priority: "P0",
         dependencies: ["planner-registry"],
         value: "Analyze React routes, Express endpoints, config files to discover features"
@@ -157,6 +172,7 @@ const productRoadmap = {
         id: "planner-web-discovery",
         name: "Web-Based Feature Discovery",
         category: "Planner",
+        phase: "Phase 1",
         priority: "P1",
         dependencies: ["shared-extractors", "planner-registry"],
         value: "Discover features by analyzing live websites and competitor products"
@@ -165,6 +181,7 @@ const productRoadmap = {
         id: "planner-roadmap-export",
         name: "Roadmap Export (Markdown/HTML)",
         category: "Planner",
+        phase: "Phase 1",
         priority: "P2",
         dependencies: ["planner-registry"],
         value: "Generate visual roadmaps for stakeholders"
@@ -173,6 +190,7 @@ const productRoadmap = {
         id: "analyzer-verification",
         name: "Production Verification (3-tier)",
         category: "Analyzer",
+        phase: "Phase 2",
         priority: "P1",
         dependencies: ["shared-extractors"],
         value: "Verify features work in production - URL, functionality, and API validation"
@@ -181,6 +199,7 @@ const productRoadmap = {
         id: "analyzer-deployment-verify",
         name: "Deployment Verification Workflow",
         category: "Analyzer",
+        phase: "Phase 2",
         priority: "P2",
         dependencies: ["analyzer-verification"],
         value: "Compare staging vs production, generate deployment reports"
@@ -189,6 +208,7 @@ const productRoadmap = {
         id: "manager-screenshots",
         name: "Screenshot Documentation for Issues",
         category: "Manager",
+        phase: "Phase 3",
         priority: "P1",
         dependencies: ["shared-screenshot"],
         value: "Attach visual evidence to GitHub issues automatically"
@@ -197,6 +217,7 @@ const productRoadmap = {
         id: "manager-multi-viewport",
         name: "Multi-Viewport Screenshot Capture",
         category: "Manager",
+        phase: "Phase 3",
         priority: "P2",
         dependencies: ["manager-screenshots"],
         value: "Capture mobile, tablet, desktop views for responsive testing"
@@ -205,6 +226,7 @@ const productRoadmap = {
         id: "manager-visual-comparison",
         name: "Before/After Visual Comparison",
         category: "Manager",
+        phase: "Phase 3",
         priority: "P2",
         dependencies: ["manager-screenshots"],
         value: "Detect visual regressions by comparing screenshots"
@@ -213,6 +235,7 @@ const productRoadmap = {
         id: "manager-ui-scan",
         name: "Automated UI Bug Detection",
         category: "Manager",
+        phase: "Phase 3",
         priority: "P2",
         dependencies: ["shared-extractors"],
         value: "AI scans UI for visual bugs and auto-creates issues"
@@ -221,6 +244,7 @@ const productRoadmap = {
         id: "integration-workflow",
         name: "Complete Planner → Analyzer → Manager Workflow",
         category: "Integration",
+        phase: "Integration",
         priority: "P0",
         dependencies: ["planner-web-discovery", "analyzer-verification", "manager-screenshots"],
         value: "End-to-end workflow from feature planning to production validation to issue tracking"
@@ -229,6 +253,7 @@ const productRoadmap = {
         id: "dashboard-live",
         name: "Live Interactive Dashboard (This!)",
         category: "Planner",
+        phase: "Future",
         priority: "P2",
         dependencies: ["planner-roadmap-export"],
         value: "Real-time project dashboard with auto-updates"

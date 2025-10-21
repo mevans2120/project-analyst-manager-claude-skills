@@ -241,6 +241,17 @@
       color: #8b949e;
     }
 
+    .feature-item .phase-badge {
+      display: inline-block;
+      background: #21262d;
+      color: #58a6ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
     .feature-item .value {
       font-size: 13px;
       color: #8b949e;
@@ -517,6 +528,7 @@
             <div class="feature-meta">
               <span>📁 ${feature.category}</span>
               ${feature.priority ? `<span>🎯 ${feature.priority}</span>` : ''}
+              ${feature.phase ? `<span>📍 ${feature.phase}</span>` : ''}
             </div>
             ${feature.progress !== undefined ? `
               <div class="progress-bar">
@@ -623,7 +635,10 @@
       return features.map(f => `
         <div class="feature-item ${type}">
           <div class="name">${f.name}</div>
-          <div class="category">${f.category}${f.priority ? ' | ' + f.priority : ''}</div>
+          <div class="category">
+            ${f.category}${f.priority ? ' | ' + f.priority : ''}
+            ${f.phase ? `<span class="phase-badge">${f.phase}</span>` : ''}
+          </div>
           ${f.value ? `<div class="value">${f.value}</div>` : ''}
           ${f.shippedDate ? `<div class="category">Shipped: ${f.shippedDate}</div>` : ''}
         </div>
