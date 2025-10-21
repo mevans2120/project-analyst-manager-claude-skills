@@ -11,6 +11,20 @@ This repository contains **two production-ready Claude Code skills** for automat
 
 **Status**: Phase 1 & 1.5 Complete ✅ | 55 tests passing | Production ready
 
+## Project Conventions
+
+**IMPORTANT**: This project follows strict naming and organizational conventions documented in `CONVENTIONS.md`.
+
+When working on this project, you MUST:
+- Follow the file naming pattern: `[COMPONENT]-[TYPE]-[KEY-DETAILS]-[DATE].md`
+- Use UPPERCASE for all documentation filenames
+- Include creation date in `YYYY-MM-DD` format
+- Never include time estimates in filenames
+- Move superseded documents to `archive/` folder
+- Use descriptive names that indicate content without opening the file
+
+**Before creating or renaming any files, consult `CONVENTIONS.md` for the complete standards.**
+
 ## Project Structure
 
 The project has completed Phase 1 implementation:
