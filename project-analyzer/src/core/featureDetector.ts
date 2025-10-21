@@ -45,6 +45,29 @@ export async function detectFeatureImplementation(
     lastModified: undefined
   };
 
+  // 0. Special handling for configuration tasks
+  const configCheck = checkConfigurationTask(feature.description, rootPath);
+  if (configCheck.isConfigTask && configCheck.isImplemented) {
+    // Mark as implemented with high confidence
+    return {
+      feature,
+      planDocument: planDocument.path,
+      status: 'implemented',
+      confidence: 100,
+      evidence: {
+        ...evidence,
+        filesFound: configCheck.filesChecked || [],
+        codePatterns: [{
+          file: configCheck.filesChecked?.[0] || 'config',
+          line: configCheck.line || 0,
+          snippet: configCheck.foundContent || 'Configuration validated',
+          confidence: 100
+        }]
+      },
+      recommendation: `✅ Configuration validated (100% confidence) - ${configCheck.explanation}`
+    };
+  }
+
   // 1. Check if planned files exist
   for (const plannedFile of planDocument.files) {
     if (checkFileExists(plannedFile.path, rootPath)) {
@@ -268,4 +291,99 @@ export function getProgressByPlan(report: ImplementationReport): Array<{
       progress: Math.round((stats.implemented / stats.total) * 100)
     }))
     .sort((a, b) => b.progress - a.progress);
+}
+
+/**
+ * Check if feature is a configuration task and validate it
+ */
+function checkConfigurationTask(description: string, rootPath: string): {
+  isConfigTask: boolean;
+  isImplemented: boolean;
+  filesChecked?: string[];
+  line?: number;
+  foundContent?: string;
+  explanation?: string;
+} {
+  const lower = description.toLowerCase();
+
+  // Pattern: "X added to Y" or "add X to Y"
+  const addToPattern = lower.match(/(?:add\s+)?(.+?)\s+(?:added\s+)?to\s+(.+)/i);
+
+  if (addToPattern) {
+    const [_, contentToAdd, targetFile] = addToPattern;
+
+    // Clean up the strings
+    const cleanContent = contentToAdd.trim().replace(/^`|`$/g, '');
+    const cleanFile = targetFile.trim().replace(/^`|`$/g, '');
+
+    // Check if target file exists
+    const filesToCheck = [
+      path.join(rootPath, cleanFile),
+      path.join(rootPath, `.${cleanFile}`), // Try with dot prefix
+    ];
+
+    for (const filePath of filesToCheck) {
+      if (fs.existsSync(filePath)) {
+        try {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          const lines = fileContent.split('\n');
+
+          // Check if content exists in file
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].includes(cleanContent)) {
+              return {
+                isConfigTask: true,
+                isImplemented: true,
+                filesChecked: [path.relative(rootPath, filePath)],
+                line: i + 1,
+                foundContent: lines[i].trim(),
+                explanation: `Found "${cleanContent}" in ${path.basename(filePath)} at line ${i + 1}`
+              };
+            }
+          }
+        } catch (error) {
+          // Ignore read errors
+        }
+      }
+    }
+
+    // Configuration task but not implemented
+    return {
+      isConfigTask: true,
+      isImplemented: false,
+      explanation: `Configuration "${cleanContent}" not found in ${cleanFile}`
+    };
+  }
+
+  // Pattern: "X in Y" or "X exists in Y"
+  const inPattern = lower.match(/(.+?)\s+(?:in|exists?\s+in)\s+(.+)/i);
+
+  if (inPattern) {
+    const [_, contentToFind, targetLocation] = inPattern;
+    const cleanContent = contentToFind.trim().replace(/^`|`$/g, '');
+    const cleanLocation = targetLocation.trim().replace(/^`|`$/g, '');
+
+    // This might be a file check or content check
+    const possiblePaths = [
+      path.join(rootPath, cleanLocation),
+      path.join(rootPath, cleanContent),
+    ];
+
+    for (const filePath of possiblePaths) {
+      if (fs.existsSync(filePath)) {
+        return {
+          isConfigTask: true,
+          isImplemented: true,
+          filesChecked: [path.relative(rootPath, filePath)],
+          explanation: `Found file/directory: ${path.basename(filePath)}`
+        };
+      }
+    }
+  }
+
+  // Not a recognized configuration task
+  return {
+    isConfigTask: false,
+    isImplemented: false
+  };
 }

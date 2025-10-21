@@ -88,18 +88,33 @@ export function parsePlanningDocument(filePath: string): PlanningDocument | null
     const features: Feature[] = [];
     const files: PlannedFile[] = [];
 
+    // Track current section for context
+    let currentSection = '';
+
     // Extract checklist items (features)
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+
+      // Track section headings for context
+      const headingMatch = line.match(/^#{2,4}\s+(.+)$/);
+      if (headingMatch) {
+        currentSection = headingMatch[1].trim();
+        continue;
+      }
 
       // Match checklist items: - [ ] or - [x]
       const checklistMatch = line.match(/^[\s-]*\[([x\s])\]\s*(.+)$/i);
       if (checklistMatch) {
         const checked = checklistMatch[1].toLowerCase() === 'x';
-        const description = checklistMatch[2].trim();
+        let description = checklistMatch[2].trim();
 
         // Filter out testing/verification items (reuse logic from scanner)
         if (!isVerificationItem(description)) {
+          // Enhance short/unclear descriptions with section context
+          if (description.length < 20 || isAmbiguousDescription(description)) {
+            description = enhanceDescription(description, currentSection);
+          }
+
           features.push({
             description,
             line: i + 1,
@@ -151,6 +166,76 @@ function isVerificationItem(description: string): boolean {
   ];
 
   return verificationPatterns.some(pattern => pattern.test(lower));
+}
+
+/**
+ * Check if description is ambiguous and needs context
+ */
+function isAmbiguousDescription(description: string): boolean {
+  const ambiguousPatterns = [
+    /^(firefox|safari|chrome|edge)$/i, // Just browser names
+    /^mobile browsers?$/i,
+    /^(ios|android)$/i,
+    /^desktop$/i,
+    /^tablet$/i,
+    /^(screenshot|image|video)s?$/i,
+    /^placeholder$/i,
+  ];
+
+  return ambiguousPatterns.some(pattern => pattern.test(description));
+}
+
+/**
+ * Enhance description with section context
+ */
+function enhanceDescription(description: string, section: string): string {
+  // Skip if no section context
+  if (!section) {
+    return description;
+  }
+
+  // Don't enhance if description is already detailed
+  if (description.length > 40) {
+    return description;
+  }
+
+  // Browser compatibility items
+  if (/^(firefox|safari|chrome|edge|mobile browsers)/i.test(description)) {
+    // Check what type of testing based on section
+    if (/compatibility|browser/i.test(section)) {
+      return `${description} browser compatibility`;
+    }
+    if (/testing/i.test(section)) {
+      return `${description} testing`;
+    }
+  }
+
+  // Documentation items
+  if (/guide|documentation/i.test(section)) {
+    if (description.length < 20) {
+      return `${description} documentation`;
+    }
+  }
+
+  // Screenshot/capture items
+  if (/^(screenshot|capture|image)s?$/i.test(description)) {
+    return `${description} for documentation`;
+  }
+
+  // Placeholder items - handle "Add" prefix
+  if (/^add\s+/i.test(description)) {
+    return `${description} to guide`;
+  }
+  if (/placeholder/i.test(description)) {
+    return `Add ${description} to guide`;
+  }
+
+  // Generic enhancement: prepend section name if description is very short
+  if (description.length < 15 && section.length < 30) {
+    return `${section}: ${description}`;
+  }
+
+  return description;
 }
 
 /**
