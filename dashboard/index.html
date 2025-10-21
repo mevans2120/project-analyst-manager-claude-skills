@@ -404,7 +404,7 @@
     <!-- HEADER -->
     <header>
       <div>
-        <h1>📦 Product Roadmap</h1>
+        <h1 id="project-title">📦 Product Roadmap</h1>
         <p style="color: #8b949e; font-size: 14px; margin-top: 5px;" id="project-phase">Loading...</p>
         <div class="stats">
           <div class="stat">✅ Shipped: <strong id="stat-shipped">0</strong></div>
@@ -466,8 +466,10 @@
     // Render dashboard
     function renderDashboard() {
       // Header
+      document.getElementById('project-title').textContent =
+        `📦 ${productRoadmap.project.name} - Product Roadmap`;
       document.getElementById('project-phase').textContent =
-        `${productRoadmap.project.name} | ${productRoadmap.project.phase}`;
+        productRoadmap.project.phase;
 
       // Stats
       document.getElementById('stat-shipped').textContent = productRoadmap.stats.shipped;
@@ -478,13 +480,13 @@
       // Status badge
       if (productRoadmap.stats.inProgress > 0) {
         document.getElementById('status-icon').textContent = '🟢';
-        document.getElementById('status-text').textContent = 'Active';
+        document.getElementById('status-text').textContent = 'Building';
       } else if (productRoadmap.stats.shipped > 0) {
         document.getElementById('status-icon').textContent = '🟡';
-        document.getElementById('status-text').textContent = 'Ready';
+        document.getElementById('status-text').textContent = 'Ready to Start';
       } else {
         document.getElementById('status-icon').textContent = '⚪';
-        document.getElementById('status-text').textContent = 'Not Started';
+        document.getElementById('status-text').textContent = 'Planning';
       }
 
       // Current features
@@ -572,27 +574,6 @@
         `;
       }
 
-      // Shipped
-      if (features.shipped && features.shipped.length > 0) {
-        html += `
-          <div class="feature-category">
-            <h3>
-              ✅ Shipped
-              <span class="feature-count">${features.shipped.length}</span>
-            </h3>
-            ${renderFeatures(features.shipped.slice(0, 3), 'shipped')}
-            ${features.shipped.length > 3 ? `
-              <div class="expand-toggle" onclick="toggleExpand('shipped')">
-                📋 View all ${features.shipped.length} shipped features...
-              </div>
-              <div id="shipped-expanded" class="hidden">
-                ${renderFeatures(features.shipped.slice(3), 'shipped')}
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }
-
       // Backlog
       if (features.backlog && features.backlog.length > 0) {
         html += `
@@ -608,6 +589,27 @@
               </div>
               <div id="backlog-expanded" class="hidden">
                 ${renderFeatures(features.backlog.slice(5), 'backlog')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+
+      // Shipped
+      if (features.shipped && features.shipped.length > 0) {
+        html += `
+          <div class="feature-category">
+            <h3>
+              ✅ Shipped
+              <span class="feature-count">${features.shipped.length}</span>
+            </h3>
+            ${renderFeatures(features.shipped.slice(0, 3), 'shipped')}
+            ${features.shipped.length > 3 ? `
+              <div class="expand-toggle" onclick="toggleExpand('shipped')">
+                📋 View all ${features.shipped.length} shipped features...
+              </div>
+              <div id="shipped-expanded" class="hidden">
+                ${renderFeatures(features.shipped.slice(3), 'shipped')}
               </div>
             ` : ''}
           </div>
