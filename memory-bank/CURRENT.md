@@ -59,6 +59,29 @@ Three complementary Claude Code skills for complete project management:
   - Web viewing capability (WebFetch + Playwright + Screenshot AI)
   - 3-phase implementation roadmap (7-10 weeks)
   - Integration architecture with Analyzer and Manager
+- **Shared Web Viewing Architecture**:
+  - Unified library for all three skills
+  - Core components: WebFetcher, PlaywrightDriver, ScreenshotCapture, NetworkMonitor
+  - Extractors: FeatureExtractor (Planner), FunctionalityChecker (Analyzer), VisualAnalyzer (Manager)
+  - Each skill uses library differently (discovery, validation, documentation)
+  - Eliminates code duplication, enables powerful workflows
+- **Analyzer Web Verification Design**:
+  - Production validation capabilities
+  - 3 verification levels: URL accessibility, functionality, API
+  - Confidence scoring update (code + production)
+  - Deployment verification workflow
+- **Manager Screenshot Documentation Design**:
+  - Visual evidence for GitHub issues
+  - Multi-viewport screenshots (mobile, tablet, desktop)
+  - Before/after visual comparison
+  - AI visual analysis integration
+  - UI bug auto-detection
+- **Integrated Implementation Roadmap**:
+  - 12-15 week timeline
+  - Shared library foundation (Weeks 1-4)
+  - Parallel skill development
+  - Clear integration points
+  - 225+ automated tests planned
 
 ### Previous Changes (2025-10-17)
 - Reinstalled hybrid memory bank plugin hooks from ~/hybrid-memory-bank-plugin
