@@ -440,7 +440,7 @@
     <!-- 2. ALL FEATURES -->
     <div class="section">
       <h2>📦 All Features</h2>
-      <p class="help-text">Organized by status - drag features between categories in data.js</p>
+      <p class="help-text">Organized by status, grouped by phase</p>
       <div class="feature-list" id="feature-list">
         <p style="color: #8b949e;">Loading...</p>
       </div>
@@ -568,7 +568,7 @@
               🏗️ In Progress
               <span class="feature-count">${features.inProgress.length}</span>
             </h3>
-            ${renderFeatures(features.inProgress, 'in-progress')}
+            ${renderFeaturesGroupedByPhase(features.inProgress, 'in-progress')}
           </div>
         `;
       }
@@ -581,7 +581,7 @@
               🔜 Next Up
               <span class="feature-count">${features.nextUp.length}</span>
             </h3>
-            ${renderFeatures(features.nextUp, 'next-up')}
+            ${renderFeaturesGroupedByPhase(features.nextUp, 'next-up')}
           </div>
         `;
       }
@@ -594,15 +594,7 @@
               📋 Backlog
               <span class="feature-count">${features.backlog.length}</span>
             </h3>
-            ${renderFeatures(features.backlog.slice(0, 5), 'backlog')}
-            ${features.backlog.length > 5 ? `
-              <div class="expand-toggle" onclick="toggleExpand('backlog')">
-                📋 View all ${features.backlog.length} backlog features...
-              </div>
-              <div id="backlog-expanded" class="hidden">
-                ${renderFeatures(features.backlog.slice(5), 'backlog')}
-              </div>
-            ` : ''}
+            ${renderFeaturesGroupedByPhase(features.backlog, 'backlog')}
           </div>
         `;
       }
@@ -615,13 +607,13 @@
               ✅ Shipped
               <span class="feature-count">${features.shipped.length}</span>
             </h3>
-            ${renderFeatures(features.shipped.slice(0, 3), 'shipped')}
+            ${renderFeaturesGroupedByPhase(features.shipped.slice(0, 3), 'shipped')}
             ${features.shipped.length > 3 ? `
               <div class="expand-toggle" onclick="toggleExpand('shipped')">
                 📋 View all ${features.shipped.length} shipped features...
               </div>
               <div id="shipped-expanded" class="hidden">
-                ${renderFeatures(features.shipped.slice(3), 'shipped')}
+                ${renderFeaturesGroupedByPhase(features.shipped.slice(3), 'shipped')}
               </div>
             ` : ''}
           </div>
@@ -631,19 +623,75 @@
       featureListDiv.innerHTML = html;
     }
 
+    function renderFeaturesGroupedByPhase(features, type) {
+      // Group by phase
+      const phaseOrder = ['Planning', 'Phase 0', 'Phase 1', 'Phase 2', 'Phase 3', 'Integration', 'Future'];
+      const byPhase = {};
+
+      features.forEach(f => {
+        const phase = f.phase || 'Unknown';
+        if (!byPhase[phase]) {
+          byPhase[phase] = [];
+        }
+        byPhase[phase].push(f);
+      });
+
+      // Render each phase group
+      let html = '';
+      phaseOrder.forEach(phase => {
+        if (byPhase[phase] && byPhase[phase].length > 0) {
+          html += `
+            <div style="margin-left: 15px; margin-top: 10px;">
+              <h4 style="color: #8b949e; font-size: 13px; margin-bottom: 8px; font-weight: 600;">
+                ${getPhaseEmoji(phase)} ${phase}
+              </h4>
+              ${renderFeatures(byPhase[phase], type)}
+            </div>
+          `;
+        }
+      });
+
+      return html;
+    }
+
+    function getPhaseEmoji(phase) {
+      const emojis = {
+        'Planning': '📋',
+        'Phase 0': '🔧',
+        'Phase 1': '📝',
+        'Phase 2': '🔍',
+        'Phase 3': '📸',
+        'Integration': '🔗',
+        'Future': '🚀'
+      };
+      return emojis[phase] || '📦';
+    }
+
     function renderFeatures(features, type) {
       return features.map(f => `
         <div class="feature-item ${type}">
           <div class="name">${f.name}</div>
           <div class="category">
             ${f.category}${f.priority ? ' | ' + f.priority : ''}
-            ${f.phase ? `<span class="phase-badge">${f.phase}</span>` : ''}
           </div>
           ${f.value ? `<div class="value">${f.value}</div>` : ''}
           ${f.shippedDate ? `<div class="category">Shipped: ${f.shippedDate}</div>` : ''}
         </div>
       `).join('');
     }
+
+    function toggleExpand(section) {
+      const el = document.getElementById(`${section}-expanded`);
+      el.classList.toggle('hidden');
+
+      const toggle = event.target;
+      if (el.classList.contains('hidden')) {
+        toggle.textContent = toggle.textContent.replace('Hide', 'View all');
+      } else {
+        toggle.textContent = toggle.textContent.replace('View all', 'Hide');
+      }
+    }
+
 
     function renderPriorityQueue() {
       const queueList = document.getElementById('priority-queue');
@@ -677,17 +725,6 @@
       return all.find(f => f.id === id);
     }
 
-    function toggleExpand(section) {
-      const el = document.getElementById(`${section}-expanded`);
-      el.classList.toggle('hidden');
-
-      const toggle = event.target;
-      if (el.classList.contains('hidden')) {
-        toggle.textContent = toggle.textContent.replace('Hide', 'View all');
-      } else {
-        toggle.textContent = toggle.textContent.replace('View all', 'Hide');
-      }
-    }
 
     // Render on load
     renderDashboard();
