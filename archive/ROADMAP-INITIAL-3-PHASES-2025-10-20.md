@@ -1,5 +1,13 @@
 # Project Manager Skills - Implementation Roadmap
 
+> **⚠️ ARCHIVED**: This document has been superseded by `PROJECT-MANAGEMENT-SUITE-INTEGRATED-IMPLEMENTATION-PLAN-2025-10-21.md`.
+>
+> **Why archived**: This was the initial 6-week, 3-phase roadmap. It was replaced by a more comprehensive 12-15 week integrated plan that includes the shared web viewing library and better phase organization across all three skills (Planner, Analyzer, Manager).
+>
+> **Date archived**: 2025-10-21
+
+---
+
 ## Visual Timeline
 
 ```

@@ -1,5 +1,13 @@
 # Dashboard MVP Plan - Minimal & Practical
 
+> **⚠️ ARCHIVED**: This document has been superseded by `DASHBOARD-DESIGN-FEATURE-FIRST-2025-10-21.md`.
+>
+> **Why archived**: This was the initial time-based dashboard design ("Week 0 of 15"). The user rejected time-based planning because "estimates are always wrong with AI". It was replaced by a feature-first, priority-driven approach that focuses on what matters most rather than when things will be done.
+>
+> **Date archived**: 2025-10-21
+
+---
+
 **Status**: Implementation Ready
 **Date**: 2025-10-21
 **Build Time**: 1-2 hours
