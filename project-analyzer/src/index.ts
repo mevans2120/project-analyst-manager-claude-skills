@@ -7,6 +7,7 @@ export * from './core/patterns';
 export * from './core/scanner';
 export * from './utils/fileTraversal';
 export * from './formatters/outputFormatter';
+export { ProductionVerifier } from './core/ProductionVerifier';
 
 import { scanTodos, processScanResults, ScanOptions, ScanResult } from './core/scanner';
 import { formatOutput, FormatterOptions, OutputFormat } from './formatters/outputFormatter';
