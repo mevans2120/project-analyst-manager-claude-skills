@@ -33,6 +33,27 @@ export class PMRoadmap extends BaseComponent {
   static styles = [
     BaseComponent.styles,
     css`
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--link, #58a6ff);
+        color: #0d1117;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: var(--radius-md, 6px);
+        font-weight: 600;
+        z-index: 100;
+        transition: top 0.2s;
+      }
+
+      .skip-link:focus {
+        top: var(--spacing-md, 16px);
+        left: var(--spacing-md, 16px);
+        outline: 2px solid #0d1117;
+        outline-offset: 2px;
+      }
+
       .roadmap {
         padding: var(--spacing-lg, 24px);
         max-width: 1400px;
@@ -335,6 +356,7 @@ export class PMRoadmap extends BaseComponent {
     const filteredShipped = this.filterFeatures(features.shipped);
 
     return html`
+      <a href="#main-content" class="skip-link">Skip to main content</a>
       <div class="roadmap">
         <div class="roadmap-header">
           <h1 class="roadmap-title">${project.name}</h1>
@@ -393,12 +415,12 @@ export class PMRoadmap extends BaseComponent {
         </div>
 
         ${filteredInProgress.length === 0 && filteredNextUp.length === 0 && filteredBacklog.length === 0 && filteredShipped.length === 0 ? html`
-          <div class="empty-state">
+          <div class="empty-state" id="main-content">
             <pm-icon name="Search" size="xl"></pm-icon>
             <p>No features match your filters</p>
           </div>
         ` : html`
-          <div class="features-container">
+          <div class="features-container" id="main-content">
             ${this.renderSectionDivider('In Progress', filteredInProgress.length, 'Loader2', 'section-in-progress')}
             ${this.renderFeatureCards(filteredInProgress)}
 

@@ -92,6 +92,21 @@ export class PMFilterBar extends BaseComponent {
         color: var(--link, #58a6ff);
       }
 
+      .clear-btn:focus {
+        outline: 2px solid var(--link, #58a6ff);
+        outline-offset: 2px;
+        border-color: var(--link, #58a6ff);
+      }
+
+      .clear-btn:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      .clear-btn:focus-visible {
+        outline: 2px solid var(--link, #58a6ff);
+        outline-offset: 2px;
+      }
+
       @media (max-width: 768px) {
         .filter-bar {
           flex-direction: column;
@@ -139,28 +154,34 @@ export class PMFilterBar extends BaseComponent {
   render() {
     return html`
       <div class="filter-bar">
-        ${this.filterGroups.map(group => html`
-          <div class="filter-group">
-            <label class="filter-label">${group.label}:</label>
-            <select
-              @change="${(e: Event) => {
-                const target = e.target as HTMLSelectElement;
-                this.handleFilterChange(group.key, target.value);
-              }}"
-              .value="${this.selectedFilters[group.key] || 'all'}"
-            >
-              <option value="all">All</option>
-              ${group.options.map(option => html`
-                <option value="${option.value}">${option.label}</option>
-              `)}
-            </select>
-          </div>
-        `)}
+        ${this.filterGroups.map(group => {
+          const selectId = `filter-${group.key}`;
+          return html`
+            <div class="filter-group">
+              <label class="filter-label" for="${selectId}">${group.label}:</label>
+              <select
+                id="${selectId}"
+                aria-label="Filter by ${group.label}"
+                @change="${(e: Event) => {
+                  const target = e.target as HTMLSelectElement;
+                  this.handleFilterChange(group.key, target.value);
+                }}"
+                .value="${this.selectedFilters[group.key] || 'all'}"
+              >
+                <option value="all">All</option>
+                ${group.options.map(option => html`
+                  <option value="${option.value}">${option.label}</option>
+                `)}
+              </select>
+            </div>
+          `;
+        })}
 
         ${this.hasActiveFilters() ? html`
           <button
             class="clear-btn"
             @click="${this.handleClearFilters}"
+            aria-label="Clear all filters"
           >
             Clear Filters
           </button>

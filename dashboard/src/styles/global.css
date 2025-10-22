@@ -14,7 +14,7 @@
 
   --text-primary: #c9d1d9;
   --text-secondary: #8b949e;
-  --text-tertiary: #6e7681;
+  --text-tertiary: #7d8590;  /* Improved contrast for WCAG AA compliance */
 
   --link: #58a6ff;
   --link-hover: #79c0ff;

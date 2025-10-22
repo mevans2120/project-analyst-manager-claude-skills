@@ -23,6 +23,16 @@ export class PMStatCard extends BaseComponent {
   @property({ type: String })
   subtitle = '';
 
+  @property({ type: String })
+  ariaLabel = '';
+
+  private handleKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      (e.target as HTMLElement).click();
+    }
+  }
+
   static styles = [
     BaseComponent.styles,
     css`
@@ -36,12 +46,28 @@ export class PMStatCard extends BaseComponent {
         display: flex;
         flex-direction: column;
         height: 100%;
+        cursor: pointer;
       }
 
       .stat-card:hover {
         border-color: var(--link, #58a6ff);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .stat-card:focus {
+        outline: 2px solid var(--link, #58a6ff);
+        outline-offset: 2px;
+        border-color: var(--link, #58a6ff);
+      }
+
+      .stat-card:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      .stat-card:focus-visible {
+        outline: 2px solid var(--link, #58a6ff);
+        outline-offset: 2px;
       }
 
       .stat-icon {
@@ -99,8 +125,16 @@ export class PMStatCard extends BaseComponent {
   ];
 
   render() {
+    const ariaLabelText = this.ariaLabel || `View ${this.label} section: ${this.value} items`;
+
     return html`
-      <div class="stat-card">
+      <div
+        class="stat-card"
+        role="button"
+        tabindex="0"
+        aria-label="${ariaLabelText}"
+        @keydown="${this.handleKeyDown}"
+      >
         <div class="stat-icon">
           <slot name="icon"></slot>
         </div>

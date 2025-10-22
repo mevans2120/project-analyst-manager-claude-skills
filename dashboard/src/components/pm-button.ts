@@ -137,6 +137,21 @@ export class PMButton extends BaseComponent {
         background: rgba(88, 166, 255, 0.1);
       }
 
+      /* Focus indicators */
+      .btn:focus {
+        outline: 2px solid var(--link, #58a6ff);
+        outline-offset: 2px;
+      }
+
+      .btn:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      .btn:focus-visible {
+        outline: 2px solid var(--link, #58a6ff);
+        outline-offset: 2px;
+      }
+
       .btn-icon {
         display: inline-flex;
         align-items: center;
