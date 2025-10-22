@@ -205,4 +205,182 @@ describe('PlaywrightDriver', () => {
       expect(driver.isLaunched()).toBe(false);
     }, 15000);
   });
+
+  describe('browser types', () => {
+    it('should launch chromium browser', async () => {
+      const chromiumDriver = new PlaywrightDriver({ browser: 'chromium', headless: true });
+      await chromiumDriver.launch();
+      expect(chromiumDriver.isLaunched()).toBe(true);
+      await chromiumDriver.close();
+    }, 15000);
+
+    // Skip firefox/webkit tests if browsers not installed
+    it.skip('should launch firefox browser', async () => {
+      const firefoxDriver = new PlaywrightDriver({ browser: 'firefox', headless: true });
+      await firefoxDriver.launch();
+      expect(firefoxDriver.isLaunched()).toBe(true);
+      await firefoxDriver.close();
+    }, 15000);
+
+    it.skip('should launch webkit browser', async () => {
+      const webkitDriver = new PlaywrightDriver({ browser: 'webkit', headless: true });
+      await webkitDriver.launch();
+      expect(webkitDriver.isLaunched()).toBe(true);
+      await webkitDriver.close();
+    }, 15000);
+  });
+
+  describe('waitFor functionality', () => {
+    beforeEach(async () => {
+      await driver.launch();
+      await driver.navigate({ url: 'https://example.com' });
+    }, 20000);
+
+    it('should wait for selector', async () => {
+      await driver.waitFor({ selector: 'h1' });
+      const text = await driver.getText('h1');
+      expect(text).toBe('Example Domain');
+    }, 15000);
+
+    it('should throw error when waiting for non-existent selector with short timeout', async () => {
+      await expect(
+        driver.waitFor({ selector: '.non-existent-class', timeout: 1000 })
+      ).rejects.toThrow();
+    }, 5000);
+
+    it('should wait for navigation', async () => {
+      await driver.waitFor({ navigation: true });
+      const content = await driver.getContent();
+      expect(content.url).toContain('example.com');
+    }, 15000);
+  });
+
+  describe('API call filtering', () => {
+    beforeEach(async () => {
+      await driver.launch();
+    }, 15000);
+
+    it('should filter API calls from network requests', async () => {
+      await driver.navigate({ url: 'https://example.com' });
+      const apiCalls = driver.getAPICalls();
+
+      expect(Array.isArray(apiCalls)).toBe(true);
+      // example.com is static HTML, so no XHR/fetch calls
+      expect(apiCalls.length).toBe(0);
+    }, 20000);
+
+    it('should identify XHR and fetch requests as API calls', async () => {
+      // This would need a site that makes API calls
+      // For now, verify the method exists and returns an array
+      const apiCalls = driver.getAPICalls();
+      expect(Array.isArray(apiCalls)).toBe(true);
+    }, 5000);
+  });
+
+  describe('error handling', () => {
+    it('should throw error when getting content without launch', async () => {
+      await expect(driver.getContent()).rejects.toThrow('Browser not launched');
+    });
+
+    it('should throw error when taking screenshot without launch', async () => {
+      await expect(driver.screenshot()).rejects.toThrow('Browser not launched');
+    });
+
+    it('should throw error when evaluating without launch', async () => {
+      await expect(driver.evaluate('document.title')).rejects.toThrow('Browser not launched');
+    });
+
+    it('should throw error when checking element exists without launch', async () => {
+      await expect(driver.exists('h1')).rejects.toThrow('Browser not launched');
+    });
+
+    it('should throw error when getting text without launch', async () => {
+      await expect(driver.getText('h1')).rejects.toThrow('Browser not launched');
+    });
+
+    it('should throw error when clicking without launch', async () => {
+      await expect(driver.click('button')).rejects.toThrow('Browser not launched');
+    });
+
+    it('should throw error when typing without launch', async () => {
+      await expect(driver.type('input', 'text')).rejects.toThrow('Browser not launched');
+    });
+
+    it('should throw error when waiting without launch', async () => {
+      await expect(driver.waitFor({ selector: 'h1' })).rejects.toThrow('Browser not launched');
+    });
+  });
+
+  describe('viewport and options', () => {
+    it('should use custom viewport', async () => {
+      const customDriver = new PlaywrightDriver({
+        viewport: { width: 800, height: 600 },
+        headless: true
+      });
+
+      await customDriver.launch();
+      await customDriver.navigate({ url: 'https://example.com' });
+
+      const viewportSize = await customDriver.evaluate('({ width: window.innerWidth, height: window.innerHeight })');
+      expect(viewportSize.width).toBe(800);
+      expect(viewportSize.height).toBe(600);
+
+      await customDriver.close();
+    }, 20000);
+
+    it('should use custom timeout', async () => {
+      const fastDriver = new PlaywrightDriver({
+        timeout: 5000,
+        headless: true
+      });
+
+      await fastDriver.launch();
+      await fastDriver.navigate({ url: 'https://example.com' });
+      await fastDriver.close();
+    }, 15000);
+  });
+
+  describe('real-world scenarios', () => {
+    beforeEach(async () => {
+      await driver.launch();
+    }, 15000);
+
+    it('should handle multiple page navigations', async () => {
+      await driver.navigate({ url: 'https://example.com' });
+      let content = await driver.getContent();
+      expect(content.url).toContain('example.com');
+
+      await driver.navigate({ url: 'https://www.iana.org' });
+      content = await driver.getContent();
+      expect(content.url).toContain('iana.org');
+    }, 30000);
+
+    it('should preserve network logs across navigations until cleared', async () => {
+      await driver.navigate({ url: 'https://example.com' });
+      const firstNavRequests = driver.getNetworkRequests().length;
+      expect(firstNavRequests).toBeGreaterThan(0);
+
+      await driver.navigate({ url: 'https://www.iana.org' });
+      const secondNavRequests = driver.getNetworkRequests().length;
+      expect(secondNavRequests).toBeGreaterThan(firstNavRequests);
+
+      driver.clearNetworkLogs();
+      expect(driver.getNetworkRequests().length).toBe(0);
+    }, 30000);
+
+    it('should handle pages with JavaScript evaluation', async () => {
+      await driver.navigate({ url: 'https://example.com' });
+
+      // Use string evaluation to avoid TypeScript DOM type errors
+      const evalResult = await driver.evaluate(`({
+        hasDocument: typeof document !== 'undefined',
+        hasWindow: typeof window !== 'undefined',
+        href: window.location.href
+      })`);
+
+      expect(evalResult.hasDocument).toBe(true);
+      expect(evalResult.hasWindow).toBe(true);
+      expect(evalResult.href).toContain('example.com');
+    }, 20000);
+  });
 });

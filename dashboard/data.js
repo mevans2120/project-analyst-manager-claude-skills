@@ -353,6 +353,51 @@ const productRoadmap = {
         "phase": "Phase 1",
         "shippedDate": "2025-10-22",
         "value": "Save dashboard changes to localStorage - persist drag-drop changes, reset to original data.js, change indicators"
+      },
+      {
+        "id": "test-jest-config",
+        "number": 49,
+        "name": "Fix Jest/TypeScript Configuration",
+        "category": "Testing",
+        "phase": "Phase 0",
+        "shippedDate": "2025-10-22",
+        "value": "Root jest.config.js with projects configuration - all TypeScript tests compile correctly, 10/10 test suites passing, 140 tests passing"
+      },
+      {
+        "id": "test-shared-playwright",
+        "number": 50,
+        "name": "Tests: PlaywrightDriver (PM-2)",
+        "category": "Testing",
+        "phase": "Phase 0",
+        "shippedDate": "2025-10-22",
+        "value": "Comprehensive PlaywrightDriver tests - 38 passing tests covering initialization, navigation, screenshots, cookies, network monitoring, error handling, viewport options, real-world scenarios"
+      },
+      {
+        "id": "test-shared-screenshot",
+        "number": 51,
+        "name": "Tests: ScreenshotCapture (PM-4)",
+        "category": "Testing",
+        "phase": "Phase 0",
+        "shippedDate": "2025-10-22",
+        "value": "Complete ScreenshotCapture test suite - 26 passing tests covering multi-viewport capture, scroll sequences, screenshot comparison, file operations, browser lifecycle, and error handling"
+      },
+      {
+        "id": "test-shared-network",
+        "number": 52,
+        "name": "Tests: NetworkMonitor (PM-5)",
+        "category": "Testing",
+        "phase": "Phase 0",
+        "shippedDate": "2025-10-22",
+        "value": "Comprehensive NetworkMonitor tests - 33 passing tests covering network monitoring, API pattern discovery, endpoint filtering, data export (JSON/Markdown), body capture, URL filtering, and summary generation"
+      },
+      {
+        "id": "test-shared-extractors",
+        "number": 53,
+        "name": "Tests: Feature Extractors Suite (PM-6)",
+        "category": "Testing",
+        "phase": "Phase 0",
+        "shippedDate": "2025-10-22",
+        "value": "Complete Feature Extractors test suite - 32 passing tests for FeatureExtractor, FunctionalityChecker, and VisualAnalyzer covering UI/API/visual extraction, functionality verification, element analysis, and error handling"
       }
     ],
     "inProgress": [],
@@ -510,6 +555,156 @@ const productRoadmap = {
         "phase": "Integration",
         "dependencies": ["integration-workflow"],
         "value": "Coordinate across multiple repositories - cross-repo dependency tracking, shared component analysis, monorepo support, dependency graphs"
+      },
+      {
+        "id": "test-planner-code-discovery",
+        "number": 54,
+        "name": "Tests: Code-Based Feature Discovery (PM-7)",
+        "category": "Testing",
+        "phase": "Phase 1",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "planner-code-discovery"],
+        "value": "Tests for CodeDiscovery - React routes, Express endpoints, component analysis, config parsing (target: 20+ tests)"
+      },
+      {
+        "id": "test-planner-web-discovery",
+        "number": 55,
+        "name": "Tests: Web-Based Feature Discovery (PM-8)",
+        "category": "Testing",
+        "phase": "Phase 1",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "planner-web-discovery"],
+        "value": "Tests for WebDiscovery - live website analysis, navigation extraction, AI-powered feature detection (target: 15+ tests)"
+      },
+      {
+        "id": "test-planner-roadmap-export",
+        "number": 56,
+        "name": "Tests: Roadmap Export (PM-9)",
+        "category": "Testing",
+        "phase": "Phase 1",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "planner-roadmap-export"],
+        "value": "Tests for RoadmapExporter - Markdown/HTML/JSON export, grouping options, formatting validation (target: 10+ tests)"
+      },
+      {
+        "id": "test-analyzer-verification",
+        "number": 57,
+        "name": "Tests: Production Verification (PM-10)",
+        "category": "Testing",
+        "phase": "Phase 2",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "analyzer-verification"],
+        "value": "Tests for ProductionVerifier - 3-tier verification (URL/functionality/API), staging comparison, test coverage (target: 25+ tests)"
+      },
+      {
+        "id": "test-analyzer-deployment",
+        "number": 58,
+        "name": "Tests: Deployment Verification Workflow (PM-11)",
+        "category": "Testing",
+        "phase": "Phase 2",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "analyzer-deployment-verify"],
+        "value": "Tests for DeploymentWorkflow - staging vs production comparison, risk analysis, readiness checks (target: 15+ tests)"
+      },
+      {
+        "id": "test-manager-screenshots",
+        "number": 59,
+        "name": "Tests: Screenshot Documentation (PM-12)",
+        "category": "Testing",
+        "phase": "Phase 3",
+        "priority": "P2",
+        "dependencies": ["test-jest-config", "manager-screenshots"],
+        "value": "Tests for screenshot documentation - code snippet capture, UI element screenshots, GitHub upload (target: 10+ tests)"
+      },
+      {
+        "id": "test-manager-multi-viewport",
+        "number": 60,
+        "name": "Tests: Multi-Viewport Screenshot Capture (PM-13)",
+        "category": "Testing",
+        "phase": "Phase 3",
+        "priority": "P2",
+        "dependencies": ["test-jest-config", "manager-multi-viewport"],
+        "value": "Tests for multi-viewport screenshots - mobile/tablet/desktop capture, comparison tables (target: 8+ tests)"
+      },
+      {
+        "id": "test-manager-visual-comparison",
+        "number": 61,
+        "name": "Tests: Before/After Visual Comparison (PM-14)",
+        "category": "Testing",
+        "phase": "Phase 3",
+        "priority": "P2",
+        "dependencies": ["test-jest-config", "manager-visual-comparison"],
+        "value": "Tests for visual comparison - diff calculation, regression detection, side-by-side comparison (target: 10+ tests)"
+      },
+      {
+        "id": "test-manager-ui-scan",
+        "number": 62,
+        "name": "Tests: Automated UI Bug Detection (PM-15)",
+        "category": "Testing",
+        "phase": "Phase 3",
+        "priority": "P2",
+        "dependencies": ["test-jest-config", "manager-ui-scan"],
+        "value": "Tests for UI scanning - accessibility checks, layout validation, broken image detection (target: 12+ tests)"
+      },
+      {
+        "id": "test-integration-workflow",
+        "number": 63,
+        "name": "Tests: Complete Integration Workflow (PM-16)",
+        "category": "Testing",
+        "phase": "Integration",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "integration-workflow"],
+        "value": "Integration tests for end-to-end workflow - discovery → verification → issue creation (target: 15+ tests)"
+      },
+      {
+        "id": "test-dashboard-components",
+        "number": 64,
+        "name": "Tests: Dashboard Lit Components (PM-17-31)",
+        "category": "Testing",
+        "phase": "Phase 1",
+        "priority": "P2",
+        "dependencies": ["test-jest-config"],
+        "value": "Component tests for pm-roadmap, pm-feature-card, pm-action-queue, pm-skill-output - render tests, interaction tests, state management (target: 30+ tests)"
+      },
+      {
+        "id": "test-analyzer-completion",
+        "number": 65,
+        "name": "Tests: Completion Detection (Analyzer v1.5)",
+        "category": "Testing",
+        "phase": "Phase 2",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "analyzer-v15"],
+        "value": "Tests for completion detection - git commit correlation, confidence scoring, archived file detection (target: 15+ tests)"
+      },
+      {
+        "id": "test-manager-state",
+        "number": 66,
+        "name": "Tests: Manager State Tracker & Label Manager",
+        "category": "Testing",
+        "phase": "Phase 3",
+        "priority": "P1",
+        "dependencies": ["test-jest-config", "manager-v10"],
+        "value": "Fix and enhance existing tests - stateTracker.test.ts, labelManager.test.ts, issueCreator.test.ts currently failing (target: all passing + 10 new)"
+      },
+      {
+        "id": "test-e2e-suite",
+        "number": 67,
+        "name": "End-to-End Test Suite",
+        "category": "Testing",
+        "phase": "Integration",
+        "priority": "P2",
+        "dependencies": ["test-jest-config"],
+        "value": "E2E tests using Playwright - full workflows from dashboard → skill execution → GitHub issue creation (target: 10+ scenarios)"
+      },
+      {
+        "id": "test-coverage-reporting",
+        "number": 68,
+        "name": "Test Coverage Reporting & CI Integration",
+        "category": "Testing",
+        "phase": "Integration",
+        "priority": "P2",
+        "dependencies": ["test-jest-config"],
+        "value": "Set up code coverage reporting with Istanbul/NYC, integrate with CI/CD, enforce minimum coverage thresholds (target: 80%+ coverage)"
       }
     ]
   }

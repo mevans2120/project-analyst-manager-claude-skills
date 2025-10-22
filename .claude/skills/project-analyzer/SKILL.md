@@ -1,248 +1,349 @@
 ---
 name: project-analyzer
-description: Analyzes repositories to identify TODOs, FIXMEs, tasks, and implementation gaps. Use this when the user wants to scan a codebase for pending work, analyze task completion, or understand what needs to be done in a project.
+description: Discovers and analyzes features across code, web applications, and production environments. Identifies features from code structure, live websites, TODOs, and verifies production deployments. Use this for feature discovery, production verification, visual testing, and deployment validation.
 ---
 
 # Project Analyzer Skill
 
-Automatically scans repositories to identify pending work items, analyze task completion rates, and provide insights into project status.
+Automatically discovers features from multiple sources (code, web, TODOs), verifies production implementations, performs visual testing, and validates deployments.
 
 ## When to Use This Skill
 
 Invoke this skill when the user:
-- Wants to find all TODOs, FIXMEs, or task markers in a codebase
-- Needs a report of pending work items in a repository
-- Asks to analyze task completion or progress
-- Wants to understand what work remains in a project
-- Requests a scan of markdown task lists (`- [ ]` items)
-- Needs to identify likely-completed tasks (cleanup analysis)
+- **Feature Discovery**: Wants to discover what features exist in a codebase or web application
+- **Code Analysis**: Needs to analyze React routes, Express endpoints, or component structure
+- **Web Analysis**: Wants to discover features by analyzing a live website
+- **Production Verification**: Needs to verify features work in production (3-tier verification)
+- **Visual Testing**: Wants to capture screenshots or perform visual regression testing
+- **Deployment Validation**: Needs to compare staging vs production environments
+- **TODO Analysis**: Wants to find pending work items (TODOs, FIXMEs, task lists)
+- **Completion Analysis**: Needs to identify likely-completed tasks for cleanup
 
-## How It Works
+## Core Capabilities
 
-The Project Analyzer scans repositories for:
-- **Code comments**: TODO, FIXME, BUG, HACK, OPTIMIZE, REFACTOR, NOTE, XXX
-- **Markdown tasks**: Unchecked task items (`- [ ]`), TODO sections
-- **Completion markers**: Checked boxes (`[x]`), strikethrough, completed tasks
-- **Archive detection**: Identifies tasks in archived/deprecated files
+### 1. Feature Discovery
+- **Code-Based Discovery** (PM-7): Analyze React routes, Express endpoints, components, configs
+- **Web-Based Discovery** (PM-8): Analyze live websites for navigation, forms, features
+- **TODO Scanning** (PM-1): Find TODO comments, task markers, markdown task lists
+- **Completion Detection** (PM-1.5): Identify likely-completed tasks with confidence scoring
+
+### 2. Production Verification (PM-10)
+- **Tier 1 - URL Verification**: Check if feature URLs are accessible (200 status)
+- **Tier 2 - Functionality Testing**: Verify forms, buttons, interactions work
+- **Tier 3 - API Validation**: Test API endpoints, verify responses, check data flow
+
+### 3. Visual Testing
+- **Screenshot Capture** (PM-12): Code snippets, UI elements, full-page screenshots
+- **Multi-Viewport** (PM-13): Mobile, tablet, desktop responsive testing
+- **Visual Comparison** (PM-14): Before/after screenshots with diff analysis
+- **UI Bug Detection** (PM-15): Automated accessibility and layout issue detection
+
+### 4. Deployment Validation (PM-11)
+- **Staging vs Production**: Compare environments for differences
+- **Risk Assessment**: Identify potential deployment risks
+- **Readiness Checks**: Pre-deployment validation checklists
+
+## Integration with Dashboard
+
+The analyzer integrates with the interactive dashboard at `http://localhost:5173`:
+
+1. **View Analysis Results**: Real-time feature lists, verification status, test results
+2. **Trigger Actions**: Click "Run Analysis" button to invoke analyzer from dashboard
+3. **Monitor Progress**: Live output streaming shows analyzer execution in real-time
+4. **Review Features**: Interactive cards show discovered features with details
+
+### Dashboard Workflow
+```
+User clicks "Analyze Repository" in dashboard
+→ Dashboard creates action in .dashboard-actions/
+→ Claude detects action, invokes analyzer skill
+→ Analyzer runs, streams output to dashboard
+→ Results displayed in interactive feature cards
+→ User can then trigger verification or issue creation
+```
 
 ## Instructions
 
-### Step 1: Determine the Repository Path
+### Step 1: Determine Analysis Type
 
-Ask the user which repository to analyze if not specified. Default to the current working directory if appropriate.
+Ask the user what type of analysis is needed:
+- **Discover features**: From code, web, or TODOs
+- **Verify production**: Check if features work in production
+- **Visual testing**: Screenshots, responsive testing, comparisons
+- **Deployment check**: Staging vs production validation
+- **TODO scan**: Find pending work items
 
-### Step 2: Choose Analysis Type
+### Step 2: Feature Discovery
 
-Determine what type of analysis is needed:
-- **Standard scan**: Find all active TODOs and tasks
-- **Completion analysis**: Identify likely-completed tasks to reduce noise
-- **Priority scan**: Group results by priority level
+#### Option A: Code-Based Discovery
+```bash
+cd "/Users/michaelevans/project-suite-claude-skills/project-planner"
 
-### Step 3: Run the Analyzer
+# Analyze React/Node.js codebase
+npx ts-node src/cli.ts discover code <repository-path> -o features.csv
 
-Execute the project-analyzer CLI tool:
+# This analyzes:
+# - React Router routes
+# - Express endpoints
+# - Component structure
+# - Configuration files
+```
+
+#### Option B: Web-Based Discovery
+```bash
+cd "/Users/michaelevans/project-suite-claude-skills/project-planner"
+
+# Analyze live website
+npx ts-node src/cli.ts discover web <url> -o features.csv
+
+# This analyzes:
+# - Navigation structure
+# - Forms and interactions
+# - Visual elements
+# - API endpoints (via network monitoring)
+```
+
+#### Option C: TODO Scanning
+```bash
+cd "/Users/michaelevans/project-suite-claude-skills/project-analyzer"
+
+# Standard TODO scan
+npm run analyze -- -p <repository-path> -o todos.json --format json
+
+# Completion analysis (find likely-completed TODOs)
+npx ts-node src/cli.ts cleanup <repository-path> -f markdown -o cleanup-report.md
+```
+
+### Step 3: Production Verification
 
 ```bash
 cd "/Users/michaelevans/project-suite-claude-skills/project-analyzer"
 
-# Standard scan (JSON output)
-npm run analyze -- -p <repository-path> -o output.json --format json
+# Tier 1: URL verification
+npx ts-node src/cli.ts verify <production-url> --tier 1 -o verification.json
 
-# Standard scan (Markdown report)
-npm run analyze -- -p <repository-path> -o report.md --format markdown
+# Tier 2: Functionality testing
+npx ts-node src/cli.ts verify <production-url> --tier 2 -o functionality-test.json
 
-# Completion analysis (find likely-completed tasks)
-npx ts-node src/cli.ts cleanup <repository-path> -f summary
+# Tier 3: API validation
+npx ts-node src/cli.ts verify <production-url> --tier 3 -o api-validation.json
 
-# Detailed completion report
-npx ts-node src/cli.ts cleanup <repository-path> -f markdown -o cleanup-report.md
+# All tiers
+npx ts-node src/cli.ts verify <production-url> --all-tiers -o complete-verification.json
 ```
 
-### Step 4: Process and Present Results
+### Step 4: Visual Testing
 
-Read the output file and present findings to the user in a clear, actionable format:
-- Summarize total TODOs/tasks found
-- Highlight high-priority items
-- Group by file or priority as appropriate
-- For completion analysis, report how many tasks are likely complete
+```bash
+cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
 
-### Step 5: Offer Next Steps
+# Multi-viewport screenshots
+npx ts-node src/cli.ts screenshot <url> --viewports mobile,tablet,desktop -o screenshots/
 
-Suggest logical follow-up actions:
-- "Would you like me to create GitHub issues from these TODOs?" (triggers project-manager skill)
-- "Should I focus on high-priority items only?"
-- "Would you like a cleanup analysis to identify completed tasks?"
+# Before/after comparison
+npx ts-node src/cli.ts compare <before-url> <after-url> -o comparison-report.md
 
-## Common Options
+# UI bug scan
+npx ts-node src/cli.ts scan-ui <url> -o ui-bugs.json
+```
 
-### Output Formats
-- `--format json`: Structured JSON for automation
-- `--format markdown`: Human-readable markdown report
-- `--format csv`: Spreadsheet-compatible output
+### Step 5: Deployment Validation
 
-### Grouping Options
-- `-g priority`: Group by priority (high/medium/low)
-- `-g file`: Group by source file (default)
-- `-g type`: Group by TODO type (TODO, FIXME, etc.)
+```bash
+cd "/Users/michaelevans/project-suite-claude-skills/project-analyzer"
 
-### Filtering Options
-- `--include <pattern>`: Only scan files matching pattern
-- `--exclude <pattern>`: Skip files matching pattern
-- `--min-confidence <number>`: For cleanup, minimum confidence level (0-100)
+# Compare staging vs production
+npx ts-node src/cli.ts compare-deployment \
+  --staging <staging-url> \
+  --production <production-url> \
+  -o deployment-diff.md
+```
 
-## Examples
+### Step 6: Present Results and Integrate with Dashboard
 
-### Example 1: Quick Project Scan
+After analysis:
+1. Read and summarize the output files
+2. Present key findings to user
+3. If dashboard is running, results are automatically visible
+4. Suggest next actions (verification, issue creation, etc.)
 
-**User**: "Can you analyze the TODOs in my project?"
+## Dashboard Integration Details
 
-**Response**:
-1. Navigate to project-analyzer directory
-2. Run: `npm run analyze -- -p ~/user-project -f markdown -o scan.md`
-3. Read and summarize scan.md
-4. Present findings grouped by priority
-5. Offer to create GitHub issues
+### Launching Dashboard
+```bash
+cd dashboard
+npm run dev
+# Dashboard available at http://localhost:5173
+```
 
-### Example 2: Completion Analysis
+### Dashboard Features
+- **Roadmap Tab**: View all discovered features in interactive cards
+- **Tests Tab**: See verification results and test coverage
+- **Action Queue**: Monitor analyzer execution in real-time
+- **Search & Filter**: Find specific features by category, phase, or priority
+- **Drag & Drop**: Organize features between backlog/nextUp/inProgress
 
-**User**: "I have a lot of old TODOs. Can you help me find which ones are already done?"
+### Action Flow
+1. **User triggers from dashboard**: Clicks "Analyze Repository" button
+2. **Action file created**: Dashboard writes JSON to `.dashboard-actions/`
+3. **Skill invoked**: Claude detects action file and invokes analyzer
+4. **Live updates**: Analyzer streams output back to dashboard
+5. **Results displayed**: Features appear in dashboard immediately
 
-**Response**:
-1. Navigate to project-analyzer directory
-2. Run: `npx ts-node src/cli.ts cleanup ~/user-project -f markdown -o cleanup.md`
-3. Read cleanup.md
-4. Report completion statistics (e.g., "194 TODOs are likely completed")
-5. Suggest reviewing high-confidence items for cleanup
+## Common Workflows
 
-### Example 3: High-Priority Focus
+### Workflow 1: Complete Feature Discovery
+```
+1. Discover features from code (PM-7)
+2. Discover features from web (PM-8)
+3. Verify features in production (PM-10)
+4. View results in dashboard
+5. Create GitHub issues for missing features (use project-manager skill)
+```
 
-**User**: "What are the most critical issues in the codebase?"
+### Workflow 2: Production Deployment Check
+```
+1. Verify production deployment (PM-10)
+2. Compare staging vs production (PM-11)
+3. Run visual regression tests (PM-14)
+4. Scan for UI bugs (PM-15)
+5. Review risk assessment in dashboard
+6. Create issues for bugs found (use project-manager skill)
+```
 
-**Response**:
-1. Navigate to project-analyzer directory
-2. Run: `npm run analyze -- -p ~/user-project -f markdown -g priority`
-3. Extract high-priority items
-4. Present only high-priority TODOs and FIXMEs
-5. Offer to create issues for critical items
+### Workflow 3: Legacy TODO Cleanup
+```
+1. Scan repository for TODOs
+2. Run completion analysis
+3. Review high-confidence completed items
+4. Generate cleanup report
+5. Create issues for active TODOs only
+```
 
-## Output Interpretation
+## Output Formats
 
-### Standard Scan Output
+### Feature Discovery Output (CSV)
+```csv
+id,name,category,phase,status,description,source
+F-1,User Login,Authentication,Phase 1,implemented,User authentication with email/password,code
+F-2,Dashboard,UI,Phase 1,implemented,Main dashboard view,web
+F-3,API Rate Limiting,Backend,Phase 2,planned,Rate limit API endpoints,todo
+```
+
+### Verification Output (JSON)
 ```json
 {
-  "todos": [
-    {
-      "type": "TODO",
-      "content": "Implement user authentication",
-      "file": "src/auth.ts",
-      "line": 42,
-      "priority": "medium",
-      "category": "code"
-    }
-  ],
-  "summary": {
-    "totalTodos": 25,
-    "byPriority": {
-      "high": 5,
-      "medium": 15,
-      "low": 5
-    }
+  "url": "https://example.com",
+  "tier1": {
+    "urlAccessible": true,
+    "statusCode": 200,
+    "responseTime": "245ms"
+  },
+  "tier2": {
+    "functional": true,
+    "formsWork": true,
+    "buttonsResponsive": true
+  },
+  "tier3": {
+    "apiEndpoints": 5,
+    "allResponding": true,
+    "dataValid": true
   }
 }
 ```
 
-### Completion Analysis Output
-- **Very High Confidence (90-100%)**: Safe to mark as complete
-- **High Confidence (70-89%)**: Review recommended
-- **Medium Confidence (50-69%)**: Verify status
-- **Active (<30%)**: Treat as active task
+### Visual Testing Output (Markdown)
+```markdown
+# Visual Comparison Report
 
-## Integration with Project Manager
+## Summary
+- **Difference**: 2.3%
+- **Verdict**: Minor visual changes detected
 
-After analyzing, you can chain to the project-manager skill:
-1. Save analysis output as JSON
-2. Pass to project-manager for GitHub issue creation
-3. Generate reports and tracking
+## Screenshots
+| Before | After |
+|--------|-------|
+| ![Before](before.png) | ![After](after.png) |
+
+**Changes Detected**:
+- Button color changed
+- Layout shifted 5px
+```
+
+## Examples
+
+### Example 1: Discover Features from Web Application
+
+**User**: "Analyze the features on our production website"
+
+**Response**:
+1. Navigate to project-planner
+2. Run: `npx ts-node src/cli.ts discover web https://example.com -o features.csv`
+3. Open dashboard to view discovered features
+4. Present summary: "Found 25 features: 15 navigation items, 7 forms, 3 API endpoints"
+5. Offer: "Would you like me to verify these features work correctly?"
+
+### Example 2: Production Verification Before Deployment
+
+**User**: "We're about to deploy. Can you verify everything works in staging?"
+
+**Response**:
+1. Run Tier 1-3 verification on staging URL
+2. Compare staging vs current production
+3. Run visual regression tests
+4. Generate deployment readiness report
+5. Present in dashboard with risk assessment
+6. Recommend: "3 features need attention before deployment"
+
+### Example 3: Complete Feature Audit
+
+**User**: "I want a complete audit of our application"
+
+**Response**:
+1. Discover features from code (PM-7)
+2. Discover features from web (PM-8)
+3. Find features mentioned in TODOs (PM-1)
+4. Verify discovered features in production (PM-10)
+5. Generate comprehensive report
+6. Display in interactive dashboard
+7. Create issues for unimplemented features (use project-manager skill)
 
 ## Technical Details
 
-- **Location**: `/Users/michaelevans/project-suite-claude-skills/project-analyzer/`
+- **Location**: `/Users/michaelevans/project-suite-claude-skills/`
+  - `project-analyzer/` - TODO scanning, completion analysis
+  - `project-planner/` - Feature discovery (code & web)
+  - `project-manager/` - Visual testing, screenshots
 - **Language**: TypeScript/Node.js
-- **Dependencies**: commander, glob, ignore
-- **Performance**: ~1000 files/second
-- **Supported file types**: 20+ languages (JS, TS, Python, Java, Go, etc.)
+- **Browser**: Playwright (Chromium/Firefox/WebKit)
+- **Performance**:
+  - Code scan: ~1000 files/second
+  - Web analysis: ~2-5 seconds per page
+  - Screenshot capture: ~1 second per viewport
 
 ## Error Handling
 
-If the analyzer fails:
-1. Check the repository path is valid
-2. Ensure npm dependencies are installed (`npm install`)
-3. Verify the project is built (`npm run build`)
-4. Check for permission issues on the target directory
+If analysis fails:
+1. **Repository not found**: Verify path exists
+2. **Website unreachable**: Check URL and network
+3. **Browser errors**: Ensure Playwright browsers installed: `npx playwright install`
+4. **Permission denied**: Check file/directory permissions
+5. **Dependencies missing**: Run `npm install` in relevant directory
 
-## Report Storage Best Practices
+## Integration with Project Manager
 
-When analyzing a repository, organize reports for easy access and version control:
-
-### Recommended Structure
-
-```
-<repository-root>/
-├── docs/
-│   └── reports/
-│       ├── README.md                  # Usage guide
-│       ├── todo-summary-2025-10-20.md # Quick stats (version controlled)
-│       ├── todo-analysis-2025-10-20.md # Full details (version controlled)
-│       ├── todo-summary-2025-10-21.md # Next day's scan
-│       └── ...
-└── .project-analyzer/                 # Hidden state directory
-    ├── state.json                     # Gitignored (changes frequently)
-    └── scans/                         # Gitignored (dated archives)
-        ├── scan-2025-10-20.md
-        └── ...
-```
-
-### Setup Commands
-
-```bash
-# Create reports directory
-mkdir -p <repo-path>/docs/reports
-
-# Generate dated reports (date automatically added to filenames)
-npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-analysis.md -f markdown -g priority
-# Creates: todo-analysis-2025-10-20.md
-
-npx ts-node src/cli.ts scan <repo-path> -o <repo-path>/docs/reports/todo-summary.md -f summary
-# Creates: todo-summary-2025-10-20.md
-
-# Add to .gitignore
-echo "# Project Analyzer (state changes frequently, reports are tracked)" >> <repo-path>/.gitignore
-echo ".project-analyzer/state.json" >> <repo-path>/.gitignore
-echo ".project-analyzer/scans/" >> <repo-path>/.gitignore
-```
-
-**Note:** The analyzer automatically adds the current date (YYYY-MM-DD) to output filenames unless the filename already contains a date pattern. This makes it easy to track historical analyses while keeping commands simple.
-
-### Why This Structure?
-
-- **Easy to find**: Reports live in `docs/reports/` alongside other documentation
-- **Version controlled**: Track TODO progress over time via git history
-- **No bloat**: State files are gitignored, only meaningful summaries are tracked
-- **Dated filenames**: Each analysis has a unique date stamp for easy tracking
-- **Professional**: Follows common documentation conventions
-
-### Report README Template
-
-Create `<repo>/docs/reports/README.md` with:
-- Links to latest reports
-- Instructions for updating
-- Explanation of report contents
-- Last updated timestamp
+After analyzing, chain to project-manager skill:
+1. Analyzer discovers/verifies features
+2. Manager creates GitHub issues for gaps
+3. Manager generates roadmaps and reports
+4. Dashboard displays complete feature lifecycle
 
 ## Tips for Best Results
 
-- Run completion analysis on old projects with lots of historical TODOs
-- Use priority grouping when presenting to users - they care most about high priority
-- Combine with project-manager skill for end-to-end automation
-- For large repos, consider using `--exclude node_modules` to speed up scanning
-- Store reports in `docs/reports/` for easy access and version control
+- **Start with code discovery** to establish baseline of what exists
+- **Verify in production** to ensure features actually work
+- **Use visual testing** for UI-heavy features
+- **Run completion analysis** on old projects to reduce TODO noise
+- **Use dashboard** for interactive exploration and team collaboration
+- **Chain skills** for complete workflows (discover → verify → create issues)
+- **Multi-viewport testing** catches responsive design issues early

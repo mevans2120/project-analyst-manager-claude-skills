@@ -85,7 +85,7 @@ export class ScreenshotDocumenter {
       captureComparison: options.captureComparison ?? false,
       uploadToGitHub: options.uploadToGitHub ?? false,
       baseUrl: options.baseUrl || '',
-      githubRepo: options.githubRepo || null,
+      githubRepo: options.githubRepo || { owner: '', repo: '', token: '' },
       captureMultiViewport: options.captureMultiViewport ?? false,
       viewports: options.viewports || ['mobile', 'tablet', 'desktop']
     };
@@ -190,7 +190,7 @@ export class ScreenshotDocumenter {
       const fullPage = options.fullPage ?? true;
 
       // Use shared library's multi-viewport capture
-      const result = await this.screenshotCapture.capture({
+      const result = await this.screenshotCapture!.capture({
         url,
         viewports,
         fullPage,
@@ -198,7 +198,7 @@ export class ScreenshotDocumenter {
       });
 
       // Save all screenshots
-      const savedPaths = await this.screenshotCapture.saveAll(
+      const savedPaths = await this.screenshotCapture!.saveAll(
         result,
         this.options.outputDir,
         outputPrefix
@@ -257,7 +257,7 @@ export class ScreenshotDocumenter {
       const threshold = options.threshold || 0.1;
 
       // Capture before screenshot
-      const beforeResult = await this.screenshotCapture.capture({
+      const beforeResult = await this.screenshotCapture!.capture({
         url: beforeUrl,
         viewports: [viewport],
         fullPage: true,
@@ -266,10 +266,10 @@ export class ScreenshotDocumenter {
 
       const beforeShot = beforeResult.screenshots[0];
       const beforePath = path.join(this.options.outputDir, `${outputPrefix}-before.png`);
-      await this.screenshotCapture.saveToFile(beforeShot, beforePath);
+      await this.screenshotCapture!.saveToFile(beforeShot, beforePath);
 
       // Capture after screenshot
-      const afterResult = await this.screenshotCapture.capture({
+      const afterResult = await this.screenshotCapture!.capture({
         url: afterUrl,
         viewports: [viewport],
         fullPage: true,
@@ -278,10 +278,10 @@ export class ScreenshotDocumenter {
 
       const afterShot = afterResult.screenshots[0];
       const afterPath = path.join(this.options.outputDir, `${outputPrefix}-after.png`);
-      await this.screenshotCapture.saveToFile(afterShot, afterPath);
+      await this.screenshotCapture!.saveToFile(afterShot, afterPath);
 
       // Compare screenshots
-      const comparison = await this.screenshotCapture.compare({
+      const comparison = await this.screenshotCapture!.compare({
         screenshot1: beforeShot.buffer,
         screenshot2: afterShot.buffer,
         threshold
@@ -346,7 +346,7 @@ export class ScreenshotDocumenter {
       const afterBuffer = await fs.readFile(afterPath);
 
       // Compare
-      const comparison = await this.screenshotCapture.compare({
+      const comparison = await this.screenshotCapture!.compare({
         screenshot1: beforeBuffer,
         screenshot2: afterBuffer,
         threshold
@@ -401,8 +401,7 @@ export class ScreenshotDocumenter {
       }
 
       // Navigate to URL
-      await this.driver.navigateTo(url);
-      await this.driver.page.waitForLoadState('networkidle');
+      await this.driver.navigate({ url, waitUntil: 'networkidle' });
 
       // Create visual analyzer
       const visualAnalyzer = new VisualAnalyzer(this.driver);
@@ -450,6 +449,7 @@ export class ScreenshotDocumenter {
           line: 0,
           type: 'BUG',
           priority: 'high',
+          category: 'ui-scan',
           content: `Button without text or aria-label found: ${button.selector}`,
           hash: this.generateHash(`button-no-text-${button.selector}`),
           rawText: `BUG: Accessibility - Button without text at ${button.selector}`
@@ -466,6 +466,7 @@ export class ScreenshotDocumenter {
           line: 0,
           type: 'BUG',
           priority: 'high',
+          category: 'ui-scan',
           content: `Link without text found: ${link.selector}`,
           hash: this.generateHash(`link-no-text-${link.selector}`),
           rawText: `BUG: Accessibility - Link without text at ${link.selector}`
@@ -482,6 +483,7 @@ export class ScreenshotDocumenter {
           line: 0,
           type: 'BUG',
           priority: 'medium',
+          category: 'ui-scan',
           content: `Input field without label or aria-label: ${input.selector}`,
           hash: this.generateHash(`input-no-label-${input.selector}`),
           rawText: `BUG: Accessibility - Input without label at ${input.selector}`
@@ -500,7 +502,7 @@ export class ScreenshotDocumenter {
 
     try {
       // Check for overlapping elements
-      const overlapping = await this.driver.evaluate<any[]>(`
+      const overlapping = await this.driver!.evaluate<any[]>(`
         (() => {
           const elements = Array.from(document.querySelectorAll('div, button, a, input'));
           const overlaps = [];
@@ -539,6 +541,7 @@ export class ScreenshotDocumenter {
           line: 0,
           type: 'BUG',
           priority: 'medium',
+          category: 'ui-scan',
           content: `Possible overlapping elements: ${overlap.el1} and ${overlap.el2}`,
           hash: this.generateHash(`overlap-${overlap.el1}-${overlap.el2}`),
           rawText: `BUG: Layout - Overlapping elements detected`
@@ -546,7 +549,7 @@ export class ScreenshotDocumenter {
       }
 
       // Check for elements outside viewport
-      const outsideViewport = await this.driver.evaluate<any[]>(`
+      const outsideViewport = await this.driver!.evaluate<any[]>(`
         Array.from(document.querySelectorAll('*')).filter(el => {
           const rect = el.getBoundingClientRect();
           return rect.right < 0 || rect.bottom < 0 ||
@@ -560,6 +563,7 @@ export class ScreenshotDocumenter {
           line: 0,
           type: 'BUG',
           priority: 'low',
+          category: 'ui-scan',
           content: `Element outside viewport: ${element}`,
           hash: this.generateHash(`outside-viewport-${element}`),
           rawText: `BUG: Layout - Element outside viewport`
@@ -579,7 +583,7 @@ export class ScreenshotDocumenter {
     const bugs: TodoItem[] = [];
 
     try {
-      const brokenImages = await this.driver.evaluate<any[]>(`
+      const brokenImages = await this.driver!.evaluate<any[]>(`
         Array.from(document.querySelectorAll('img')).filter(img => {
           return !img.complete || img.naturalHeight === 0;
         }).map(img => ({
@@ -594,6 +598,7 @@ export class ScreenshotDocumenter {
           line: 0,
           type: 'BUG',
           priority: 'high',
+          category: 'ui-scan',
           content: `Broken image: ${img.src}`,
           hash: this.generateHash(`broken-image-${img.src}`),
           rawText: `BUG: Broken image at ${img.src}`
@@ -620,6 +625,7 @@ export class ScreenshotDocumenter {
           line: 0,
           type: 'BUG',
           priority: 'medium',
+          category: 'ui-scan',
           content: `Image missing alt text: ${img.attributes.src || img.selector}`,
           hash: this.generateHash(`missing-alt-${img.selector}`),
           rawText: `BUG: Accessibility - Image missing alt text`
@@ -679,7 +685,7 @@ export class ScreenshotDocumenter {
       }
 
       // Navigate to the HTML file
-      await this.driver.navigateTo(`file://${path.resolve(tempHtmlPath)}`);
+      await this.driver.navigate({ url: `file://${path.resolve(tempHtmlPath)}`, waitUntil: 'networkidle' });
 
       // Capture screenshot
       const screenshotPath = path.join(
@@ -687,10 +693,11 @@ export class ScreenshotDocumenter {
         `code-${todo.hash}.png`
       );
 
-      await this.screenshotCapture!.captureElement(
-        '.code-container',
-        screenshotPath
-      );
+      // Capture screenshot using driver's screenshot method
+      const screenshot = await this.driver.screenshot({
+        fullPage: false,
+        path: screenshotPath
+      });
 
       // Clean up temp file
       await fs.unlink(tempHtmlPath);
@@ -864,8 +871,7 @@ export class ScreenshotDocumenter {
         }
       } else {
         // Single viewport capture (legacy behavior)
-        await this.driver.navigateTo(url);
-        await this.driver.page.waitForLoadState('networkidle');
+        await this.driver.navigate({ url, waitUntil: 'networkidle' });
 
         // Capture full page screenshot
         const fullPagePath = path.join(
@@ -873,7 +879,9 @@ export class ScreenshotDocumenter {
           `ui-full-${todo.hash}.png`
         );
 
-        await this.screenshotCapture!.captureFullPage(fullPagePath);
+        // Capture full page using ScreenshotCapture.captureSingle and save
+        const screenshotResult = await this.screenshotCapture!.captureSingle(url, 'desktop');
+        await this.screenshotCapture!.saveToFile(screenshotResult, fullPagePath);
 
         screenshots.push({
           type: 'full-page',
@@ -893,7 +901,12 @@ export class ScreenshotDocumenter {
               `ui-element-${todo.hash}.png`
             );
 
-            await this.screenshotCapture!.captureElement(selector, elementPath);
+            // Capture element screenshot using driver
+            await this.driver.waitFor({ selector });
+            const elementScreenshot = await this.driver.screenshot({
+              fullPage: false,
+              path: elementPath
+            });
 
             screenshots.push({
               type: 'ui',
