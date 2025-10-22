@@ -86,7 +86,7 @@ export class PMRoadmap extends BaseComponent {
       .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: var(--spacing-lg, 24px);
+        gap: var(--spacing-xl, 32px);
         margin-bottom: var(--spacing-xl, 32px);
         grid-auto-rows: 1fr;
       }
