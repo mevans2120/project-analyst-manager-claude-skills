@@ -18,6 +18,12 @@ export class PMFeatureCard extends BaseComponent {
   @property({ type: Boolean })
   draggable: boolean = false;
 
+  @property({ type: Array })
+  allFeatures: Feature[] = [];
+
+  @property({ type: String })
+  section: string = ''; // Which section this card belongs to (inProgress, nextUp, backlog, shipped)
+
   static styles = [
     BaseComponent.styles,
     css`
@@ -51,6 +57,14 @@ export class PMFeatureCard extends BaseComponent {
       .feature-card.dragging {
         opacity: 0.5;
         transform: scale(0.95);
+      }
+
+      .feature-card.drop-above {
+        border-top: 3px solid var(--link, #58a6ff);
+      }
+
+      .feature-card.drop-below {
+        border-bottom: 3px solid var(--link, #58a6ff);
       }
 
       .feature-header {
@@ -202,6 +216,65 @@ export class PMFeatureCard extends BaseComponent {
     this.emit('feature-drag-end', this.feature);
   }
 
+  private handleDragOver(e: DragEvent): void {
+    if (!this.feature) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer!.dropEffect = 'move';
+
+    // Determine if we're in the top or bottom half of the card
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const midpoint = rect.top + rect.height / 2;
+    const isTopHalf = e.clientY < midpoint;
+
+    // Add visual indicator
+    const card = e.currentTarget as HTMLElement;
+    card.classList.remove('drop-above', 'drop-below');
+    card.classList.add(isTopHalf ? 'drop-above' : 'drop-below');
+
+    // Emit event with position info
+    this.emit('feature-drag-over', {
+      feature: this.feature,
+      position: isTopHalf ? 'before' : 'after',
+      section: this.section
+    });
+  }
+
+  private handleDragLeave(e: DragEvent): void {
+    // Remove visual indicators
+    const card = e.currentTarget as HTMLElement;
+    card.classList.remove('drop-above', 'drop-below');
+  }
+
+  private handleDrop(e: DragEvent): void {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Remove visual indicators
+    const card = e.currentTarget as HTMLElement;
+    card.classList.remove('drop-above', 'drop-below');
+
+    // Determine drop position
+    const rect = card.getBoundingClientRect();
+    const midpoint = rect.top + rect.height / 2;
+    const isTopHalf = e.clientY < midpoint;
+
+    // Parse dropped feature
+    const featureData = e.dataTransfer!.getData('application/json');
+    if (!featureData) return;
+
+    const droppedFeature: Feature = JSON.parse(featureData);
+
+    // Emit drop event with all necessary info
+    this.emit('feature-drop', {
+      droppedFeature,
+      targetFeature: this.feature,
+      position: isTopHalf ? 'before' : 'after',
+      section: this.section
+    });
+  }
+
   render() {
     if (!this.feature) {
       return html`<div class="feature-card">No feature data</div>`;
@@ -213,9 +286,12 @@ export class PMFeatureCard extends BaseComponent {
     return html`
       <div
         class="feature-card ${this.draggable ? 'draggable' : ''}"
-        ?draggable="${this.draggable}"
+        draggable="${this.draggable ? 'true' : 'false'}"
         @dragstart="${this.draggable ? this.handleDragStart : null}"
         @dragend="${this.draggable ? this.handleDragEnd : null}"
+        @dragover="${this.handleDragOver}"
+        @dragleave="${this.handleDragLeave}"
+        @drop="${this.handleDrop}"
       >
         <div class="feature-header">
           <div class="feature-title-section">
@@ -258,9 +334,13 @@ export class PMFeatureCard extends BaseComponent {
         ${dependencies && dependencies.length > 0 ? html`
           <div class="dependencies">
             <span class="dependencies-label">Depends on:</span>
-            ${dependencies.map(dep => html`
-              <span class="dependency-tag">${dep}</span>
-            `)}
+            ${dependencies.map(depId => {
+              const depFeature = this.allFeatures.find(f => f.id === depId);
+              const displayText = depFeature
+                ? (depFeature.number ? `PM-${depFeature.number}` : depId)
+                : depId;
+              return html`<span class="dependency-tag">${displayText}</span>`;
+            })}
           </div>
         ` : ''}
 

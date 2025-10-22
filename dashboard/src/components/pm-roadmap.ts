@@ -8,6 +8,7 @@ import { customElement, state } from 'lit/decorators.js';
 import { BaseComponent } from './base-component';
 import type { Feature, RoadmapData } from '../types/roadmap';
 import type { FilterGroup } from './pm-filter-bar';
+import { RoadmapPersistence } from '../services/roadmap-persistence';
 import './pm-stat-card';
 import './pm-badge';
 import './pm-search-input';
@@ -33,6 +34,12 @@ export class PMRoadmap extends BaseComponent {
 
   @state()
   private isDropZoneActive: boolean = false;
+
+  @state()
+  private hasSavedChanges: boolean = false;
+
+  @state()
+  private originalData: RoadmapData | null = null;
 
   private filterGroups: FilterGroup[] = [];
 
@@ -189,6 +196,66 @@ export class PMRoadmap extends BaseComponent {
         display: block;
       }
 
+      .action-buttons {
+        display: flex;
+        gap: var(--spacing-sm, 8px);
+        align-items: center;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-xs, 4px);
+        padding: 8px 16px;
+        background: var(--bg-secondary, #161b22);
+        border: 1px solid var(--border-primary, #30363d);
+        border-radius: var(--radius-md, 6px);
+        color: var(--text-primary, #c9d1d9);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .btn:hover {
+        background: var(--bg-tertiary, #21262d);
+        border-color: var(--link, #58a6ff);
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn-primary {
+        background: var(--link, #58a6ff);
+        color: #0d1117;
+        border-color: var(--link, #58a6ff);
+      }
+
+      .btn-primary:hover {
+        background: #1f6feb;
+        border-color: #1f6feb;
+      }
+
+      .btn-danger {
+        border-color: var(--error, #f85149);
+        color: var(--error, #f85149);
+      }
+
+      .btn-danger:hover {
+        background: rgba(248, 81, 73, 0.1);
+        border-color: var(--error, #f85149);
+      }
+
+      .saved-indicator {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs, 4px);
+        color: var(--success, #3fb950);
+        font-size: 12px;
+        font-weight: 500;
+      }
+
       @media (max-width: 768px) {
         .roadmap {
           padding: var(--spacing-md, 16px);
@@ -219,7 +286,17 @@ export class PMRoadmap extends BaseComponent {
 
   private async loadRoadmapData(): Promise<void> {
     await this.withLoading(async () => {
-      console.log('[pm-roadmap] Fetching data.js...');
+      // First, try to load from localStorage
+      const savedState = RoadmapPersistence.load();
+
+      if (savedState) {
+        console.log('[pm-roadmap] Loading from saved state');
+        this.roadmapData = savedState;
+        this.hasSavedChanges = true;
+      }
+
+      // Always load original data from data.js (for reset functionality)
+      console.log('[pm-roadmap] Fetching original data.js...');
 
       const response = await fetch('/data.js');
 
@@ -248,11 +325,18 @@ export class PMRoadmap extends BaseComponent {
         throw new Error('Invalid roadmap data structure');
       }
 
-      this.roadmapData = {
+      // Store original data for reset
+      this.originalData = {
         project: roadmapData.project,
         features: roadmapData.features,
         stats: roadmapData.stats
       };
+
+      // If no saved state, use original data
+      if (!savedState) {
+        this.roadmapData = this.originalData;
+      }
+
       console.log('[pm-roadmap] Set roadmapData, stats:', this.roadmapData.stats);
 
       // Build filter groups dynamically from data
@@ -396,7 +480,8 @@ export class PMRoadmap extends BaseComponent {
         this.roadmapData.features.backlog = this.roadmapData.features.backlog.filter(f => f.id !== feature.id);
         this.roadmapData.features.nextUp.push(feature);
 
-        // Trigger re-render
+        // Save state and trigger re-render
+        this.saveState();
         this.requestUpdate();
 
         console.log(`Moved feature ${feature.id} to Next Up`);
@@ -404,6 +489,98 @@ export class PMRoadmap extends BaseComponent {
     } catch (error) {
       console.error('Error handling drop:', error);
     }
+  }
+
+  private handleFeatureDrop(e: CustomEvent): void {
+    if (!this.roadmapData) return;
+
+    const { droppedFeature, targetFeature, position, section } = e.detail;
+
+    // Validate dependencies if moving to Next Up
+    if (section === 'nextUp' && droppedFeature.dependencies && droppedFeature.dependencies.length > 0) {
+      const shipped = this.roadmapData.features.shipped || [];
+      const unmetDeps = droppedFeature.dependencies.filter((depId: string) =>
+        !shipped.some(f => f.id === depId)
+      );
+
+      if (unmetDeps.length > 0) {
+        alert(`Cannot move to Next Up. Dependencies not met: ${unmetDeps.join(', ')}`);
+        return;
+      }
+    }
+
+    // Remove from all sections
+    this.roadmapData.features.inProgress = this.roadmapData.features.inProgress.filter(f => f.id !== droppedFeature.id);
+    this.roadmapData.features.nextUp = this.roadmapData.features.nextUp.filter(f => f.id !== droppedFeature.id);
+    this.roadmapData.features.backlog = this.roadmapData.features.backlog.filter(f => f.id !== droppedFeature.id);
+    this.roadmapData.features.shipped = this.roadmapData.features.shipped.filter(f => f.id !== droppedFeature.id);
+
+    // Get target array
+    let targetArray: Feature[];
+    switch (section) {
+      case 'inProgress':
+        targetArray = this.roadmapData.features.inProgress;
+        break;
+      case 'nextUp':
+        targetArray = this.roadmapData.features.nextUp;
+        break;
+      case 'backlog':
+        targetArray = this.roadmapData.features.backlog;
+        break;
+      case 'shipped':
+        targetArray = this.roadmapData.features.shipped;
+        break;
+      default:
+        console.error('Unknown section:', section);
+        return;
+    }
+
+    // Find target index
+    const targetIndex = targetArray.findIndex(f => f.id === targetFeature.id);
+
+    if (targetIndex === -1) {
+      // Target not found, append to end
+      targetArray.push(droppedFeature);
+    } else {
+      // Insert at the correct position
+      const insertIndex = position === 'before' ? targetIndex : targetIndex + 1;
+      targetArray.splice(insertIndex, 0, droppedFeature);
+    }
+
+    // Save state and trigger re-render
+    this.saveState();
+    this.requestUpdate();
+
+    console.log(`Moved ${droppedFeature.id} ${position} ${targetFeature.id} in ${section}`);
+  }
+
+  private saveState(): void {
+    if (!this.roadmapData) return;
+
+    RoadmapPersistence.save(this.roadmapData);
+    this.hasSavedChanges = true;
+  }
+
+  private handleExport(): void {
+    if (!this.roadmapData) return;
+
+    const timestamp = new Date().toISOString().split('T')[0];
+    const filename = `roadmap-${timestamp}.json`;
+
+    RoadmapPersistence.export(this.roadmapData, filename);
+  }
+
+  private handleReset(): void {
+    if (!confirm('Are you sure you want to reset to the original roadmap? All changes will be lost.')) {
+      return;
+    }
+
+    RoadmapPersistence.clear();
+    this.roadmapData = this.originalData;
+    this.hasSavedChanges = false;
+    this.requestUpdate();
+
+    console.log('[pm-roadmap] Reset to original data');
   }
 
   private renderSectionDivider(title: string, count: number, iconName: string, sectionId: string, alwaysShow: boolean = false): ReturnType<typeof html> {
@@ -431,9 +608,25 @@ export class PMRoadmap extends BaseComponent {
     `;
   }
 
-  private renderFeatureCards(features: Feature[], draggable: boolean = false): ReturnType<typeof html> {
+  private renderFeatureCards(features: Feature[], draggable: boolean = false, section: string = ''): ReturnType<typeof html> {
+    if (!this.roadmapData) return html``;
+
+    // Collect all features for dependency lookup
+    const allFeatures = [
+      ...this.roadmapData.features.shipped,
+      ...this.roadmapData.features.inProgress,
+      ...this.roadmapData.features.nextUp,
+      ...this.roadmapData.features.backlog
+    ];
+
     return features.map(feature => html`
-      <pm-feature-card .feature="${feature}" ?draggable="${draggable}"></pm-feature-card>
+      <pm-feature-card
+        .feature="${feature}"
+        ?draggable="${draggable}"
+        .allFeatures="${allFeatures}"
+        .section="${section}"
+        @feature-drop="${this.handleFeatureDrop}"
+      ></pm-feature-card>
     `);
   }
 
@@ -523,6 +716,23 @@ export class PMRoadmap extends BaseComponent {
             .filterGroups="${this.filterGroups}"
             @filter-change="${this.handleFilterChange}"
           ></pm-filter-bar>
+
+          <div class="action-buttons">
+            ${this.hasSavedChanges ? html`
+              <span class="saved-indicator">
+                <pm-icon name="CheckCircle2" size="sm"></pm-icon>
+                Changes saved
+              </span>
+            ` : ''}
+            <button class="btn btn-primary" @click="${this.handleExport}">
+              <pm-icon name="Download" size="sm"></pm-icon>
+              Export
+            </button>
+            <button class="btn btn-danger" @click="${this.handleReset}" ?disabled="${!this.hasSavedChanges}">
+              <pm-icon name="RotateCcw" size="sm"></pm-icon>
+              Reset
+            </button>
+          </div>
         </div>
 
         ${filteredInProgress.length === 0 && filteredNextUp.length === 0 && filteredBacklog.length === 0 && filteredShipped.length === 0 ? html`
@@ -533,7 +743,7 @@ export class PMRoadmap extends BaseComponent {
         ` : html`
           <div class="features-container" id="main-content">
             ${this.renderSectionDivider('In Progress', filteredInProgress.length, 'Loader2', 'section-in-progress')}
-            ${this.renderFeatureCards(filteredInProgress)}
+            ${this.renderFeatureCards(filteredInProgress, true, 'inProgress')}
 
             ${this.renderSectionDivider('Next Up', filteredNextUp.length, 'ArrowRight', 'section-next-up', true)}
             <div
@@ -548,14 +758,14 @@ export class PMRoadmap extends BaseComponent {
                   <pm-icon name="ArrowDown" size="md"></pm-icon>
                   <p>Drop backlog items here to add to Next Up</p>
                 </div>
-              ` : this.renderFeatureCards(filteredNextUp)}
+              ` : this.renderFeatureCards(filteredNextUp, true, 'nextUp')}
             </div>
 
             ${this.renderSectionDivider('Backlog', filteredBacklog.length, 'Archive', 'section-backlog')}
-            ${this.renderFeatureCards(filteredBacklog, true)}
+            ${this.renderFeatureCards(filteredBacklog, true, 'backlog')}
 
             ${this.renderSectionDivider('Shipped', filteredShipped.length, 'CheckCircle2', 'section-shipped')}
-            ${this.renderFeatureCards(filteredShipped)}
+            ${this.renderFeatureCards(filteredShipped, false, 'shipped')}
           </div>
         `}
       </div>

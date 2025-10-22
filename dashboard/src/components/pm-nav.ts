@@ -8,7 +8,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { BaseComponent } from './base-component';
 import './pm-icon';
 
-export type NavRoute = 'roadmap' | 'tests';
+export type NavRoute = 'roadmap' | 'queue' | 'tests';
 
 @customElement('pm-nav')
 export class PMNav extends BaseComponent {
@@ -112,6 +112,15 @@ export class PMNav extends BaseComponent {
             >
               <pm-icon name="Map" size="sm"></pm-icon>
               Roadmap
+            </button>
+
+            <button
+              class="nav-tab ${this.activeRoute === 'queue' ? 'active' : ''}"
+              @click="${() => this.handleNavClick('queue')}"
+              aria-label="View priority queue"
+            >
+              <pm-icon name="ListOrdered" size="sm"></pm-icon>
+              Priority Queue
             </button>
 
             <button

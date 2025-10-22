@@ -9,6 +9,7 @@ import { BaseComponent } from './base-component';
 import type { NavRoute } from './pm-nav';
 import './pm-nav';
 import './pm-roadmap';
+import './pm-priority-queue';
 import './pm-tests-view';
 
 @customElement('pm-app')
@@ -32,6 +33,7 @@ export class PMApp extends BaseComponent {
     const hash = window.location.hash.slice(1); // Remove #
     // Support both #tests and #/tests formats
     if (hash === 'tests' || hash === '/tests') return 'tests';
+    if (hash === 'queue' || hash === '/queue') return 'queue';
     return 'roadmap'; // Default to roadmap (empty hash, #, or #/)
   }
 
@@ -76,6 +78,8 @@ export class PMApp extends BaseComponent {
       <div class="view-container">
         ${this.currentRoute === 'roadmap'
           ? html`<pm-roadmap></pm-roadmap>`
+          : this.currentRoute === 'queue'
+          ? html`<pm-priority-queue></pm-priority-queue>`
           : html`<pm-tests-view></pm-tests-view>`
         }
       </div>
