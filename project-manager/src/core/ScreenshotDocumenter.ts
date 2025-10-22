@@ -13,6 +13,8 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PlaywrightDriver } from '../../../shared/src/core/PlaywrightDriver';
 import { ScreenshotCapture } from '../../../shared/src/core/ScreenshotCapture';
+import { VisualAnalyzer } from '../../../shared/src/core/FeatureExtractor';
+import type { ViewportPreset, Viewport } from '../../../shared/src/types/screenshot';
 import type { TodoItem } from '../types';
 
 export interface ScreenshotOptions {
@@ -36,6 +38,10 @@ export interface ScreenshotOptions {
     repo: string;
     token: string;
   };
+  /** PM-13: Capture multiple viewports (mobile, tablet, desktop) */
+  captureMultiViewport?: boolean;
+  /** PM-13: Which viewports to capture */
+  viewports?: (ViewportPreset | Viewport)[];
 }
 
 export interface ScreenshotResult {
@@ -55,6 +61,13 @@ export interface Screenshot {
     line?: number;
     element?: string;
     viewport?: { width: number; height: number };
+    /** PM-14: Comparison metadata */
+    comparison?: {
+      beforePath: string;
+      afterPath: string;
+      differencePercentage: number;
+      identical: boolean;
+    };
   };
 }
 
@@ -72,7 +85,9 @@ export class ScreenshotDocumenter {
       captureComparison: options.captureComparison ?? false,
       uploadToGitHub: options.uploadToGitHub ?? false,
       baseUrl: options.baseUrl || '',
-      githubRepo: options.githubRepo || null
+      githubRepo: options.githubRepo || null,
+      captureMultiViewport: options.captureMultiViewport ?? false,
+      viewports: options.viewports || ['mobile', 'tablet', 'desktop']
     };
   }
 
@@ -146,6 +161,486 @@ export class ScreenshotDocumenter {
     }
 
     return results;
+  }
+
+  /**
+   * PM-13: Capture multi-viewport screenshots for a URL
+   * Useful for responsive testing and visual verification
+   */
+  async captureMultiViewport(
+    url: string,
+    options: {
+      viewports?: (ViewportPreset | Viewport)[];
+      outputPrefix?: string;
+      fullPage?: boolean;
+    } = {}
+  ): Promise<Screenshot[]> {
+    const screenshots: Screenshot[] = [];
+
+    try {
+      // Initialize Playwright if needed
+      if (!this.driver) {
+        this.driver = new PlaywrightDriver({ headless: true, browser: 'chromium' });
+        await this.driver.launch();
+        this.screenshotCapture = new ScreenshotCapture(this.driver);
+      }
+
+      const viewports = options.viewports || this.options.viewports;
+      const outputPrefix = options.outputPrefix || 'multi-viewport';
+      const fullPage = options.fullPage ?? true;
+
+      // Use shared library's multi-viewport capture
+      const result = await this.screenshotCapture.capture({
+        url,
+        viewports,
+        fullPage,
+        waitTime: 1000
+      });
+
+      // Save all screenshots
+      const savedPaths = await this.screenshotCapture.saveAll(
+        result,
+        this.options.outputDir,
+        outputPrefix
+      );
+
+      // Build screenshot results
+      for (let i = 0; i < result.screenshots.length; i++) {
+        const shot = result.screenshots[i];
+        const viewportName = shot.presetName || `${shot.viewport.width}x${shot.viewport.height}`;
+
+        screenshots.push({
+          type: 'full-page',
+          path: savedPaths[i],
+          caption: `${viewportName} view of ${result.title || url}`,
+          metadata: {
+            viewport: {
+              width: shot.viewport.width,
+              height: shot.viewport.height
+            }
+          }
+        });
+      }
+
+      return screenshots;
+    } catch (error) {
+      console.error('Failed to capture multi-viewport screenshots:', error);
+      return screenshots;
+    }
+  }
+
+  /**
+   * PM-14: Capture before/after screenshots and compare
+   * Useful for detecting visual regressions
+   */
+  async captureBeforeAfter(
+    beforeUrl: string,
+    afterUrl: string,
+    options: {
+      viewport?: ViewportPreset | Viewport;
+      outputPrefix?: string;
+      threshold?: number; // Difference threshold (0-1)
+    } = {}
+  ): Promise<Screenshot[]> {
+    const screenshots: Screenshot[] = [];
+
+    try {
+      // Initialize Playwright if needed
+      if (!this.driver) {
+        this.driver = new PlaywrightDriver({ headless: true, browser: 'chromium' });
+        await this.driver.launch();
+        this.screenshotCapture = new ScreenshotCapture(this.driver);
+      }
+
+      const viewport = options.viewport || 'desktop';
+      const outputPrefix = options.outputPrefix || 'comparison';
+      const threshold = options.threshold || 0.1;
+
+      // Capture before screenshot
+      const beforeResult = await this.screenshotCapture.capture({
+        url: beforeUrl,
+        viewports: [viewport],
+        fullPage: true,
+        waitTime: 1000
+      });
+
+      const beforeShot = beforeResult.screenshots[0];
+      const beforePath = path.join(this.options.outputDir, `${outputPrefix}-before.png`);
+      await this.screenshotCapture.saveToFile(beforeShot, beforePath);
+
+      // Capture after screenshot
+      const afterResult = await this.screenshotCapture.capture({
+        url: afterUrl,
+        viewports: [viewport],
+        fullPage: true,
+        waitTime: 1000
+      });
+
+      const afterShot = afterResult.screenshots[0];
+      const afterPath = path.join(this.options.outputDir, `${outputPrefix}-after.png`);
+      await this.screenshotCapture.saveToFile(afterShot, afterPath);
+
+      // Compare screenshots
+      const comparison = await this.screenshotCapture.compare({
+        screenshot1: beforeShot.buffer,
+        screenshot2: afterShot.buffer,
+        threshold
+      });
+
+      // Create comparison screenshot entry
+      const comparisonPath = path.join(this.options.outputDir, `${outputPrefix}-comparison.png`);
+
+      // For now, we'll just save the after screenshot as the comparison
+      // In a production system, you'd generate a diff image highlighting differences
+      await fs.copyFile(afterPath, comparisonPath);
+
+      screenshots.push({
+        type: 'comparison',
+        path: comparisonPath,
+        caption: comparison.identical
+          ? 'No visual differences detected'
+          : `Visual changes detected (${comparison.differencePercentage.toFixed(2)}% different)`,
+        metadata: {
+          comparison: {
+            beforePath,
+            afterPath,
+            differencePercentage: comparison.differencePercentage,
+            identical: comparison.identical
+          }
+        }
+      });
+
+      return screenshots;
+    } catch (error) {
+      console.error('Failed to capture before/after comparison:', error);
+      return screenshots;
+    }
+  }
+
+  /**
+   * PM-14: Compare two existing screenshot files
+   */
+  async compareScreenshots(
+    beforePath: string,
+    afterPath: string,
+    options: {
+      outputPrefix?: string;
+      threshold?: number;
+    } = {}
+  ): Promise<Screenshot | null> {
+    try {
+      // Initialize screenshot capture if needed
+      if (!this.screenshotCapture) {
+        if (!this.driver) {
+          this.driver = new PlaywrightDriver({ headless: true, browser: 'chromium' });
+          await this.driver.launch();
+        }
+        this.screenshotCapture = new ScreenshotCapture(this.driver);
+      }
+
+      const outputPrefix = options.outputPrefix || 'comparison';
+      const threshold = options.threshold || 0.1;
+
+      // Read screenshot files
+      const beforeBuffer = await fs.readFile(beforePath);
+      const afterBuffer = await fs.readFile(afterPath);
+
+      // Compare
+      const comparison = await this.screenshotCapture.compare({
+        screenshot1: beforeBuffer,
+        screenshot2: afterBuffer,
+        threshold
+      });
+
+      // Create comparison result
+      const comparisonPath = path.join(this.options.outputDir, `${outputPrefix}-result.png`);
+      await fs.copyFile(afterPath, comparisonPath);
+
+      return {
+        type: 'comparison',
+        path: comparisonPath,
+        caption: comparison.identical
+          ? 'Screenshots are identical'
+          : `Difference: ${comparison.differencePercentage.toFixed(2)}%`,
+        metadata: {
+          comparison: {
+            beforePath,
+            afterPath,
+            differencePercentage: comparison.differencePercentage,
+            identical: comparison.identical
+          }
+        }
+      };
+    } catch (error) {
+      console.error('Failed to compare screenshots:', error);
+      return null;
+    }
+  }
+
+  /**
+   * PM-15: Scan UI for visual bugs and potential issues
+   * Returns a list of detected bugs as TodoItems that can be auto-converted to issues
+   */
+  async scanUIForBugs(
+    url: string,
+    options: {
+      viewport?: ViewportPreset | Viewport;
+      checkAccessibility?: boolean;
+      checkLayout?: boolean;
+      checkPerformance?: boolean;
+    } = {}
+  ): Promise<TodoItem[]> {
+    const bugs: TodoItem[] = [];
+
+    try {
+      // Initialize Playwright if needed
+      if (!this.driver) {
+        this.driver = new PlaywrightDriver({ headless: true, browser: 'chromium' });
+        await this.driver.launch();
+        this.screenshotCapture = new ScreenshotCapture(this.driver);
+      }
+
+      // Navigate to URL
+      await this.driver.navigateTo(url);
+      await this.driver.page.waitForLoadState('networkidle');
+
+      // Create visual analyzer
+      const visualAnalyzer = new VisualAnalyzer(this.driver);
+      const elements = await visualAnalyzer.analyze();
+
+      // Check for accessibility issues
+      if (options.checkAccessibility !== false) {
+        const a11yBugs = await this.checkAccessibilityIssues(elements);
+        bugs.push(...a11yBugs);
+      }
+
+      // Check for layout issues
+      if (options.checkLayout !== false) {
+        const layoutBugs = await this.checkLayoutIssues();
+        bugs.push(...layoutBugs);
+      }
+
+      // Check for broken images
+      const imageBugs = await this.checkBrokenImages();
+      bugs.push(...imageBugs);
+
+      // Check for missing alt text
+      const altTextBugs = await this.checkMissingAltText(elements);
+      bugs.push(...altTextBugs);
+
+      return bugs;
+    } catch (error) {
+      console.error('Failed to scan UI for bugs:', error);
+      return bugs;
+    }
+  }
+
+  /**
+   * PM-15: Check for accessibility issues
+   */
+  private async checkAccessibilityIssues(elements: any[]): Promise<TodoItem[]> {
+    const bugs: TodoItem[] = [];
+
+    // Check for buttons without text
+    const buttons = elements.filter(el => el.type === 'button');
+    for (const button of buttons) {
+      if (!button.text || button.text.trim().length === 0) {
+        bugs.push({
+          file: 'ui-scan',
+          line: 0,
+          type: 'BUG',
+          priority: 'high',
+          content: `Button without text or aria-label found: ${button.selector}`,
+          hash: this.generateHash(`button-no-text-${button.selector}`),
+          rawText: `BUG: Accessibility - Button without text at ${button.selector}`
+        });
+      }
+    }
+
+    // Check for links without text
+    const links = elements.filter(el => el.type === 'link');
+    for (const link of links) {
+      if (!link.text || link.text.trim().length === 0) {
+        bugs.push({
+          file: 'ui-scan',
+          line: 0,
+          type: 'BUG',
+          priority: 'high',
+          content: `Link without text found: ${link.selector}`,
+          hash: this.generateHash(`link-no-text-${link.selector}`),
+          rawText: `BUG: Accessibility - Link without text at ${link.selector}`
+        });
+      }
+    }
+
+    // Check for inputs without labels
+    const inputs = elements.filter(el => el.type === 'input');
+    for (const input of inputs) {
+      if (!input.attributes['aria-label'] && !input.attributes['id']) {
+        bugs.push({
+          file: 'ui-scan',
+          line: 0,
+          type: 'BUG',
+          priority: 'medium',
+          content: `Input field without label or aria-label: ${input.selector}`,
+          hash: this.generateHash(`input-no-label-${input.selector}`),
+          rawText: `BUG: Accessibility - Input without label at ${input.selector}`
+        });
+      }
+    }
+
+    return bugs;
+  }
+
+  /**
+   * PM-15: Check for layout issues
+   */
+  private async checkLayoutIssues(): Promise<TodoItem[]> {
+    const bugs: TodoItem[] = [];
+
+    try {
+      // Check for overlapping elements
+      const overlapping = await this.driver.evaluate<any[]>(`
+        (() => {
+          const elements = Array.from(document.querySelectorAll('div, button, a, input'));
+          const overlaps = [];
+
+          for (let i = 0; i < elements.length; i++) {
+            const rect1 = elements[i].getBoundingClientRect();
+            if (rect1.width === 0 || rect1.height === 0) continue;
+
+            for (let j = i + 1; j < elements.length; j++) {
+              const rect2 = elements[j].getBoundingClientRect();
+              if (rect2.width === 0 || rect2.height === 0) continue;
+
+              // Check if rectangles overlap
+              if (!(rect1.right < rect2.left ||
+                    rect1.left > rect2.right ||
+                    rect1.bottom < rect2.top ||
+                    rect1.top > rect2.bottom)) {
+                overlaps.push({
+                  el1: elements[i].tagName + (elements[i].className ? '.' + elements[i].className.split(' ')[0] : ''),
+                  el2: elements[j].tagName + (elements[j].className ? '.' + elements[j].className.split(' ')[0] : '')
+                });
+                break;
+              }
+            }
+
+            if (overlaps.length >= 5) break; // Limit to first 5
+          }
+
+          return overlaps;
+        })()
+      `);
+
+      for (const overlap of overlapping) {
+        bugs.push({
+          file: 'ui-scan',
+          line: 0,
+          type: 'BUG',
+          priority: 'medium',
+          content: `Possible overlapping elements: ${overlap.el1} and ${overlap.el2}`,
+          hash: this.generateHash(`overlap-${overlap.el1}-${overlap.el2}`),
+          rawText: `BUG: Layout - Overlapping elements detected`
+        });
+      }
+
+      // Check for elements outside viewport
+      const outsideViewport = await this.driver.evaluate<any[]>(`
+        Array.from(document.querySelectorAll('*')).filter(el => {
+          const rect = el.getBoundingClientRect();
+          return rect.right < 0 || rect.bottom < 0 ||
+                 rect.left > window.innerWidth || rect.top > window.innerHeight;
+        }).slice(0, 5).map(el => el.tagName + (el.className ? '.' + el.className.split(' ')[0] : ''))
+      `);
+
+      for (const element of outsideViewport) {
+        bugs.push({
+          file: 'ui-scan',
+          line: 0,
+          type: 'BUG',
+          priority: 'low',
+          content: `Element outside viewport: ${element}`,
+          hash: this.generateHash(`outside-viewport-${element}`),
+          rawText: `BUG: Layout - Element outside viewport`
+        });
+      }
+    } catch (error) {
+      console.warn('Failed to check layout issues:', error);
+    }
+
+    return bugs;
+  }
+
+  /**
+   * PM-15: Check for broken images
+   */
+  private async checkBrokenImages(): Promise<TodoItem[]> {
+    const bugs: TodoItem[] = [];
+
+    try {
+      const brokenImages = await this.driver.evaluate<any[]>(`
+        Array.from(document.querySelectorAll('img')).filter(img => {
+          return !img.complete || img.naturalHeight === 0;
+        }).map(img => ({
+          src: img.src,
+          alt: img.alt
+        }))
+      `);
+
+      for (const img of brokenImages) {
+        bugs.push({
+          file: 'ui-scan',
+          line: 0,
+          type: 'BUG',
+          priority: 'high',
+          content: `Broken image: ${img.src}`,
+          hash: this.generateHash(`broken-image-${img.src}`),
+          rawText: `BUG: Broken image at ${img.src}`
+        });
+      }
+    } catch (error) {
+      console.warn('Failed to check broken images:', error);
+    }
+
+    return bugs;
+  }
+
+  /**
+   * PM-15: Check for missing alt text on images
+   */
+  private async checkMissingAltText(elements: any[]): Promise<TodoItem[]> {
+    const bugs: TodoItem[] = [];
+
+    const images = elements.filter(el => el.type === 'image');
+    for (const img of images) {
+      if (!img.attributes.alt || img.attributes.alt.trim().length === 0) {
+        bugs.push({
+          file: 'ui-scan',
+          line: 0,
+          type: 'BUG',
+          priority: 'medium',
+          content: `Image missing alt text: ${img.attributes.src || img.selector}`,
+          hash: this.generateHash(`missing-alt-${img.selector}`),
+          rawText: `BUG: Accessibility - Image missing alt text`
+        });
+      }
+    }
+
+    return bugs;
+  }
+
+  /**
+   * Generate simple hash for bug deduplication
+   */
+  private generateHash(str: string): string {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash).toString(36);
   }
 
   /**
@@ -334,48 +829,83 @@ export class ScreenshotDocumenter {
         return screenshots;
       }
 
-      // Navigate to URL
-      await this.driver.navigateTo(url);
-      await this.driver.page.waitForLoadState('networkidle');
+      // PM-13: Multi-viewport capture if enabled
+      if (this.options.captureMultiViewport) {
+        const result = await this.screenshotCapture!.capture({
+          url,
+          viewports: this.options.viewports,
+          fullPage: true,
+          waitTime: 1000
+        });
 
-      // Capture full page screenshot
-      const fullPagePath = path.join(
-        this.options.outputDir,
-        `ui-full-${todo.hash}.png`
-      );
+        // Save all viewport screenshots
+        const savedPaths = await this.screenshotCapture!.saveAll(
+          result,
+          this.options.outputDir,
+          `ui-${todo.hash}`
+        );
 
-      await this.screenshotCapture!.captureFullPage(fullPagePath);
-
-      screenshots.push({
-        type: 'full-page',
-        path: fullPagePath,
-        caption: `Full page screenshot of ${url}`,
-        metadata: {
-          viewport: { width: 1920, height: 1080 }
-        }
-      });
-
-      // Try to capture specific element if selector is in TODO
-      const selector = this.extractSelectorFromTodo(todo);
-      if (selector) {
-        try {
-          const elementPath = path.join(
-            this.options.outputDir,
-            `ui-element-${todo.hash}.png`
-          );
-
-          await this.screenshotCapture!.captureElement(selector, elementPath);
+        // Add screenshots to result
+        for (let i = 0; i < result.screenshots.length; i++) {
+          const shot = result.screenshots[i];
+          const viewportName = shot.presetName || `${shot.viewport.width}x${shot.viewport.height}`;
 
           screenshots.push({
-            type: 'ui',
-            path: elementPath,
-            caption: `UI element: ${selector}`,
+            type: 'full-page',
+            path: savedPaths[i],
+            caption: `${viewportName} view of ${url}`,
             metadata: {
-              element: selector
+              viewport: {
+                width: shot.viewport.width,
+                height: shot.viewport.height
+              }
             }
           });
-        } catch (error) {
-          console.warn(`Failed to capture element ${selector}:`, error);
+        }
+      } else {
+        // Single viewport capture (legacy behavior)
+        await this.driver.navigateTo(url);
+        await this.driver.page.waitForLoadState('networkidle');
+
+        // Capture full page screenshot
+        const fullPagePath = path.join(
+          this.options.outputDir,
+          `ui-full-${todo.hash}.png`
+        );
+
+        await this.screenshotCapture!.captureFullPage(fullPagePath);
+
+        screenshots.push({
+          type: 'full-page',
+          path: fullPagePath,
+          caption: `Full page screenshot of ${url}`,
+          metadata: {
+            viewport: { width: 1920, height: 1080 }
+          }
+        });
+
+        // Try to capture specific element if selector is in TODO
+        const selector = this.extractSelectorFromTodo(todo);
+        if (selector) {
+          try {
+            const elementPath = path.join(
+              this.options.outputDir,
+              `ui-element-${todo.hash}.png`
+            );
+
+            await this.screenshotCapture!.captureElement(selector, elementPath);
+
+            screenshots.push({
+              type: 'ui',
+              path: elementPath,
+              caption: `UI element: ${selector}`,
+              metadata: {
+                element: selector
+              }
+            });
+          } catch (error) {
+            console.warn(`Failed to capture element ${selector}:`, error);
+          }
         }
       }
 
@@ -486,31 +1016,100 @@ export class ScreenshotDocumenter {
     lines.push('## Screenshots');
     lines.push('');
 
-    for (const screenshot of screenshots) {
-      if (screenshot.caption) {
-        lines.push(`### ${screenshot.caption}`);
-        lines.push('');
-      }
+    // PM-14: Handle comparison screenshots specially
+    const comparisonScreenshots = screenshots.filter(s => s.type === 'comparison');
+    const otherScreenshots = screenshots.filter(s => s.type !== 'comparison');
 
-      if (screenshot.url) {
-        // Use URL if available
-        lines.push(`![${screenshot.caption || screenshot.type}](${screenshot.url})`);
-      } else {
-        // Include file path for local reference
-        lines.push(`![${screenshot.caption || screenshot.type}](${screenshot.path})`);
-      }
-
+    // Display comparison screenshots first
+    if (comparisonScreenshots.length > 0) {
+      lines.push('### Visual Comparison');
       lines.push('');
 
-      // Add metadata if available
-      if (screenshot.metadata) {
-        if (screenshot.metadata.file && screenshot.metadata.line) {
-          lines.push(`**Location**: \`${screenshot.metadata.file}:${screenshot.metadata.line}\``);
+      for (const screenshot of comparisonScreenshots) {
+        const comp = screenshot.metadata?.comparison;
+        if (comp) {
+          lines.push(`**Result**: ${screenshot.caption}`);
+          lines.push('');
+
+          // Before and After side-by-side
+          lines.push('| Before | After |');
+          lines.push('| --- | --- |');
+
+          const beforeImg = `![Before](${comp.beforePath})`;
+          const afterImg = `![After](${comp.afterPath})`;
+          lines.push(`| ${beforeImg} | ${afterImg} |`);
+          lines.push('');
+
+          lines.push(`**Difference**: ${comp.differencePercentage.toFixed(2)}%`);
           lines.push('');
         }
-        if (screenshot.metadata.element) {
-          lines.push(`**Element**: \`${screenshot.metadata.element}\``);
+      }
+    }
+
+    // PM-13: Group screenshots by viewport if multiple viewports present
+    const hasMultipleViewports = otherScreenshots.some(s =>
+      s.metadata?.viewport &&
+      otherScreenshots.filter(ss => ss.metadata?.viewport).length > 1
+    );
+
+    if (hasMultipleViewports) {
+      lines.push('### Responsive Views');
+      lines.push('');
+
+      // Create a comparison table for multi-viewport screenshots
+      const viewportScreenshots = otherScreenshots.filter(s => s.metadata?.viewport);
+      if (viewportScreenshots.length > 0) {
+        // Table header
+        const viewportNames = viewportScreenshots
+          .map(s => {
+            const vp = s.metadata!.viewport!;
+            return `${vp.width}x${vp.height}`;
+          })
+          .join(' | ');
+
+        lines.push(`| ${viewportNames} |`);
+        lines.push(`| ${viewportScreenshots.map(() => '---').join(' | ')} |`);
+
+        // Table row with images
+        const imageRow = viewportScreenshots
+          .map(s => {
+            const imgSrc = s.url || s.path;
+            const caption = s.caption || s.type;
+            return `![${caption}](${imgSrc})`;
+          })
+          .join(' | ');
+
+        lines.push(`| ${imageRow} |`);
+        lines.push('');
+      }
+    } else if (otherScreenshots.length > 0) {
+      // Standard formatting for non-multi-viewport screenshots
+      for (const screenshot of otherScreenshots) {
+        if (screenshot.caption) {
+          lines.push(`### ${screenshot.caption}`);
           lines.push('');
+        }
+
+        if (screenshot.url) {
+          // Use URL if available
+          lines.push(`![${screenshot.caption || screenshot.type}](${screenshot.url})`);
+        } else {
+          // Include file path for local reference
+          lines.push(`![${screenshot.caption || screenshot.type}](${screenshot.path})`);
+        }
+
+        lines.push('');
+
+        // Add metadata if available
+        if (screenshot.metadata) {
+          if (screenshot.metadata.file && screenshot.metadata.line) {
+            lines.push(`**Location**: \`${screenshot.metadata.file}:${screenshot.metadata.line}\``);
+            lines.push('');
+          }
+          if (screenshot.metadata.element) {
+            lines.push(`**Element**: \`${screenshot.metadata.element}\``);
+            lines.push('');
+          }
         }
       }
     }
