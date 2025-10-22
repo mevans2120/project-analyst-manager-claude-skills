@@ -5,20 +5,20 @@
 
 import './styles/global.css';
 
-// Import components
-import './components/pm-roadmap';
+// Import app component
+import './components/pm-app';
 
 console.log('🚀 Project Management Dashboard - Vite + Lit');
 console.log('Environment:', import.meta.env.MODE);
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Dashboard initialized');
+  console.log('Dashboard initialized with routing');
 
   const root = document.getElementById('app');
   if (root) {
     root.innerHTML = `
-      <pm-roadmap></pm-roadmap>
+      <pm-app></pm-app>
     `;
   }
 });

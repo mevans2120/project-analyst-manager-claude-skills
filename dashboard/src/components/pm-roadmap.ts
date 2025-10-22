@@ -169,31 +169,46 @@ export class PMRoadmap extends BaseComponent {
     `
   ];
 
-  protected onMount(): void {
+  connectedCallback(): void {
+    super.connectedCallback();
+    console.log('[pm-roadmap] Component connected to DOM');
+    // Always load data when component connects to DOM
     this.loadRoadmapData();
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    console.log('[pm-roadmap] Component disconnected from DOM');
   }
 
   private async loadRoadmapData(): Promise<void> {
     await this.withLoading(async () => {
       console.log('[pm-roadmap] Fetching data.js...');
+
       const response = await fetch('/data.js');
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data.js: ${response.status} ${response.statusText}`);
+      }
+
       const text = await response.text();
       console.log('[pm-roadmap] Fetched data.js, length:', text.length);
 
       // Execute the JavaScript file and extract productRoadmap
-      // We need to execute the whole file including the stats calculation
+      // Wrap in IIFE to avoid const redeclaration errors
+      const uniqueVar = `__productRoadmap_${Date.now()}`;
       const script = document.createElement('script');
-      script.textContent = text + '\nwindow.__productRoadmap = productRoadmap;';
+      script.textContent = `(function() { ${text}; window.${uniqueVar} = productRoadmap; })();`;
       document.head.appendChild(script);
 
-      const roadmapData = (window as any).__productRoadmap;
-      delete (window as any).__productRoadmap;
+      const roadmapData = (window as any)[uniqueVar];
+      delete (window as any)[uniqueVar];
       document.head.removeChild(script);
 
       console.log('[pm-roadmap] Parsed roadmap data:', roadmapData);
 
       if (!roadmapData || !roadmapData.features || !roadmapData.stats) {
-        console.error('[pm-roadmap] Invalid roadmap data structure');
+        console.error('[pm-roadmap] Invalid roadmap data structure:', roadmapData);
         throw new Error('Invalid roadmap data structure');
       }
 

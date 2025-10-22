@@ -14,6 +14,10 @@ export { PMFilterBar } from './pm-filter-bar';
 export { PMIcon } from './pm-icon';
 export { PMFeatureCard } from './pm-feature-card';
 export { PMRoadmap } from './pm-roadmap';
+export { PMTestCard } from './pm-test-card';
+export { PMTestsView } from './pm-tests-view';
+export { PMNav } from './pm-nav';
+export { PMApp } from './pm-app';
 export { PMShowcase } from './pm-showcase';
 export { PMDemo } from './pm-demo';
 
