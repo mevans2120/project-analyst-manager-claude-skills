@@ -5,6 +5,7 @@ const productRoadmap = {
   // Project metadata
   project: {
     name: "Project Management Suite",
+    code: "PM",  // Two-letter project code for feature references
     status: "active",
     phase: "Design Complete - Ready to Build"
   },

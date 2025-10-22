@@ -522,18 +522,20 @@
           </div>
         `;
       } else {
+        const projectCode = productRoadmap.project.code || '';
+
         currentDiv.innerHTML = productRoadmap.current.map(feature => {
           const deps = feature.dependencies && feature.dependencies.length > 0
             ? feature.dependencies.map(depId => {
                 const depFeature = findFeature(depId);
-                return depFeature ? `#${depFeature.number}` : depId;
+                return depFeature ? `${projectCode}-${depFeature.number}` : depId;
               }).join(', ')
             : null;
 
           return `
           <div class="current-feature">
             <h3>
-              ${feature.number ? `#${feature.number} ` : ''}
+              ${feature.number ? `${projectCode}-${feature.number} ` : ''}
               ${feature.name}
             </h3>
             <div class="feature-meta">
@@ -681,18 +683,20 @@
     }
 
     function renderFeatures(features, type) {
+      const projectCode = productRoadmap.project.code || '';
+
       return features.map(f => {
         const deps = f.dependencies && f.dependencies.length > 0
           ? f.dependencies.map(depId => {
               const depFeature = findFeature(depId);
-              return depFeature ? `#${depFeature.number}` : depId;
+              return depFeature ? `${projectCode}-${depFeature.number}` : depId;
             }).join(', ')
           : null;
 
         return `
           <div class="feature-item ${type}">
             <div class="name">
-              ${f.number ? `<span style="color: #58a6ff; font-weight: 600;">#${f.number}</span> ` : ''}
+              ${f.number ? `<span style="color: #58a6ff; font-weight: 600;">${projectCode}-${f.number}</span> ` : ''}
               ${f.name}
             </div>
             <div class="category">

@@ -232,19 +232,36 @@ When adding features to `dashboard/data.js`:
 
 ### Feature Numbering
 
-Features are numbered sequentially starting from 1:
-- **Next Up**: #1-3 (features ready to start)
-- **Backlog**: #4-17 (features not yet ready)
+Features are numbered with a project code prefix and sequential number:
+- **Format**: `[PROJECT_CODE]-[NUMBER]`
+- **Example**: `PM-1`, `PM-2`, `PM-3`
+
+**Project Codes**:
+- `PM` - Project Management Suite (this project)
+- Future projects use their own two-letter codes
+
+**Current numbering**:
+- **Next Up**: PM-1 to PM-3 (features ready to start)
+- **Backlog**: PM-4 to PM-17 (features not yet ready)
 - **Future features**: Continue numbering from last backlog item
 
-**Purpose**: Feature numbers allow easy reference in discussions and dependency tracking.
+**Purpose**:
+- Distinguish features across multiple projects
+- Easy reference in discussions and dependency tracking
+- Clear identification of which project a feature belongs to
 
-**Example**: "Feature #2 depends on #1" is clearer than "PlaywrightDriver depends on shared-webfetcher"
+**Example**: "Feature PM-2 depends on PM-1" is clearer than "PlaywrightDriver depends on shared-webfetcher"
+
+**Multi-project example**:
+- PM-1, PM-2, PM-3 (Project Management Suite features)
+- CT-1, CT-2, CT-3 (Care Tracker features, if working on that project)
+- CH-1, CH-2 (Codymd HackNBack features)
 
 **Rules**:
+- Project code is always UPPERCASE, two letters
 - Numbers are permanent - don't renumber when features move between sections
-- When adding new features, assign the next available number
-- Dependencies use IDs in the data, but dashboard displays as numbers (#1, #5, etc.)
+- When adding new features, assign the next available number for that project
+- Dependencies use IDs in the data, but dashboard displays as `PM-1`, `PM-5`, etc.
 
 ### Phase Names
 
