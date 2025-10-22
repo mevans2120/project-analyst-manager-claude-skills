@@ -20,6 +20,8 @@ import './pm-loading';
 import './pm-error';
 import './pm-icon';
 import './pm-action-button';
+import './pm-action-queue';
+import './pm-skill-output';
 
 @customElement('pm-roadmap')
 export class PMRoadmap extends BaseComponent {
@@ -46,6 +48,9 @@ export class PMRoadmap extends BaseComponent {
 
   @state()
   private exportFormat: ExportFormat = 'json';
+
+  @state()
+  private currentActionId: string | null = null;
 
   private filterGroups: FilterGroup[] = [];
   private fileWatcher: FileWatcher | null = null;
@@ -665,6 +670,12 @@ export class PMRoadmap extends BaseComponent {
     console.log('[pm-roadmap] Reset to original data');
   }
 
+  private handleActionCreated(e: CustomEvent): void {
+    const actionRequest = e.detail.actionRequest;
+    this.currentActionId = actionRequest.id;
+    console.log('[pm-roadmap] Action created:', actionRequest.id);
+  }
+
   private renderSectionDivider(title: string, count: number, iconName: string, sectionId: string, alwaysShow: boolean = false): ReturnType<typeof html> {
     if (count === 0 && !alwaysShow) {
       return html``;
@@ -803,6 +814,7 @@ export class PMRoadmap extends BaseComponent {
             <pm-action-button
               action="analyze"
               .payload=${{ repoPath: '.', options: { includeCompleted: false } }}
+              @action-created="${this.handleActionCreated}"
             ></pm-action-button>
             ${this.hasSavedChanges ? html`
               <span class="saved-indicator">
@@ -832,6 +844,18 @@ export class PMRoadmap extends BaseComponent {
             </button>
           </div>
         </div>
+
+        <!-- PM-27: Action Queue System -->
+        <div style="margin-bottom: var(--spacing-xl, 32px);">
+          <pm-action-queue></pm-action-queue>
+        </div>
+
+        <!-- PM-28: Real-Time Skill Output Display -->
+        ${this.currentActionId ? html`
+          <div style="margin-bottom: var(--spacing-xl, 32px);">
+            <pm-skill-output .actionId="${this.currentActionId}"></pm-skill-output>
+          </div>
+        ` : ''}
 
         ${filteredInProgress.length === 0 && filteredNextUp.length === 0 && filteredBacklog.length === 0 && filteredShipped.length === 0 ? html`
           <div class="empty-state" id="main-content">
