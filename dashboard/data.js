@@ -335,17 +335,14 @@ const productRoadmap = {
         "phase": "Phase 1",
         "shippedDate": "2025-10-22",
         "value": "Real-time project dashboard with auto-updates - includes file watcher (PM-25), real-time skill output (PM-28), action queue (PM-27), SPA routing (PM-24), and interactive filtering"
-      }
-    ],
-    "inProgress": [],
-    "nextUp": [],
-    "backlog": [
+      },
       {
         "id": "dashboard-drag-drop",
         "number": 30,
         "name": "Drag & Drop Feature Reordering",
         "category": "Dashboard",
         "phase": "Phase 1",
+        "shippedDate": "2025-10-22",
         "value": "Drag features between backlog/nextUp/inProgress sections with dependency validation - visual feedback, state persistence, prevent invalid moves"
       },
       {
@@ -354,8 +351,13 @@ const productRoadmap = {
         "name": "LocalStorage State Persistence",
         "category": "Dashboard",
         "phase": "Phase 1",
+        "shippedDate": "2025-10-22",
         "value": "Save dashboard changes to localStorage - persist drag-drop changes, reset to original data.js, change indicators"
-      },
+      }
+    ],
+    "inProgress": [],
+    "nextUp": [],
+    "backlog": [
       {
         "id": "analyzer-completion-detection",
         "number": 32,
