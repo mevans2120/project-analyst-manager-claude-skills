@@ -23,11 +23,12 @@ export class PMFeatureCard extends BaseComponent {
         border: 1px solid var(--border-primary, #30363d);
         border-radius: var(--radius-md, 6px);
         padding: var(--spacing-lg, 24px);
+        padding-bottom: var(--spacing-xl, 32px);
         transition: all 0.2s ease;
         display: flex;
         flex-direction: column;
         gap: var(--spacing-md, 16px);
-        height: 100%;
+        margin-bottom: var(--spacing-lg, 24px);
       }
 
       .feature-card:hover {
