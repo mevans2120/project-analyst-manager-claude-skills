@@ -1,24 +1,88 @@
-# Product Roadmap Dashboard
+# Interactive Product Roadmap Dashboard
 
-**A feature-first, priority-driven project tracking dashboard**
+**A feature-first, priority-driven project tracking dashboard with interactive feature management**
 
 ## Quick Start
 
-1. **Open the dashboard**:
+1. **Open the dashboard in Chrome or Edge**:
    ```bash
    open dashboard/index.html
    ```
    Or double-click `index.html` in Finder
 
-2. **Bookmark it** in your browser for quick access
+   **Browser Requirements**: Chrome or Edge (File System Access API required for interactive features)
 
-3. **Update weekly** by editing `data.js` (2 minutes)
+2. **Connect to data.js** (one-time per session):
+   - Click the **"📂 Connect File for Auto-Save"** banner at the top
+   - Select `dashboard/data.js` in the file picker
+   - Grant permission when prompted
+
+3. **Manage features interactively**:
+   - **Drag-and-drop** any Backlog feature to the Next Up section to promote it
+   - Click **"▶️ Start This Feature"** on any Next Up feature to move it to Current
+   - Changes auto-save to `data.js` - no copy/paste needed!
+
+4. **Bookmark it** in your browser for quick access
 
 That's it!
 
 ---
 
-## How to Update (Weekly)
+## Interactive Features
+
+### Drag-and-Drop & Click Controls
+
+**Backlog → Next Up** (Drag-and-Drop):
+- **Grab** any Backlog feature (look for the ✋ drag hint)
+- **Drag** it over to the Next Up section
+- **Drop** it when the section highlights in blue
+- Dashboard validates dependencies automatically
+- If dependencies are not met, shows alert with missing items
+- If dependencies are met, feature moves to Next Up
+- Changes save immediately to `data.js`
+
+**Next Up → Current** (Click):
+- Click **"▶️ Start This Feature"** button on any Next Up feature
+- Feature automatically moves to Current and In Progress
+- Progress starts at 0%
+- Changes save immediately to `data.js`
+
+### Auto-Save
+
+- Uses **File System Access API** for direct file writes
+- No copy/paste needed
+- Preserves exact file format
+- Changes take effect immediately
+
+**Session-Based Connection**:
+- File connection is stored in memory (not localStorage)
+- You'll need to reconnect after browser restart, tab close, or page refresh
+- This is a security feature of the File System Access API
+
+### Dependency Validation
+
+Example: Cannot move PM-2 to Next Up if PM-1 is not shipped:
+
+```javascript
+{
+  id: "shared-playwright",
+  number: 2,
+  dependencies: ["shared-webfetcher"]  // PM-1 must be shipped first
+}
+```
+
+If you try to move this feature too early:
+```
+❌ Cannot move to Next Up. Dependencies not met: shared-webfetcher
+```
+
+**Solution**: Complete PM-1 first, or remove the dependency from the feature.
+
+---
+
+## How to Update (Manual Editing)
+
+You can also edit `data.js` manually if you prefer:
 
 ### When You Start a New Feature
 
@@ -361,6 +425,38 @@ Modify the CSS grid, flexbox, or spacing in the `<style>` section.
 - **Problem**: Syntax error in `data.js`
 - **Fix**: Check browser console (F12) for errors
 - **Common**: Missing comma, extra comma, unclosed brackets
+
+### "File System Access API not supported in this browser"
+- **Problem**: Using Firefox or Safari
+- **Fix**: Switch to Chrome or Edge for interactive features
+- **Alternative**: Edit `data.js` manually (interactive features not required)
+
+### Changes don't persist after page refresh
+- **Problem**: File connection lost (session-based)
+- **Fix**: Click "📂 Select data.js File" to reconnect
+- **Why**: Security feature of File System Access API
+
+### "Cannot move to Next Up. Dependencies not met"
+- **Problem**: Trying to move a feature that depends on unfinished features
+- **Fix Option 1**: Complete and ship the dependent features first
+- **Fix Option 2**: Edit `data.js` to remove dependencies from the feature
+- **Example**: PM-2 depends on PM-1, so PM-1 must be shipped before PM-2 can move to Next Up
+
+### Drag-and-drop not working
+- **Problem**: Can't drag backlog features
+- **Fix**:
+  1. Ensure you're using Chrome or Edge (drag-and-drop uses modern APIs)
+  2. Look for the ✋ drag hint on backlog features
+  3. Try refreshing the page (Cmd+R or Ctrl+R)
+  4. Make sure you're not holding down Ctrl/Cmd while dragging
+
+### File doesn't save / Changes not applying
+- **Problem**: File handle lost or file locked
+- **Fix**:
+  1. Check browser console (F12) for error messages
+  2. Ensure you selected the correct `data.js` file
+  3. Ensure file is not open/locked by another program (close VS Code, etc.)
+  4. Try disconnecting and reconnecting to the file
 
 ### Styles look broken
 - **Problem**: Browser cache

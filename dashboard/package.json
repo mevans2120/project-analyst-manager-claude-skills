@@ -1,0 +1,21 @@
+{
+  "name": "project-management-dashboard",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Interactive dashboard for Project Management Suite with Vite + Lit",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lit": "^3.1.0",
+    "lucide-static": "^0.546.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8"
+  }
+}

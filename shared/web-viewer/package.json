@@ -1,0 +1,29 @@
+{
+  "name": "@project-management-suite/web-viewer",
+  "version": "0.1.0",
+  "description": "Shared web viewing library for fetching and analyzing web pages with AI",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "web-fetcher",
+    "ai-analysis",
+    "web-scraping",
+    "claude-ai",
+    "shared-library"
+  ],
+  "author": "Michael Evans",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "playwright": "^1.56.1"
+  }
+}

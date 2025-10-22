@@ -6,6 +6,7 @@
 export * from './types';
 export * from './core/stateTracker';
 export * from './core/issueCreator';
+export * from './core/DashboardSync';
 export * from './utils/githubClient';
 export * from './utils/labelManager';
 export * from './formatters/reportGenerator';
@@ -134,6 +135,23 @@ export class ProjectManager {
    */
   saveState() {
     saveState(this.config.stateFile, this.state);
+  }
+
+  /**
+   * Check dashboard sync status
+   */
+  async checkDashboardSync(rootPath: string) {
+    const { DashboardSync } = await import('./core/DashboardSync');
+    const sync = new DashboardSync(rootPath);
+    const report = await sync.generateReport();
+    const formatted = sync.formatReport(report);
+
+    console.log(formatted);
+
+    return {
+      report,
+      formatted
+    };
   }
 }
 

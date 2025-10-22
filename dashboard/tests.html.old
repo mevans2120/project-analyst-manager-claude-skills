@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Status Dashboard - Project Management Suite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: #161b22;
+      padding: 30px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border: 1px solid #30363d;
+    }
+
+    h1 {
+      color: #58a6ff;
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      background: #238636;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: #2ea043;
+    }
+
+    .btn.secondary {
+      background: #21262d;
+    }
+
+    .btn.secondary:hover {
+      background: #30363d;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-number.passing {
+      color: #3fb950;
+    }
+
+    .stat-number.failing {
+      color: #f85149;
+    }
+
+    .stat-number.skipped {
+      color: #d29922;
+    }
+
+    .stat-label {
+      color: #8b949e;
+      font-size: 14px;
+    }
+
+    .filters {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-label {
+      color: #8b949e;
+      font-size: 14px;
+    }
+
+    select, input {
+      background: #0d1117;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #58a6ff;
+    }
+
+    .test-list {
+      background: #161b22;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      overflow: hidden;
+    }
+
+    .test-item {
+      padding: 15px 20px;
+      border-bottom: 1px solid #30363d;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .test-item:hover {
+      background: #1c2128;
+    }
+
+    .test-item:last-child {
+      border-bottom: none;
+    }
+
+    .test-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .test-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #c9d1d9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-badge {
+      font-size: 20px;
+    }
+
+    .test-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      color: #8b949e;
+      flex-wrap: wrap;
+    }
+
+    .test-details {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #30363d;
+      display: none;
+    }
+
+    .test-item.expanded .test-details {
+      display: block;
+    }
+
+    .error-message {
+      background: #1c1117;
+      border: 1px solid #f85149;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #f85149;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    .empty-state {
+      padding: 60px;
+      text-align: center;
+      color: #8b949e;
+    }
+
+    .empty-state-emoji {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .loading {
+      padding: 60px;
+      text-align: center;
+      color: #8b949e;
+    }
+
+    .package-badge {
+      background: #21262d;
+      color: #58a6ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .duration {
+      color: #8b949e;
+    }
+
+    .suite-name {
+      color: #d29922;
+    }
+
+    @media (max-width: 768px) {
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        width: 100%;
+      }
+
+      select, input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧪 Test Status Dashboard</h1>
+      <p style="color: #8b949e; margin-bottom: 15px;">Real-time test suite health monitoring</p>
+      <div class="header-actions">
+        <a href="index.html" class="btn secondary">← Back to Roadmap</a>
+        <button class="btn" onclick="loadTestData()">🔄 Refresh</button>
+      </div>
+    </header>
+
+    <div id="stats" class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="total-tests">-</div>
+        <div class="stat-label">Total Tests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number passing" id="passing-tests">-</div>
+        <div class="stat-label">Passing</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number failing" id="failing-tests">-</div>
+        <div class="stat-label">Failing</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number skipped" id="skipped-tests">-</div>
+        <div class="stat-label">Skipped</div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label class="filter-label">Package:</label>
+        <select id="package-filter" onchange="filterTests()">
+          <option value="all">All Packages</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Status:</label>
+        <select id="status-filter" onchange="filterTests()">
+          <option value="all">All Status</option>
+          <option value="passed">✅ Passed</option>
+          <option value="failed">❌ Failed</option>
+          <option value="skipped">⏭️ Skipped</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Search:</label>
+        <input type="text" id="search-input" placeholder="Search tests..." oninput="filterTests()">
+      </div>
+    </div>
+
+    <div id="test-list" class="test-list">
+      <div class="loading">
+        <div>⏳ Loading test data...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let testData = null;
+    let allTests = [];
+
+    // Load test data
+    async function loadTestData() {
+      try {
+        const response = await fetch('../.test-status/latest.json');
+        if (!response.ok) {
+          throw new Error('Failed to load test data');
+        }
+
+        testData = await response.json();
+
+        // testData is an array of package results
+        allTests = [];
+        testData.forEach(packageData => {
+          allTests.push(...packageData.tests);
+        });
+
+        renderStats();
+        populatePackageFilter();
+        filterTests();
+      } catch (error) {
+        console.error('Error loading test data:', error);
+        document.getElementById('test-list').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-emoji">⚠️</div>
+            <p><strong>No test data found</strong></p>
+            <p style="margin-top: 10px;">Run <code>npm test</code> in any package to generate test data</p>
+          </div>
+        `;
+      }
+    }
+
+    // Render stats
+    function renderStats() {
+      if (!testData) return;
+
+      let totalTests = 0;
+      let passing = 0;
+      let failing = 0;
+      let skipped = 0;
+
+      testData.forEach(packageData => {
+        totalTests += packageData.totalTests;
+        passing += packageData.passed;
+        failing += packageData.failed;
+        skipped += packageData.skipped;
+      });
+
+      document.getElementById('total-tests').textContent = totalTests;
+      document.getElementById('passing-tests').textContent = passing;
+      document.getElementById('failing-tests').textContent = failing;
+      document.getElementById('skipped-tests').textContent = skipped;
+    }
+
+    // Populate package filter
+    function populatePackageFilter() {
+      if (!testData) return;
+
+      const packageFilter = document.getElementById('package-filter');
+      const packages = [...new Set(testData.map(p => p.package))];
+
+      packages.forEach(pkg => {
+        const option = document.createElement('option');
+        option.value = pkg;
+        option.textContent = pkg.charAt(0).toUpperCase() + pkg.slice(1);
+        packageFilter.appendChild(option);
+      });
+    }
+
+    // Filter tests
+    function filterTests() {
+      const packageFilter = document.getElementById('package-filter').value;
+      const statusFilter = document.getElementById('status-filter').value;
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+      let filtered = allTests.filter(test => {
+        const matchesPackage = packageFilter === 'all' || test.package === packageFilter;
+        const matchesStatus = statusFilter === 'all' || test.status === statusFilter;
+        const matchesSearch = !searchTerm ||
+          test.name.toLowerCase().includes(searchTerm) ||
+          test.suite.toLowerCase().includes(searchTerm) ||
+          test.file.toLowerCase().includes(searchTerm);
+
+        return matchesPackage && matchesStatus && matchesSearch;
+      });
+
+      renderTests(filtered);
+    }
+
+    // Render tests
+    function renderTests(tests) {
+      const testList = document.getElementById('test-list');
+
+      if (tests.length === 0) {
+        testList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-emoji">🔍</div>
+            <p><strong>No tests match your filters</strong></p>
+          </div>
+        `;
+        return;
+      }
+
+      testList.innerHTML = tests.map(test => {
+        const statusEmoji = test.status === 'passed' ? '✅' :
+                           test.status === 'failed' ? '❌' : '⏭️';
+
+        return `
+          <div class="test-item" onclick="toggleTestDetails(event, '${test.testId}')">
+            <div class="test-header">
+              <div class="test-name">
+                <span class="status-badge">${statusEmoji}</span>
+                <span>${test.name}</span>
+              </div>
+              <span class="duration">${test.duration}ms</span>
+            </div>
+            <div class="test-meta">
+              <span class="package-badge">${test.package}</span>
+              <span class="suite-name">${test.suite}</span>
+              <span style="color: #6e7681;">${test.file}</span>
+            </div>
+            ${test.error ? `
+              <div class="test-details" id="details-${test.testId}">
+                <div class="error-message">${escapeHtml(test.error.message)}</div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Toggle test details
+    function toggleTestDetails(event, testId) {
+      const testItem = event.currentTarget;
+      testItem.classList.toggle('expanded');
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Load on page load
+    loadTestData();
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadTestData, 30000);
+  </script>
+</body>
+</html>

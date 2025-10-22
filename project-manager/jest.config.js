@@ -9,5 +9,9 @@ module.exports = {
     '!src/cli.ts'
   ],
   coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov', 'html']
+  coverageReporters: ['text', 'lcov', 'html'],
+  reporters: [
+    'default',
+    ['<rootDir>/dist/reporters/TestStatusReporter.js', {}]
+  ]
 };

@@ -283,6 +283,148 @@ Use these standard phase names:
 
 ---
 
+## Interactive Dashboard Features
+
+### Overview
+
+The dashboard (`dashboard/index.html`) includes interactive features that allow you to move features between sections with automatic file saving.
+
+**Key Features**:
+- ✅ Drag-and-drop features from "Backlog" to "Next Up" with dependency validation
+- ✅ Move features from "Next Up" to "Current" with one click
+- ✅ Auto-save changes directly to `data.js` (no copy/paste)
+- ✅ File System Access API for seamless updates
+
+### Browser Requirements
+
+**Compatible Browsers**:
+- ✅ Chrome (recommended)
+- ✅ Edge
+- ❌ Firefox (File System Access API not supported)
+- ❌ Safari (File System Access API not supported)
+
+**Why Chrome/Edge?**: The interactive features use the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API), which is only available in Chromium-based browsers.
+
+### How to Use
+
+#### First-Time Setup
+
+1. **Open the dashboard**:
+   ```bash
+   open dashboard/index.html
+   ```
+   Or drag `index.html` into Chrome/Edge
+
+2. **Connect to data.js**:
+   - Click the "📂 Connect File for Auto-Save" banner at the top
+   - Select `dashboard/data.js` in the file picker
+   - Grant permission when prompted
+
+3. **Start moving features**:
+   - Drag any Backlog feature and drop it on the Next Up section
+   - Click "▶️ Start This Feature" on any Next Up feature to move it to Current
+
+#### Daily Workflow
+
+1. **View current state**: Open `dashboard/index.html` in browser
+2. **Move features**: Click buttons to update roadmap
+3. **Changes auto-save**: File is updated immediately
+4. **Refresh to see updates**: Reload page to see the new state
+
+### Interactive Controls
+
+**Next Up Features**:
+- **Button**: "▶️ Start This Feature"
+- **Action**: Moves feature to Current and In Progress
+- **Effect**: Feature removed from Next Up, added to both `current` array and `inProgress` array
+- **Initial progress**: Set to 0%
+
+**Backlog Features**:
+- **Drag-and-Drop**: Drag feature to Next Up section
+- **Action**: Moves feature to Next Up (with dependency validation)
+- **Visual Feedback**: Feature becomes semi-transparent while dragging, drop zone highlights when hovering
+- **Validation**: Checks that all dependencies are in `shipped` status
+- **Alert**: Shows error if dependencies are not met
+
+### Dependency Validation
+
+When moving a feature from Backlog to Next Up, the dashboard automatically checks dependencies:
+
+```javascript
+// Example: Cannot move PM-2 to Next Up if PM-1 is not shipped
+feature: {
+  id: "shared-playwright",
+  number: 2,
+  dependencies: ["shared-webfetcher"]  // PM-1 must be shipped first
+}
+```
+
+**Validation Rules**:
+- ✅ All dependencies must be in `features.shipped` array
+- ❌ If any dependency is not shipped, shows alert with missing dependencies
+- ✅ If all dependencies met, feature moves to Next Up
+
+### File Persistence
+
+**How Auto-Save Works**:
+
+1. **File Connection**: User grants one-time permission to `data.js`
+2. **File Handle Stored**: Browser keeps reference to the file in memory
+3. **On Move**: `saveRoadmap()` writes to file using File System Access API
+4. **Format Preserved**: File is written with exact same structure as template
+
+**Generated File Format**:
+```javascript
+// dashboard/data.js
+// Update this file to reflect current project status
+
+const productRoadmap = {
+  // ... data ...
+};
+
+// Auto-calculate stats
+productRoadmap.stats = {
+  // ... stats ...
+};
+```
+
+**Session-Based**: File handle is stored in memory, not localStorage. You'll need to reconnect after:
+- Browser restart
+- Tab close
+- Page refresh
+
+### Troubleshooting
+
+**Issue**: "File System Access API not supported in this browser"
+- **Solution**: Switch to Chrome or Edge
+
+**Issue**: Changes don't persist after page refresh
+- **Solution**: Click "📂 Select data.js File" to reconnect
+
+**Issue**: "Cannot move to Next Up. Dependencies not met"
+- **Solution**: Complete and ship the dependent features first, or remove dependencies from the feature
+
+**Issue**: File doesn't save
+- **Solution**:
+  1. Check browser console for errors
+  2. Ensure you selected the correct `data.js` file
+  3. Ensure file is not open/locked by another program
+
+### Implementation Details
+
+**State Management**:
+- `currentRoadmap`: In-memory copy of roadmap data
+- `fileHandle`: Reference to `data.js` file (File System Access API)
+- `hasChanges`: Flag indicating unsaved changes
+
+**Key Functions**:
+- `selectDataFile()`: Opens file picker and stores handle
+- `saveRoadmap()`: Writes current state to file
+- `moveToCurrent(featureId)`: Moves feature from Next Up → Current
+- `moveToNextUp(featureId)`: Moves feature from Backlog → Next Up (with validation)
+
+---
+
 ## Testing Conventions
 
 ### Test File Naming
