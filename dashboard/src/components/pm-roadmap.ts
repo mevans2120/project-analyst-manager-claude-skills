@@ -813,9 +813,28 @@ export class PMRoadmap extends BaseComponent {
           <div class="action-buttons">
             <pm-action-button
               action="analyze"
-              .payload=${{ repoPath: '.', options: { includeCompleted: false } }}
+              .payload=${{ repoPath: '.', options: { includeCompleted: false, format: 'json' } }}
               @action-created="${this.handleActionCreated}"
             ></pm-action-button>
+
+            <pm-action-button
+              action="create-issues"
+              .payload=${{ inputFile: '.project-analysis.json', dryRun: true }}
+              @action-created="${this.handleActionCreated}"
+            ></pm-action-button>
+
+            <pm-action-button
+              action="export-roadmap"
+              .payload=${{ format: this.exportFormat, groupBy: 'phase', outputFile: 'roadmap-export' }}
+              @action-created="${this.handleActionCreated}"
+            ></pm-action-button>
+
+            <pm-action-button
+              action="verify-production"
+              .payload=${{ baseUrl: 'http://localhost:5174', tier: 'all' }}
+              @action-created="${this.handleActionCreated}"
+            ></pm-action-button>
+
             ${this.hasSavedChanges ? html`
               <span class="saved-indicator">
                 <pm-icon name="CheckCircle2" size="sm"></pm-icon>

@@ -8,7 +8,9 @@ export type ActionType =
   | 'create-issues'
   | 'update-feature'
   | 'run-tests'
-  | 'discover-web';
+  | 'discover-web'
+  | 'export-roadmap'
+  | 'verify-production';
 
 export type ActionStatus = 'pending' | 'processing' | 'completed' | 'failed';
 
@@ -68,6 +70,19 @@ export interface DiscoverWebPayload {
   outputFile?: string;
 }
 
+export interface ExportRoadmapPayload {
+  format: 'markdown' | 'html' | 'json';
+  outputFile?: string;
+  groupBy?: 'phase' | 'category' | 'priority';
+}
+
+export interface VerifyProductionPayload {
+  baseUrl: string;
+  features?: string[]; // Feature IDs to verify, or all if not specified
+  tier?: '1' | '2' | '3' | 'all';
+  stagingUrl?: string; // For deployment comparison
+}
+
 /**
  * Helper function to create action requests
  */
@@ -93,15 +108,19 @@ export function createActionRequest(
 export function getActionDisplayName(type: ActionType): string {
   switch (type) {
     case 'analyze':
-      return 'Run Analysis';
+      return 'Analyze TODOs';
     case 'create-issues':
-      return 'Create GitHub Issues';
+      return 'Create Issues';
     case 'update-feature':
       return 'Update Feature';
     case 'run-tests':
       return 'Run Tests';
     case 'discover-web':
       return 'Discover from Web';
+    case 'export-roadmap':
+      return 'Export Roadmap';
+    case 'verify-production':
+      return 'Verify Production';
     default:
       return type;
   }
@@ -122,6 +141,10 @@ export function getActionIcon(type: ActionType): string {
       return 'TestTube';
     case 'discover-web':
       return 'Globe';
+    case 'export-roadmap':
+      return 'Download';
+    case 'verify-production':
+      return 'CheckCircle2';
     default:
       return 'Play';
   }
@@ -142,6 +165,10 @@ export function getActionDescription(type: ActionType): string {
       return 'Execute test suite and update dashboard';
     case 'discover-web':
       return 'Analyze website to discover features';
+    case 'export-roadmap':
+      return 'Export roadmap to file (Markdown, HTML, or JSON)';
+    case 'verify-production':
+      return 'Verify features work in production environment';
     default:
       return '';
   }
