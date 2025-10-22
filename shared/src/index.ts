@@ -8,6 +8,7 @@ export { PlaywrightDriver } from './core/PlaywrightDriver';
 export { ScreenshotCapture } from './core/ScreenshotCapture';
 export { NetworkMonitor } from './core/NetworkMonitor';
 export { FeatureExtractor, FunctionalityChecker, VisualAnalyzer } from './core/FeatureExtractor';
+export { IntegrationWorkflow } from './workflows/IntegrationWorkflow';
 export * from './types';
 export * from './types/playwright';
 export * from './types/screenshot';
