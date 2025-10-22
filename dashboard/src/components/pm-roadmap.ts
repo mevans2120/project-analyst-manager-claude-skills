@@ -10,6 +10,7 @@ import type { Feature, RoadmapData } from '../types/roadmap';
 import type { FilterGroup } from './pm-filter-bar';
 import { RoadmapPersistence } from '../services/roadmap-persistence';
 import { RoadmapExport, type ExportFormat } from '../services/roadmap-export';
+import { FileWatcher } from '../services/file-watcher';
 import './pm-stat-card';
 import './pm-badge';
 import './pm-search-input';
@@ -46,6 +47,7 @@ export class PMRoadmap extends BaseComponent {
   private exportFormat: ExportFormat = 'json';
 
   private filterGroups: FilterGroup[] = [];
+  private fileWatcher: FileWatcher | null = null;
 
   static styles = [
     BaseComponent.styles,
@@ -319,11 +321,17 @@ export class PMRoadmap extends BaseComponent {
     console.log('[pm-roadmap] Component connected to DOM');
     // Always load data when component connects to DOM
     this.loadRoadmapData();
+
+    // PM-25: Start watching data.js for changes
+    this.startFileWatcher();
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     console.log('[pm-roadmap] Component disconnected from DOM');
+
+    // PM-25: Stop watching files
+    this.stopFileWatcher();
   }
 
   private async loadRoadmapData(): Promise<void> {
@@ -385,6 +393,35 @@ export class PMRoadmap extends BaseComponent {
       this.buildFilterGroups();
       console.log('[pm-roadmap] Built filter groups, ready to render');
     }, 'Failed to load roadmap data');
+  }
+
+  /**
+   * PM-25: Start watching data.js for changes
+   */
+  private startFileWatcher(): void {
+    if (this.fileWatcher) return; // Already watching
+
+    this.fileWatcher = new FileWatcher();
+    this.fileWatcher.watch(['/data.js']);
+
+    this.fileWatcher.addEventListener('file-changed', ((e: CustomEvent) => {
+      console.log('[pm-roadmap] File changed:', e.detail.file);
+      console.log('[pm-roadmap] Auto-reloading roadmap data...');
+      this.loadRoadmapData();
+    }) as EventListener);
+
+    console.log('[pm-roadmap] File watcher started for /data.js');
+  }
+
+  /**
+   * PM-25: Stop watching files
+   */
+  private stopFileWatcher(): void {
+    if (this.fileWatcher) {
+      this.fileWatcher.stop();
+      this.fileWatcher = null;
+      console.log('[pm-roadmap] File watcher stopped');
+    }
   }
 
   private buildFilterGroups(): void {
