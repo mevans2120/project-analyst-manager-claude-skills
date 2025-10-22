@@ -212,11 +212,12 @@ When adding features to `dashboard/data.js`:
 ```javascript
 {
   id: "kebab-case-id",              // Unique identifier
+  number: 1,                         // Feature number (sequential, used for references)
   name: "Human Readable Name",       // What shows in UI
   category: "Category Name",         // Planner, Analyzer, Manager, etc.
   phase: "Phase X",                  // Phase 0, Phase 1, Phase 2, etc.
   priority: "P0",                    // P0, P1, P2, P3
-  dependencies: ["other-id"],        // What must be done first
+  dependencies: ["other-id"],        // What must be done first (use IDs, dashboard converts to numbers)
   value: "Why this matters",         // Business value
 
   // For in-progress only:
@@ -228,6 +229,22 @@ When adding features to `dashboard/data.js`:
   shippedDate: "2025-10-21"         // YYYY-MM-DD
 }
 ```
+
+### Feature Numbering
+
+Features are numbered sequentially starting from 1:
+- **Next Up**: #1-3 (features ready to start)
+- **Backlog**: #4-17 (features not yet ready)
+- **Future features**: Continue numbering from last backlog item
+
+**Purpose**: Feature numbers allow easy reference in discussions and dependency tracking.
+
+**Example**: "Feature #2 depends on #1" is clearer than "PlaywrightDriver depends on shared-webfetcher"
+
+**Rules**:
+- Numbers are permanent - don't renumber when features move between sections
+- When adding new features, assign the next available number
+- Dependencies use IDs in the data, but dashboard displays as numbers (#1, #5, etc.)
 
 ### Phase Names
 

@@ -103,6 +103,7 @@ const productRoadmap = {
     nextUp: [
       {
         id: "shared-webfetcher",
+        number: 1,
         name: "WebFetcher - Static HTML Analysis",
         category: "Shared Library",
         phase: "Phase 0",
@@ -112,6 +113,7 @@ const productRoadmap = {
       },
       {
         id: "shared-playwright",
+        number: 2,
         name: "PlaywrightDriver - Browser Automation",
         category: "Shared Library",
         phase: "Phase 0",
@@ -121,6 +123,7 @@ const productRoadmap = {
       },
       {
         id: "planner-registry",
+        number: 3,
         name: "CSV Feature Registry",
         category: "Planner",
         phase: "Phase 1",
@@ -134,6 +137,7 @@ const productRoadmap = {
     backlog: [
       {
         id: "shared-screenshot",
+        number: 4,
         name: "ScreenshotCapture - Visual Documentation",
         category: "Shared Library",
         phase: "Phase 0",
@@ -143,6 +147,7 @@ const productRoadmap = {
       },
       {
         id: "shared-network",
+        number: 5,
         name: "NetworkMonitor - API Discovery",
         category: "Shared Library",
         phase: "Phase 0",
@@ -152,6 +157,7 @@ const productRoadmap = {
       },
       {
         id: "shared-extractors",
+        number: 6,
         name: "Feature Extractors Suite",
         category: "Shared Library",
         phase: "Phase 0",
@@ -161,6 +167,7 @@ const productRoadmap = {
       },
       {
         id: "planner-code-discovery",
+        number: 7,
         name: "Code-Based Feature Discovery",
         category: "Planner",
         phase: "Phase 1",
@@ -170,6 +177,7 @@ const productRoadmap = {
       },
       {
         id: "planner-web-discovery",
+        number: 8,
         name: "Web-Based Feature Discovery",
         category: "Planner",
         phase: "Phase 1",
@@ -179,6 +187,7 @@ const productRoadmap = {
       },
       {
         id: "planner-roadmap-export",
+        number: 9,
         name: "Roadmap Export (Markdown/HTML)",
         category: "Planner",
         phase: "Phase 1",
@@ -188,6 +197,7 @@ const productRoadmap = {
       },
       {
         id: "analyzer-verification",
+        number: 10,
         name: "Production Verification (3-tier)",
         category: "Analyzer",
         phase: "Phase 2",
@@ -197,6 +207,7 @@ const productRoadmap = {
       },
       {
         id: "analyzer-deployment-verify",
+        number: 11,
         name: "Deployment Verification Workflow",
         category: "Analyzer",
         phase: "Phase 2",
@@ -206,6 +217,7 @@ const productRoadmap = {
       },
       {
         id: "manager-screenshots",
+        number: 12,
         name: "Screenshot Documentation for Issues",
         category: "Manager",
         phase: "Phase 3",
@@ -215,6 +227,7 @@ const productRoadmap = {
       },
       {
         id: "manager-multi-viewport",
+        number: 13,
         name: "Multi-Viewport Screenshot Capture",
         category: "Manager",
         phase: "Phase 3",
@@ -224,6 +237,7 @@ const productRoadmap = {
       },
       {
         id: "manager-visual-comparison",
+        number: 14,
         name: "Before/After Visual Comparison",
         category: "Manager",
         phase: "Phase 3",
@@ -233,6 +247,7 @@ const productRoadmap = {
       },
       {
         id: "manager-ui-scan",
+        number: 15,
         name: "Automated UI Bug Detection",
         category: "Manager",
         phase: "Phase 3",
@@ -242,6 +257,7 @@ const productRoadmap = {
       },
       {
         id: "integration-workflow",
+        number: 16,
         name: "Complete Planner → Analyzer → Manager Workflow",
         category: "Integration",
         phase: "Integration",
@@ -251,6 +267,7 @@ const productRoadmap = {
       },
       {
         id: "dashboard-live",
+        number: 17,
         name: "Live Interactive Dashboard (This!)",
         category: "Planner",
         phase: "Future",
