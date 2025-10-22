@@ -12,17 +12,7 @@ const productRoadmap = {
 
   // What you're working on RIGHT NOW
   current: [
-    // Nothing started yet - uncomment when you begin
-    // {
-    //   id: "shared-webfetcher",
-    //   name: "WebFetcher - Static HTML Analysis",
-    //   category: "Shared Library",
-    //   priority: "P0",
-    //   progress: 0,
-    //   blockers: [],
-    //   value: "Foundation for all web viewing capabilities",
-    //   notes: "Core component that enables Planner, Analyzer, and Manager to fetch and analyze web pages"
-    // }
+    // Nothing in progress - ready to start next feature!
   ],
 
   // ALL features organized by status
@@ -92,26 +82,34 @@ const productRoadmap = {
         phase: "Phase 2",
         shippedDate: "2025-10-17",
         value: "Scans 20+ file types for TODOs, FIXMEs, BUGs with 1000 files/sec performance"
-      }
-    ],
-
-    // 🏗️ IN PROGRESS (Currently building)
-    inProgress: [
-      // Empty - add here when you start working on something
-    ],
-
-    // 🔜 NEXT UP (Ready to start - no blockers)
-    nextUp: [
+      },
       {
         id: "shared-webfetcher",
         number: 1,
         name: "WebFetcher - Static HTML Analysis",
         category: "Shared Library",
         phase: "Phase 0",
-        priority: "P0",
-        dependencies: [],
-        value: "Foundation for all web viewing - enables static site analysis with AI"
+        shippedDate: "2025-10-22",
+        value: "Foundation for all web viewing - 7 tests passing, fetch & analyze HTML with AI"
       },
+      {
+        id: "planner-registry",
+        number: 3,
+        name: "CSV Feature Registry",
+        category: "Planner",
+        phase: "Phase 1",
+        shippedDate: "2025-10-22",
+        value: "Single source of truth for features - 17 tests passing, full CRUD with dependency tracking"
+      }
+    ],
+
+    // 🏗️ IN PROGRESS (Currently building)
+    inProgress: [
+      // Nothing in progress - ready to start!
+    ],
+
+    // 🔜 NEXT UP (Ready to start - no blockers)
+    nextUp: [
       {
         id: "shared-playwright",
         number: 2,
@@ -121,16 +119,6 @@ const productRoadmap = {
         priority: "P0",
         dependencies: ["shared-webfetcher"],
         value: "Enables SPA navigation, authentication, and dynamic content analysis"
-      },
-      {
-        id: "planner-registry",
-        number: 3,
-        name: "CSV Feature Registry",
-        category: "Planner",
-        phase: "Phase 1",
-        priority: "P0",
-        dependencies: [],
-        value: "Single source of truth for all product features - core of Planner skill"
       }
     ],
 
@@ -315,9 +303,9 @@ const productRoadmap = {
 
   // Quick stats (auto-calculated for header)
   stats: {
-    shipped: 8,
+    shipped: 10,
     inProgress: 0,
-    nextUp: 3,
+    nextUp: 1,
     backlog: 15,
     total: 26
   }
