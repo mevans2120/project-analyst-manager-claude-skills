@@ -104,7 +104,7 @@ export class PMRoadmap extends BaseComponent {
       .features-container {
         display: grid;
         grid-template-columns: 1fr;
-        gap: var(--spacing-xl, 32px);
+        gap: 16px;
         width: 100%;
       }
 

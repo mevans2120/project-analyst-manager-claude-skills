@@ -22,13 +22,13 @@ export class PMFeatureCard extends BaseComponent {
         background: var(--bg-secondary, #161b22);
         border: 1px solid var(--border-primary, #30363d);
         border-radius: var(--radius-md, 6px);
-        padding: var(--spacing-lg, 24px);
-        padding-bottom: var(--spacing-xl, 32px);
+        padding: 16px;
+        padding-bottom: 20px;
         transition: all 0.2s ease;
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-md, 16px);
-        margin-bottom: var(--spacing-lg, 24px);
+        gap: 12px;
+        margin-bottom: 12px;
       }
 
       .feature-card:hover {
@@ -62,18 +62,18 @@ export class PMFeatureCard extends BaseComponent {
       }
 
       .feature-name {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         color: var(--text-primary, #c9d1d9);
-        line-height: 1.4;
+        line-height: 1.3;
         margin: 0;
       }
 
       .feature-id {
-        font-size: 11px;
+        font-size: 10px;
         color: var(--text-tertiary, #6e7681);
         font-family: var(--font-mono, monospace);
-        margin-top: var(--spacing-xs, 4px);
+        margin-top: 2px;
       }
 
       .feature-badges {
@@ -85,18 +85,18 @@ export class PMFeatureCard extends BaseComponent {
 
       .feature-value {
         color: var(--text-secondary, #8b949e);
-        font-size: 14px;
-        line-height: 1.6;
+        font-size: 13px;
+        line-height: 1.5;
         flex: 1;
       }
 
       .feature-footer {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--spacing-md, 16px);
-        padding-top: var(--spacing-sm, 8px);
+        gap: 12px;
+        padding-top: 8px;
         border-top: 1px solid var(--border-primary, #30363d);
-        font-size: 12px;
+        font-size: 11px;
       }
 
       .feature-meta {
