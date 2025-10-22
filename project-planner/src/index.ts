@@ -4,4 +4,6 @@
  */
 
 export { CSVFeatureRegistry } from './core/FeatureRegistry';
+export { CodeDiscovery } from './core/CodeDiscovery';
 export * from './types';
+export * from './types/discovery';

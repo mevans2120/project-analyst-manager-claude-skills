@@ -12,7 +12,26 @@ const productRoadmap = {
 
   // What you're working on RIGHT NOW
   current: [
-    // All features complete! Ready for next batch.
+    {
+      id: "shared-screenshot",
+      name: "ScreenshotCapture - Multi-viewport",
+      category: "Shared Library",
+      priority: "P0",
+      progress: 0,
+      blockers: [],
+      value: "Screenshot management and AI visual analysis",
+      notes: "Building on PlaywrightDriver - enables visual testing"
+    },
+    {
+      id: "planner-code-discovery",
+      name: "Code-Based Feature Discovery",
+      category: "Planner",
+      priority: "P0",
+      progress: 0,
+      blockers: [],
+      value: "Analyze React/Express code to discover features",
+      notes: "Makes Planner functional - working in parallel with PM-4"
+    }
   ],
 
   // ALL features organized by status
@@ -109,12 +128,30 @@ const productRoadmap = {
         phase: "Phase 0",
         shippedDate: "2025-10-22",
         value: "Complete browser automation - Chromium/Firefox/WebKit, auth, screenshots, network monitoring (400+ lines)"
+      },
+      {
+        id: "shared-screenshot",
+        number: 4,
+        name: "ScreenshotCapture - Multi-viewport Screenshots",
+        category: "Shared Library",
+        phase: "Phase 0",
+        shippedDate: "2025-10-22",
+        value: "Multi-viewport screenshots with comparison, scroll sequences, and file management (300+ lines)"
+      },
+      {
+        id: "planner-code-discovery",
+        number: 7,
+        name: "Code-Based Feature Discovery",
+        category: "Planner",
+        phase: "Phase 1",
+        shippedDate: "2025-10-22",
+        value: "Analyze React routes, Express endpoints, components, and configs to discover features (400+ lines)"
       }
     ],
 
     // 🏗️ IN PROGRESS (Currently building)
     inProgress: [
-      // Ready for next features!
+      // All clear!
     ],
 
     // 🔜 NEXT UP (Ready to start - no blockers)
@@ -124,16 +161,6 @@ const productRoadmap = {
 
     // 📋 BACKLOG (Not started yet)
     backlog: [
-      {
-        id: "shared-screenshot",
-        number: 4,
-        name: "ScreenshotCapture - Visual Documentation",
-        category: "Shared Library",
-        phase: "Phase 0",
-        priority: "P0",
-        dependencies: ["shared-playwright"],
-        value: "Screenshot management and AI visual analysis for all skills"
-      },
       {
         id: "shared-network",
         number: 5,
@@ -153,16 +180,6 @@ const productRoadmap = {
         priority: "P0",
         dependencies: ["shared-playwright", "shared-screenshot"],
         value: "FeatureExtractor, FunctionalityChecker, VisualAnalyzer for all skills"
-      },
-      {
-        id: "planner-code-discovery",
-        number: 7,
-        name: "Code-Based Feature Discovery",
-        category: "Planner",
-        phase: "Phase 1",
-        priority: "P0",
-        dependencies: ["planner-registry"],
-        value: "Analyze React routes, Express endpoints, config files to discover features"
       },
       {
         id: "planner-web-discovery",
@@ -303,10 +320,10 @@ const productRoadmap = {
 
   // Quick stats (auto-calculated for header)
   stats: {
-    shipped: 11,
+    shipped: 13,
     inProgress: 0,
     nextUp: 0,
-    backlog: 15,
+    backlog: 13,
     total: 26
   }
 };
