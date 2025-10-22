@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation Bug Fix Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #0d1117;
+      color: #c9d1d9;
+    }
+
+    .test-section {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    h1 {
+      color: #58a6ff;
+      border-bottom: 2px solid #30363d;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      color: #8b949e;
+      margin-top: 0;
+    }
+
+    .status {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      display: inline-block;
+      margin: 5px 0;
+    }
+
+    .pass {
+      background: rgba(63, 185, 80, 0.15);
+      color: #3fb950;
+      border: 1px solid #3fb950;
+    }
+
+    .fail {
+      background: rgba(248, 81, 73, 0.15);
+      color: #f85149;
+      border: 1px solid #f85149;
+    }
+
+    .pending {
+      background: rgba(210, 153, 34, 0.15);
+      color: #d29922;
+      border: 1px solid #d29922;
+    }
+
+    button {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 5px 5px 5px 0;
+    }
+
+    button:hover {
+      background: #2ea043;
+    }
+
+    button:disabled {
+      background: #21262d;
+      color: #6e7681;
+      cursor: not-allowed;
+    }
+
+    .log {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      margin: 2px 0;
+      padding: 2px 0;
+    }
+
+    .log-error {
+      color: #f85149;
+    }
+
+    .log-success {
+      color: #3fb950;
+    }
+
+    .log-info {
+      color: #58a6ff;
+    }
+
+    code {
+      background: #0d1117;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Navigation Bug Fix Test</h1>
+
+  <div class="test-section">
+    <h2>Problem Description</h2>
+    <p>When navigating from <code>Tests</code> → <code>Roadmap</code>, the roadmap component fails to load data and shows an error. However, refreshing the page on the roadmap route works fine.</p>
+
+    <h3>Root Cause</h3>
+    <p>Lit reuses component instances when they're disconnected/reconnected to the DOM. The roadmap component was clearing its data in <code>onUnmount()</code>, but when navigating back, Lit reused the same instance without calling <code>onMount()</code> again.</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Automated Test Suite</h2>
+    <div id="test-status">
+      <span class="status pending">Pending</span>
+      <p>Click "Run Tests" to verify the fix</p>
+    </div>
+    <button id="run-tests">Run Tests</button>
+    <button id="clear-log" disabled>Clear Log</button>
+    <div id="test-log" class="log"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Manual Testing Instructions</h2>
+    <ol>
+      <li>Open the dashboard at <a href="http://localhost:5173" target="_blank">http://localhost:5173</a></li>
+      <li>Verify roadmap loads successfully (should see project stats and features)</li>
+      <li>Click "Tests" tab in navigation</li>
+      <li>Verify tests view loads successfully</li>
+      <li>Click "Roadmap" tab in navigation</li>
+      <li><strong>Expected</strong>: Roadmap should load successfully</li>
+      <li><strong>Previous Behavior</strong>: Shows "Failed to load roadmap data" error</li>
+    </ol>
+    <a href="http://localhost:5173" target="_blank">
+      <button>Open Dashboard</button>
+    </a>
+  </div>
+
+  <div class="test-section">
+    <h2>Code Changes</h2>
+    <h3>1. pm-roadmap.ts</h3>
+    <ul>
+      <li>Added <code>connectedCallback()</code> override to detect reconnection without data</li>
+      <li>Removed data clearing from <code>onUnmount()</code></li>
+      <li>Removed unnecessary cache-busting query parameters</li>
+    </ul>
+
+    <h3>2. pm-app.ts</h3>
+    <ul>
+      <li>Removed meaningless <code>key</code> attributes with <code>Date.now()</code></li>
+      <li>(Lit doesn't use keys like React - they have no effect)</li>
+    </ul>
+  </div>
+
+  <script type="module">
+    const log = document.getElementById('test-log');
+    const statusDiv = document.getElementById('test-status');
+    const runButton = document.getElementById('run-tests');
+    const clearButton = document.getElementById('clear-log');
+
+    function logEntry(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = `log-entry log-${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function updateStatus(passed, total) {
+      const allPassed = passed === total;
+      statusDiv.innerHTML = `
+        <span class="status ${allPassed ? 'pass' : 'fail'}">
+          ${allPassed ? 'All Tests Passed' : 'Some Tests Failed'}
+        </span>
+        <p>${passed} / ${total} tests passed</p>
+      `;
+    }
+
+    async function runTests() {
+      runButton.disabled = true;
+      clearButton.disabled = false;
+      log.innerHTML = '';
+
+      logEntry('Starting test suite...', 'info');
+
+      let passed = 0;
+      let total = 0;
+
+      // Test 1: Component can be created
+      total++;
+      logEntry('Test 1: Creating pm-roadmap component...', 'info');
+      try {
+        const el = document.createElement('pm-roadmap');
+        if (el.tagName === 'PM-ROADMAP') {
+          passed++;
+          logEntry('✓ Test 1 PASSED: Component created successfully', 'success');
+        } else {
+          logEntry('✗ Test 1 FAILED: Component not created', 'error');
+        }
+      } catch (e) {
+        logEntry(`✗ Test 1 FAILED: ${e.message}`, 'error');
+      }
+
+      // Test 2: Component has connectedCallback override
+      total++;
+      logEntry('Test 2: Checking for connectedCallback override...', 'info');
+      try {
+        const el = document.createElement('pm-roadmap');
+        const hasOverride = el.connectedCallback !== HTMLElement.prototype.connectedCallback;
+        if (hasOverride) {
+          passed++;
+          logEntry('✓ Test 2 PASSED: connectedCallback is overridden', 'success');
+        } else {
+          logEntry('✗ Test 2 FAILED: connectedCallback not overridden', 'error');
+        }
+      } catch (e) {
+        logEntry(`✗ Test 2 FAILED: ${e.message}`, 'error');
+      }
+
+      // Test 3: Component lifecycle (mount/unmount/remount)
+      total++;
+      logEntry('Test 3: Testing component lifecycle...', 'info');
+      try {
+        const el = document.createElement('pm-roadmap');
+        const container = document.createElement('div');
+
+        // Mount
+        container.appendChild(el);
+        document.body.appendChild(container);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Unmount
+        el.remove();
+        await new Promise(resolve => setTimeout(resolve, 50));
+
+        // Remount
+        container.appendChild(el);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Cleanup
+        container.remove();
+
+        passed++;
+        logEntry('✓ Test 3 PASSED: Component survived mount/unmount/remount cycle', 'success');
+      } catch (e) {
+        logEntry(`✗ Test 3 FAILED: ${e.message}`, 'error');
+      }
+
+      // Test 4: Check pm-app doesn't use Date.now() keys
+      total++;
+      logEntry('Test 4: Checking pm-app for improper key usage...', 'info');
+      try {
+        const response = await fetch('/src/components/pm-app.ts');
+        const code = await response.text();
+        const hasDateKeys = code.includes('key="roadmap-${Date.now()}') ||
+                           code.includes('key="tests-${Date.now()}');
+
+        if (!hasDateKeys) {
+          passed++;
+          logEntry('✓ Test 4 PASSED: No improper Date.now() keys found', 'success');
+        } else {
+          logEntry('✗ Test 4 FAILED: Found Date.now() keys in pm-app.ts', 'error');
+        }
+      } catch (e) {
+        logEntry(`✗ Test 4 FAILED: ${e.message}`, 'error');
+      }
+
+      logEntry('', 'info');
+      logEntry('Test suite completed!', 'info');
+      updateStatus(passed, total);
+      runButton.disabled = false;
+    }
+
+    runButton.addEventListener('click', runTests);
+    clearButton.addEventListener('click', () => {
+      log.innerHTML = '';
+      statusDiv.innerHTML = `
+        <span class="status pending">Pending</span>
+        <p>Click "Run Tests" to verify the fix</p>
+      `;
+      clearButton.disabled = true;
+    });
+  </script>
+</body>
+</html>

@@ -9,6 +9,7 @@ import { BaseComponent } from './base-component';
 import type { Feature, RoadmapData } from '../types/roadmap';
 import type { FilterGroup } from './pm-filter-bar';
 import { RoadmapPersistence } from '../services/roadmap-persistence';
+import { RoadmapExport, type ExportFormat } from '../services/roadmap-export';
 import './pm-stat-card';
 import './pm-badge';
 import './pm-search-input';
@@ -40,6 +41,9 @@ export class PMRoadmap extends BaseComponent {
 
   @state()
   private originalData: RoadmapData | null = null;
+
+  @state()
+  private exportFormat: ExportFormat = 'json';
 
   private filterGroups: FilterGroup[] = [];
 
@@ -254,6 +258,44 @@ export class PMRoadmap extends BaseComponent {
         color: var(--success, #3fb950);
         font-size: 12px;
         font-weight: 500;
+      }
+
+      .export-group {
+        display: flex;
+        gap: var(--spacing-xs, 4px);
+        align-items: stretch;
+      }
+
+      .export-select {
+        background: var(--bg-secondary, #161b22);
+        border: 1px solid var(--border-primary, #30363d);
+        border-right: none;
+        border-radius: var(--radius-md, 6px) 0 0 var(--radius-md, 6px);
+        color: var(--text-primary, #c9d1d9);
+        font-size: 14px;
+        padding: 8px 12px;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+
+      .export-select:hover {
+        background: var(--bg-tertiary, #21262d);
+        border-color: var(--link, #58a6ff);
+      }
+
+      .export-select:focus {
+        border-color: var(--link, #58a6ff);
+        box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+      }
+
+      .export-select option {
+        background: var(--bg-secondary, #161b22);
+        color: var(--text-primary, #c9d1d9);
+      }
+
+      .btn-export {
+        border-radius: 0 var(--radius-md, 6px) var(--radius-md, 6px) 0;
       }
 
       @media (max-width: 768px) {
@@ -564,10 +606,12 @@ export class PMRoadmap extends BaseComponent {
   private handleExport(): void {
     if (!this.roadmapData) return;
 
-    const timestamp = new Date().toISOString().split('T')[0];
-    const filename = `roadmap-${timestamp}.json`;
+    RoadmapExport.exportAsFile(this.roadmapData, this.exportFormat);
+  }
 
-    RoadmapPersistence.export(this.roadmapData, filename);
+  private handleExportFormatChange(e: Event): void {
+    const select = e.target as HTMLSelectElement;
+    this.exportFormat = select.value as ExportFormat;
   }
 
   private handleReset(): void {
@@ -724,10 +768,22 @@ export class PMRoadmap extends BaseComponent {
                 Changes saved
               </span>
             ` : ''}
-            <button class="btn btn-primary" @click="${this.handleExport}">
-              <pm-icon name="Download" size="sm"></pm-icon>
-              Export
-            </button>
+            <div class="export-group">
+              <select
+                class="export-select"
+                .value="${this.exportFormat}"
+                @change="${this.handleExportFormatChange}"
+                aria-label="Export format"
+              >
+                <option value="json">JSON</option>
+                <option value="markdown">Markdown</option>
+                <option value="html">HTML</option>
+              </select>
+              <button class="btn btn-primary btn-export" @click="${this.handleExport}">
+                <pm-icon name="Download" size="sm"></pm-icon>
+                Export
+              </button>
+            </div>
             <button class="btn btn-danger" @click="${this.handleReset}" ?disabled="${!this.hasSavedChanges}">
               <pm-icon name="RotateCcw" size="sm"></pm-icon>
               Reset
