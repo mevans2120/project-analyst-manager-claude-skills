@@ -43,7 +43,7 @@ Determine what type of analysis is needed:
 Execute the project-analyzer CLI tool:
 
 ```bash
-cd "/Users/michaelevans/project-analyst-manager-Claude skills/project-analyzer"
+cd "/Users/michaelevans/project-suite-claude-skills/project-analyzer"
 
 # Standard scan (JSON output)
 npm run analyze -- -p <repository-path> -o output.json --format json
@@ -166,7 +166,7 @@ After analyzing, you can chain to the project-manager skill:
 
 ## Technical Details
 
-- **Location**: `/Users/michaelevans/project-analyst-manager-Claude skills/project-analyzer/`
+- **Location**: `/Users/michaelevans/project-suite-claude-skills/project-analyzer/`
 - **Language**: TypeScript/Node.js
 - **Dependencies**: commander, glob, ignore
 - **Performance**: ~1000 files/second

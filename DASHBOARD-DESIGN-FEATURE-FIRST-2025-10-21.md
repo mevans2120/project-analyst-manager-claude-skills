@@ -708,7 +708,7 @@ const productRoadmap = {
       }).join('');
 
       // GitHub link
-      document.getElementById('github-link').href = 'https://github.com/mevans2120/project-analyst-manager-claude-skills';
+      document.getElementById('github-link').href = 'https://github.com/mevans2120/project-suite-claude-skills';
     }
 
     function renderFeatureList() {

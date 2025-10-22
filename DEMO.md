@@ -20,7 +20,7 @@ cd project-analyzer
 npm run analyze -- -p ../ -o ../demo-output.json --format json
 
 # Expected output:
-# Scanning repository: /path/to/project-analyst-manager-Claude skills
+# Scanning repository: /path/to/project-suite-claude-skills
 # Found 8 files to scan
 # Scanning complete: Found X TODOs
 # Output saved to: ../demo-output.json
@@ -185,7 +185,7 @@ cd ../project-analyzer
 npm run analyze -- --completion-report -p ../
 
 # Expected output:
-# Scanning repository: /path/to/project-analyst-manager-Claude skills
+# Scanning repository: /path/to/project-suite-claude-skills
 # Analyzing completion patterns...
 #
 # === Completion Summary ===

@@ -51,7 +51,7 @@ if [ -z "$GITHUB_TOKEN" ]; then
 fi
 
 # Check for config file
-cd "/Users/michaelevans/project-analyst-manager-Claude skills/project-manager"
+cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
 if [ ! -f "project-manager.config.json" ]; then
   echo "Configuration file needed. Would you like me to create one?"
 fi
@@ -70,7 +70,7 @@ Identify what the user wants to do:
 Navigate to project-manager and run the corresponding command:
 
 ```bash
-cd "/Users/michaelevans/project-analyst-manager-Claude skills/project-manager"
+cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
 
 # Create issues from analyzer output (DRY RUN FIRST!)
 npm run manage create-issues -- -i <input.json> --dry-run
@@ -356,7 +356,7 @@ cp project-manager.config.example.json project-manager.config.json
 
 ## Technical Details
 
-- **Location**: `/Users/michaelevans/project-analyst-manager-Claude skills/project-manager/`
+- **Location**: `/Users/michaelevans/project-suite-claude-skills/project-manager/`
 - **Language**: TypeScript/Node.js
 - **Dependencies**: @octokit/rest, commander
 - **API**: GitHub REST API v3

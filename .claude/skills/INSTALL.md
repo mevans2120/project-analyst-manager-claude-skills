@@ -54,8 +54,8 @@ Both skills are installed in:
 - **Personal** (after copying): `~/.claude/skills/` (available everywhere)
 
 The actual analyzer and manager tools are located at:
-- `/Users/michaelevans/project-analyst-manager-Claude skills/project-analyzer/`
-- `/Users/michaelevans/project-analyst-manager-Claude skills/project-manager/`
+- `/Users/michaelevans/project-suite-claude-skills/project-analyzer/`
+- `/Users/michaelevans/project-suite-claude-skills/project-manager/`
 
 ## Output Locations
 

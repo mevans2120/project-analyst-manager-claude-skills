@@ -10,7 +10,7 @@ Two complementary Claude Code skills have been successfully implemented for auto
 ## Project Structure
 
 ```
-project-analyst-manager-Claude skills/
+project-suite-claude-skills/
 ├── project-analyzer/          # Phase 1 + 1.5 - COMPLETE
 │   ├── src/
 │   │   ├── core/
