@@ -15,6 +15,9 @@ export class PMFeatureCard extends BaseComponent {
   @property({ type: Object })
   feature: Feature | null = null;
 
+  @property({ type: Boolean })
+  draggable: boolean = false;
+
   static styles = [
     BaseComponent.styles,
     css`
@@ -35,6 +38,19 @@ export class PMFeatureCard extends BaseComponent {
         border-color: var(--link, #58a6ff);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .feature-card.draggable {
+        cursor: grab;
+      }
+
+      .feature-card.draggable:active {
+        cursor: grabbing;
+      }
+
+      .feature-card.dragging {
+        opacity: 0.5;
+        transform: scale(0.95);
       }
 
       .feature-header {
@@ -165,6 +181,27 @@ export class PMFeatureCard extends BaseComponent {
     return 'neutral';
   }
 
+  private handleDragStart(e: DragEvent): void {
+    if (!this.feature) return;
+
+    e.dataTransfer!.effectAllowed = 'move';
+    e.dataTransfer!.setData('application/json', JSON.stringify(this.feature));
+
+    // Add dragging class
+    (e.currentTarget as HTMLElement).classList.add('dragging');
+
+    // Emit drag start event
+    this.emit('feature-drag-start', this.feature);
+  }
+
+  private handleDragEnd(e: DragEvent): void {
+    // Remove dragging class
+    (e.currentTarget as HTMLElement).classList.remove('dragging');
+
+    // Emit drag end event
+    this.emit('feature-drag-end', this.feature);
+  }
+
   render() {
     if (!this.feature) {
       return html`<div class="feature-card">No feature data</div>`;
@@ -174,7 +211,12 @@ export class PMFeatureCard extends BaseComponent {
     const isShipped = !!shippedDate;
 
     return html`
-      <div class="feature-card">
+      <div
+        class="feature-card ${this.draggable ? 'draggable' : ''}"
+        ?draggable="${this.draggable}"
+        @dragstart="${this.draggable ? this.handleDragStart : null}"
+        @dragend="${this.draggable ? this.handleDragEnd : null}"
+      >
         <div class="feature-header">
           <div class="feature-title-section">
             ${number ? html`<div class="feature-number">PM-${number}</div>` : ''}

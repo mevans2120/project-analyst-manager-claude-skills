@@ -28,6 +28,12 @@ export class PMRoadmap extends BaseComponent {
   @state()
   private activeFilters: Record<string, string> = {};
 
+  @state()
+  private isDragging: boolean = false;
+
+  @state()
+  private isDropZoneActive: boolean = false;
+
   private filterGroups: FilterGroup[] = [];
 
   static styles = [
@@ -151,6 +157,36 @@ export class PMRoadmap extends BaseComponent {
       .empty-state pm-icon {
         margin-bottom: var(--spacing-md, 16px);
         opacity: 0.5;
+      }
+
+      .drop-zone {
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .drop-zone.active {
+        background: rgba(88, 166, 255, 0.05);
+        border: 2px dashed var(--link, #58a6ff);
+        border-radius: var(--radius-md, 6px);
+        padding: var(--spacing-md, 16px);
+      }
+
+      .drop-zone.active .empty-state {
+        border: 2px dashed var(--link, #58a6ff);
+        border-radius: var(--radius-md, 6px);
+        background: rgba(88, 166, 255, 0.1);
+      }
+
+      .drop-hint {
+        display: none;
+        text-align: center;
+        padding: var(--spacing-lg, 24px);
+        color: var(--link, #58a6ff);
+        font-weight: 500;
+      }
+
+      .drop-zone.active .drop-hint {
+        display: block;
       }
 
       @media (max-width: 768px) {
@@ -318,8 +354,60 @@ export class PMRoadmap extends BaseComponent {
     }
   }
 
-  private renderSectionDivider(title: string, count: number, iconName: string, sectionId: string): ReturnType<typeof html> {
-    if (count === 0) {
+  private handleDragOver(e: DragEvent): void {
+    e.preventDefault();
+    e.dataTransfer!.dropEffect = 'move';
+    this.isDropZoneActive = true;
+  }
+
+  private handleDragLeave(e: DragEvent): void {
+    // Only deactivate if leaving the drop zone itself
+    const relatedTarget = e.relatedTarget as HTMLElement;
+    if (!relatedTarget || !(e.currentTarget as HTMLElement).contains(relatedTarget)) {
+      this.isDropZoneActive = false;
+    }
+  }
+
+  private handleDrop(e: DragEvent): void {
+    e.preventDefault();
+    this.isDropZoneActive = false;
+
+    try {
+      const featureData = e.dataTransfer!.getData('application/json');
+      if (!featureData) return;
+
+      const feature: Feature = JSON.parse(featureData);
+
+      // Check if dependencies are met
+      if (feature.dependencies && feature.dependencies.length > 0) {
+        const shipped = this.roadmapData?.features.shipped || [];
+        const unmetDeps = feature.dependencies.filter(depId =>
+          !shipped.some(f => f.id === depId)
+        );
+
+        if (unmetDeps.length > 0) {
+          alert(`Cannot move to Next Up. Dependencies not met: ${unmetDeps.join(', ')}`);
+          return;
+        }
+      }
+
+      // Move feature from backlog to nextUp
+      if (this.roadmapData) {
+        this.roadmapData.features.backlog = this.roadmapData.features.backlog.filter(f => f.id !== feature.id);
+        this.roadmapData.features.nextUp.push(feature);
+
+        // Trigger re-render
+        this.requestUpdate();
+
+        console.log(`Moved feature ${feature.id} to Next Up`);
+      }
+    } catch (error) {
+      console.error('Error handling drop:', error);
+    }
+  }
+
+  private renderSectionDivider(title: string, count: number, iconName: string, sectionId: string, alwaysShow: boolean = false): ReturnType<typeof html> {
+    if (count === 0 && !alwaysShow) {
       return html``;
     }
 
@@ -334,9 +422,18 @@ export class PMRoadmap extends BaseComponent {
     `;
   }
 
-  private renderFeatureCards(features: Feature[]): ReturnType<typeof html> {
+  private renderEmptySection(message: string): ReturnType<typeof html> {
+    return html`
+      <div class="empty-state" style="padding: var(--spacing-lg, 24px); text-align: center;">
+        <pm-icon name="Inbox" size="md" style="opacity: 0.5;"></pm-icon>
+        <p style="color: var(--text-tertiary, #7d8590); font-size: 14px; margin: var(--spacing-sm, 8px) 0 0 0;">${message}</p>
+      </div>
+    `;
+  }
+
+  private renderFeatureCards(features: Feature[], draggable: boolean = false): ReturnType<typeof html> {
     return features.map(feature => html`
-      <pm-feature-card .feature="${feature}"></pm-feature-card>
+      <pm-feature-card .feature="${feature}" ?draggable="${draggable}"></pm-feature-card>
     `);
   }
 
@@ -438,11 +535,24 @@ export class PMRoadmap extends BaseComponent {
             ${this.renderSectionDivider('In Progress', filteredInProgress.length, 'Loader2', 'section-in-progress')}
             ${this.renderFeatureCards(filteredInProgress)}
 
-            ${this.renderSectionDivider('Next Up', filteredNextUp.length, 'ArrowRight', 'section-next-up')}
-            ${this.renderFeatureCards(filteredNextUp)}
+            ${this.renderSectionDivider('Next Up', filteredNextUp.length, 'ArrowRight', 'section-next-up', true)}
+            <div
+              class="drop-zone ${this.isDropZoneActive ? 'active' : ''}"
+              @dragover="${this.handleDragOver}"
+              @dragleave="${this.handleDragLeave}"
+              @drop="${this.handleDrop}"
+            >
+              ${filteredNextUp.length === 0 ? html`
+                ${this.renderEmptySection('No features queued. Drag items from backlog to queue them!')}
+                <div class="drop-hint">
+                  <pm-icon name="ArrowDown" size="md"></pm-icon>
+                  <p>Drop backlog items here to add to Next Up</p>
+                </div>
+              ` : this.renderFeatureCards(filteredNextUp)}
+            </div>
 
             ${this.renderSectionDivider('Backlog', filteredBacklog.length, 'Archive', 'section-backlog')}
-            ${this.renderFeatureCards(filteredBacklog)}
+            ${this.renderFeatureCards(filteredBacklog, true)}
 
             ${this.renderSectionDivider('Shipped', filteredShipped.length, 'CheckCircle2', 'section-shipped')}
             ${this.renderFeatureCards(filteredShipped)}
