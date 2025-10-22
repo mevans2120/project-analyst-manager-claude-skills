@@ -19,6 +19,7 @@ import './pm-feature-card';
 import './pm-loading';
 import './pm-error';
 import './pm-icon';
+import './pm-action-button';
 
 @customElement('pm-roadmap')
 export class PMRoadmap extends BaseComponent {
@@ -799,6 +800,10 @@ export class PMRoadmap extends BaseComponent {
           ></pm-filter-bar>
 
           <div class="action-buttons">
+            <pm-action-button
+              action="analyze"
+              .payload=${{ repoPath: '.', options: { includeCompleted: false } }}
+            ></pm-action-button>
             ${this.hasSavedChanges ? html`
               <span class="saved-indicator">
                 <pm-icon name="CheckCircle2" size="sm"></pm-icon>
