@@ -3,7 +3,7 @@
  * Clean, single-color SVG icons
  */
 
-import { html, css, unsafeCSS } from 'lit';
+import { html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { BaseComponent } from './base-component';

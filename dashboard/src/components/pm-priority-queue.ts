@@ -261,7 +261,9 @@ export class PMPriorityQueue extends BaseComponent {
 
       this.roadmapData = {
         project: roadmapData.project,
+        current: roadmapData.current || [],
         features: roadmapData.features,
+        priorityQueue: roadmapData.priorityQueue || [],
         stats: roadmapData.stats
       };
 

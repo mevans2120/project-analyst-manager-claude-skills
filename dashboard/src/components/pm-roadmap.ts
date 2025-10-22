@@ -34,8 +34,8 @@ export class PMRoadmap extends BaseComponent {
   @state()
   private activeFilters: Record<string, string> = {};
 
-  @state()
-  private isDragging: boolean = false;
+  // @state()
+  // private _isDragging: boolean = false; // Unused for now - may be used for future drag-and-drop features
 
   @state()
   private isDropZoneActive: boolean = false;
@@ -384,7 +384,9 @@ export class PMRoadmap extends BaseComponent {
       // Store original data for reset
       this.originalData = {
         project: roadmapData.project,
+        current: roadmapData.current || [],
         features: roadmapData.features,
+        priorityQueue: roadmapData.priorityQueue || [],
         stats: roadmapData.stats
       };
 
@@ -393,7 +395,7 @@ export class PMRoadmap extends BaseComponent {
         this.roadmapData = this.originalData;
       }
 
-      console.log('[pm-roadmap] Set roadmapData, stats:', this.roadmapData.stats);
+      console.log('[pm-roadmap] Set roadmapData, stats:', this.roadmapData?.stats);
 
       // Build filter groups dynamically from data
       this.buildFilterGroups();
@@ -701,7 +703,7 @@ export class PMRoadmap extends BaseComponent {
     `;
   }
 
-  private renderFeatureCards(features: Feature[], draggable: boolean = false, section: string = ''): ReturnType<typeof html> {
+  private renderFeatureCards(features: Feature[], draggable: boolean = false, section: string = '') {
     if (!this.roadmapData) return html``;
 
     // Collect all features for dependency lookup

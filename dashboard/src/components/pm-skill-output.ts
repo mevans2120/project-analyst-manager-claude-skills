@@ -25,7 +25,7 @@ export class PMSkillOutput extends BaseComponent {
     current: number;
     total: number;
     message: string;
-    percentage: number;
+    percentage?: number;
   } | null = null;
 
   @state()

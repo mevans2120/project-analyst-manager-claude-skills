@@ -5,7 +5,7 @@
 import { html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BaseComponent } from './base-component';
-import type { ErrorState } from '@types/common';
+import type { ErrorState } from '../types/common';
 
 @customElement('pm-error')
 export class PMError extends BaseComponent {

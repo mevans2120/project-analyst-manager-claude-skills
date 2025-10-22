@@ -3,15 +3,15 @@
  * Provides common functionality, error handling, and lifecycle management
  */
 
-import { LitElement, PropertyValues, css } from 'lit';
+import { LitElement, PropertyValues, css, CSSResultGroup } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import type { ErrorState, LoadingState } from '@types/common';
+import type { ErrorState, LoadingState } from '../types/common';
 
 export class BaseComponent extends LitElement {
   /**
    * Global styles shared across all components
    */
-  static styles = css`
+  static styles: CSSResultGroup = css`
     :host {
       display: block;
       color: var(--text-primary, #c9d1d9);
