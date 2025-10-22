@@ -398,6 +398,24 @@ const productRoadmap = {
         "phase": "Phase 0",
         "shippedDate": "2025-10-22",
         "value": "Complete Feature Extractors test suite - 32 passing tests for FeatureExtractor, FunctionalityChecker, and VisualAnalyzer covering UI/API/visual extraction, functionality verification, element analysis, and error handling"
+      },
+      {
+        "id": "test-planner-code-discovery",
+        "number": 54,
+        "name": "Tests: Code-Based Feature Discovery (PM-7)",
+        "category": "Testing",
+        "phase": "Phase 1",
+        "shippedDate": "2025-10-22",
+        "value": "Comprehensive CodeDiscovery test suite - 21 passing tests covering React routes, Express endpoints, component analysis, config parsing, glob patterns, comment extraction, confidence scoring, and error handling"
+      },
+      {
+        "id": "test-planner-roadmap-export",
+        "number": 56,
+        "name": "Tests: Roadmap Export (PM-9)",
+        "category": "Testing",
+        "phase": "Phase 1",
+        "shippedDate": "2025-10-22",
+        "value": "Complete RoadmapExporter test suite - 48 passing tests covering Markdown/HTML/JSON export, grouping by phase/category/priority/status, progress bars, dependency chains, formatting consistency, and edge cases"
       }
     ],
     "inProgress": [],
@@ -557,16 +575,6 @@ const productRoadmap = {
         "value": "Coordinate across multiple repositories - cross-repo dependency tracking, shared component analysis, monorepo support, dependency graphs"
       },
       {
-        "id": "test-planner-code-discovery",
-        "number": 54,
-        "name": "Tests: Code-Based Feature Discovery (PM-7)",
-        "category": "Testing",
-        "phase": "Phase 1",
-        "priority": "P1",
-        "dependencies": ["test-jest-config", "planner-code-discovery"],
-        "value": "Tests for CodeDiscovery - React routes, Express endpoints, component analysis, config parsing (target: 20+ tests)"
-      },
-      {
         "id": "test-planner-web-discovery",
         "number": 55,
         "name": "Tests: Web-Based Feature Discovery (PM-8)",
@@ -574,17 +582,7 @@ const productRoadmap = {
         "phase": "Phase 1",
         "priority": "P1",
         "dependencies": ["test-jest-config", "planner-web-discovery"],
-        "value": "Tests for WebDiscovery - live website analysis, navigation extraction, AI-powered feature detection (target: 15+ tests)"
-      },
-      {
-        "id": "test-planner-roadmap-export",
-        "number": 56,
-        "name": "Tests: Roadmap Export (PM-9)",
-        "category": "Testing",
-        "phase": "Phase 1",
-        "priority": "P1",
-        "dependencies": ["test-jest-config", "planner-roadmap-export"],
-        "value": "Tests for RoadmapExporter - Markdown/HTML/JSON export, grouping options, formatting validation (target: 10+ tests)"
+        "value": "Tests for WebDiscovery - live website analysis, navigation extraction, AI-powered feature detection (target: 15+ tests) - SKIPPED: WebDiscovery needs rewrite"
       },
       {
         "id": "test-analyzer-verification",

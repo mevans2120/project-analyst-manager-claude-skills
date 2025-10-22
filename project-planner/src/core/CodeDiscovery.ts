@@ -33,7 +33,7 @@ export class CodeDiscovery {
    * Discover features from codebase
    */
   async discover(): Promise<DiscoveryResult> {
-    const startTime = Date.now();
+    const startTime = performance.now();
     const features: DiscoveredFeature[] = [];
     let filesScanned = 0;
 
@@ -47,7 +47,7 @@ export class CodeDiscovery {
       features.push(...fileFeatures);
     }
 
-    const scanTime = Date.now() - startTime;
+    const scanTime = performance.now() - startTime;
 
     return {
       features,
@@ -98,6 +98,15 @@ export class CodeDiscovery {
   private shouldExclude(filepath: string): boolean {
     const excludePatterns = this.options.excludePatterns || [];
     return excludePatterns.some(pattern => {
+      // Simple matching for common exclude patterns like **/node_modules/**
+      const simpleExcludePattern = /^\*\*\/([^/]+)\/\*\*$/;
+      const match = pattern.match(simpleExcludePattern);
+      if (match) {
+        const dirName = match[1];
+        return filepath.includes(`/${dirName}/`) || filepath.includes(`\\${dirName}\\`);
+      }
+
+      // Fall back to regex matching
       const regex = this.globToRegex(pattern);
       return regex.test(filepath);
     });
@@ -108,7 +117,23 @@ export class CodeDiscovery {
    */
   private shouldInclude(filepath: string): boolean {
     const includePatterns = this.options.includePatterns || [];
+    const ext = path.extname(filepath);
+
     return includePatterns.some(pattern => {
+      // Simple extension-based matching for common patterns
+      if (pattern.includes('{js,jsx,ts,tsx')) {
+        const validExts = ['.js', '.jsx', '.ts', '.tsx', '.json'];
+        return validExts.includes(ext);
+      }
+
+      // For simple **/*.ext patterns, just check the extension
+      const simpleExtPattern = /^\*\*\/\*\.(\w+)$/;
+      const match = pattern.match(simpleExtPattern);
+      if (match) {
+        return ext === `.${match[1]}`;
+      }
+
+      // For other patterns, use regex matching
       const regex = this.globToRegex(pattern);
       return regex.test(filepath);
     });
@@ -118,11 +143,41 @@ export class CodeDiscovery {
    * Convert glob pattern to regex
    */
   private globToRegex(pattern: string): RegExp {
-    const escaped = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*\*/g, '.*')
-      .replace(/\*/g, '[^/]*')
-      .replace(/\?/g, '.');
+    const braceGroups: string[] = [];
+
+    // Handle brace expansion {js,jsx,ts,tsx} -> save as placeholder
+    let escaped = pattern.replace(/\{([^}]+)\}/g, (_, group) => {
+      const index = braceGroups.length;
+      braceGroups.push(`(${group.split(',').join('|')})`);
+      return `__BRACE_${index}__`;
+    });
+
+    // Escape special regex characters
+    escaped = escaped.replace(/\./g, '\\.');
+
+    // Temporarily replace ** patterns to avoid confusion with single *
+    escaped = escaped.replace(/\*\*\//g, '<GLOBSTAR_SLASH>'); // **/ prefix
+    escaped = escaped.replace(/\/\*\*/g, '<SLASH_GLOBSTAR>'); // /** suffix
+    escaped = escaped.replace(/\*\*/g, '<GLOBSTAR>'); // ** standalone
+
+    // Replace single * with regex that matches anything except /
+    escaped = escaped.replace(/\*/g, '[^/]*');
+
+    // Replace **/ with optional path prefix
+    escaped = escaped.replace(/<GLOBSTAR_SLASH>/g, '(?:.*/)?');
+    // Replace /** with /followed by anything
+    escaped = escaped.replace(/<SLASH_GLOBSTAR>/g, '/.*');
+    // Replace standalone ** with .*
+    escaped = escaped.replace(/<GLOBSTAR>/g, '.*');
+
+    // Replace ? with .
+    escaped = escaped.replace(/\?/g, '.');
+
+    // Restore brace expansion groups
+    escaped = escaped.replace(/__BRACE_(\d+)__/g, (_, index) => {
+      return braceGroups[parseInt(index, 10)];
+    });
+
     return new RegExp(escaped);
   }
 
@@ -156,15 +211,19 @@ export class CodeDiscovery {
     const features: DiscoveredFeature[] = [];
     const lines = content.split('\n');
 
-    // Pattern: <Route path="/..." component={...} />
-    const routeRegex = /<Route\s+path=["']([^"']+)["']\s+component=\{([^}]+)\}/g;
+    // Pattern: <Route path="/..." component={...} /> or <Route path="/..." />
+    // Allow optional whitespace between Route and path
+    const routeRegex = /<Route\s*path=["']([^"']+)["']/g;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       let match;
 
+      // Reset regex state for each line
+      routeRegex.lastIndex = 0;
+
       while ((match = routeRegex.exec(line)) !== null) {
-        const [, routePath, component] = match;
+        const [, routePath] = match;
 
         features.push({
           name: this.pathToFeatureName(routePath),
@@ -184,6 +243,9 @@ export class CodeDiscovery {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       let match;
+
+      // Reset regex state for each line
+      pathRegex.lastIndex = 0;
 
       while ((match = pathRegex.exec(line)) !== null) {
         const [, routePath] = match;
@@ -399,8 +461,17 @@ export class CodeDiscovery {
       config: 0
     };
 
+    // Map singular types to plural keys
+    const typeMap: Record<string, string> = {
+      route: 'routes',
+      endpoint: 'endpoints',
+      component: 'components',
+      config: 'config'
+    };
+
     result.features.forEach(feature => {
-      summary[feature.type] = (summary[feature.type] || 0) + 1;
+      const key = typeMap[feature.type] || feature.type;
+      summary[key] = (summary[key] || 0) + 1;
     });
 
     return summary;

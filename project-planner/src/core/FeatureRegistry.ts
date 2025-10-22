@@ -298,6 +298,14 @@ export class CSVFeatureRegistry {
   }
 
   /**
+   * Initialize registry with project info
+   */
+  async init(options: { project: { name: string; code: string; description?: string } }): Promise<void> {
+    this.registry.project = options.project;
+    this.save();
+  }
+
+  /**
    * Get project info
    */
   getProjectInfo() {

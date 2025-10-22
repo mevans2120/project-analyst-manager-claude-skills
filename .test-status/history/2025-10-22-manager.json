@@ -1223,5 +1223,1658 @@
         "duration": 1
       }
     ]
+  },
+  {
+    "timestamp": "2025-10-22T22:19:17.380Z",
+    "package": "manager",
+    "totalTests": 60,
+    "passed": 60,
+    "failed": 0,
+    "skipped": 0,
+    "duration": 7919,
+    "tests": [
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_determine_labels_for_TODO_type",
+        "name": "should determine labels for TODO type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 7
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_determine_labels_for_FIXME_type",
+        "name": "should determine labels for FIXME type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_apply_custom_label_mapping",
+        "name": "should apply custom label mapping",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_add_from-markdown_label_for_markdown_TODOs",
+        "name": "should add from-markdown label for markdown TODOs",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_apply_custom_default_labels",
+        "name": "should apply custom default labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_identify_bug_type",
+        "name": "should identify bug type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_identify_feature_type",
+        "name": "should identify feature type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_default_to_task_for_unknown_labels",
+        "name": "should default to task for unknown labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_correct_emoji_for_bug",
+        "name": "should return correct emoji for bug",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_correct_emoji_for_feature",
+        "name": "should return correct emoji for feature",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_default_emoji_for_unknown_type",
+        "name": "should return default emoji for unknown type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_validate_valid_label",
+        "name": "should validate valid label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_empty_label",
+        "name": "should reject empty label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_label_that_is_too_long",
+        "name": "should reject label that is too long",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_whitespace-only_label",
+        "name": "should reject whitespace-only label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_sanitize_label_with_spaces",
+        "name": "should sanitize label with spaces",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_convert_to_lowercase",
+        "name": "should convert to lowercase",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_remove_invalid_characters",
+        "name": "should remove invalid characters",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_truncate_long_labels",
+        "name": "should truncate long labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_trim_whitespace",
+        "name": "should trim whitespace",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getAllLabels_should_collect_all_unique_labels_from_TODOs",
+        "name": "should collect all unique labels from TODOs",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getAllLabels_should_not_duplicate_labels",
+        "name": "should not duplicate labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_Constructor_should_create__test-status_directory_structure",
+        "name": "should create .test-status directory structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 5
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_Constructor_should_detect_package_name_from_package_json",
+        "name": "should detect package name from package.json",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_generate_and_save_test_results",
+        "name": "should generate and save test results",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 11
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_handle_failed_tests_correctly",
+        "name": "should handle failed tests correctly",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_save_history_file_with_date",
+        "name": "should save history file with date",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_File_output_structure_should_create_proper_latest_json_structure",
+        "name": "should create proper latest.json structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_File_output_structure_should_create_proper_summary_json_structure",
+        "name": "should create proper summary.json structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_generateTodoHash_should_generate_consistent_hash_for_same_TODO",
+        "name": "should generate consistent hash for same TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 6
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_generateTodoHash_should_generate_different_hashes_for_different_TODOs",
+        "name": "should generate different hashes for different TODOs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_loadState_should_return_default_state_when_file_does_not_exist",
+        "name": "should return default state when file does not exist",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_loadState_should_load_existing_state_from_file",
+        "name": "should load existing state from file",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_saveState_should_save_state_to_file",
+        "name": "should save state to file",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_saveState_should_create_directory_if_it_does_not_exist",
+        "name": "should create directory if it does not exist",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_isProcessed_should_return_true_for_processed_TODO",
+        "name": "should return true for processed TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_isProcessed_should_return_false_for_unprocessed_TODO",
+        "name": "should return false for unprocessed TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_addProcessedTodo_should_add_processed_TODO_to_state",
+        "name": "should add processed TODO to state",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_addProcessedTodo_should_update_metadata_correctly_for_failed_status",
+        "name": "should update metadata correctly for failed status",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_filterNewTodos_should_filter_out_processed_TODOs",
+        "name": "should filter out processed TODOs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_getStateStats_should_calculate_statistics_correctly",
+        "name": "should calculate statistics correctly",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_cleanupOldEntries_should_remove_old_entries_without_issue_URLs",
+        "name": "should remove old entries without issue URLs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_cleanupOldEntries_should_keep_old_entries_with_issue_URLs",
+        "name": "should keep old entries with issue URLs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_readDashboard_should_read_and_parse_dashboard_data",
+        "name": "should read and parse dashboard data",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 7
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_readDashboard_should_throw_error_if_dashboard_file_does_not_exist",
+        "name": "should throw error if dashboard file does not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 48
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_low_confidence_when_feature_files_do_not_exist",
+        "name": "should return low confidence when feature files do not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_medium_confidence_when_feature_has_implementation_but_no_tests",
+        "name": "should return medium confidence when feature has implementation but no tests",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_high_confidence_when_feature_has_both_implementation_and_tests",
+        "name": "should return high confidence when feature has both implementation and tests",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_generate_report_with_no_issues_when_all_shipped_features_exist",
+        "name": "should generate report with no issues when all shipped features exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 5
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_detect_false_positives_when_shipped_features_do_not_exist",
+        "name": "should detect false positives when shipped features do not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_skip_completed_features_detection_when_no_inProgress_features",
+        "name": "should skip completed features detection when no inProgress features",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_recommend_features_for_Next_Up_based_on_dependencies",
+        "name": "should recommend features for Next Up based on dependencies",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_recommend_features_when_dependencies_are_met",
+        "name": "should recommend features when dependencies are met",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_format_report_as_markdown",
+        "name": "should format report as markdown",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_show_up_to_date_status_when_dashboard_is_accurate",
+        "name": "should show up to date status when dashboard is accurate",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 7
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_show_warnings_when_dashboard_has_issues",
+        "name": "should show warnings when dashboard has issues",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_create_issues_successfully_in_dry_run_mode",
+        "name": "should create issues successfully in dry run mode",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 22
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_handle_multiple_TODOs",
+        "name": "should handle multiple TODOs",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_update_state_with_processed_TODOs",
+        "name": "should update state with processed TODOs",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createSingleIssue_should_create_a_single_issue_successfully",
+        "name": "should create a single issue successfully",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 1
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-10-22T22:19:34.215Z",
+    "package": "manager",
+    "totalTests": 60,
+    "passed": 60,
+    "failed": 0,
+    "skipped": 0,
+    "duration": 6484,
+    "tests": [
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_Constructor_should_create__test-status_directory_structure",
+        "name": "should create .test-status directory structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 41
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_Constructor_should_detect_package_name_from_package_json",
+        "name": "should detect package name from package.json",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_generate_and_save_test_results",
+        "name": "should generate and save test results",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 33
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_handle_failed_tests_correctly",
+        "name": "should handle failed tests correctly",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_save_history_file_with_date",
+        "name": "should save history file with date",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 5
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_File_output_structure_should_create_proper_latest_json_structure",
+        "name": "should create proper latest.json structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 9
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_File_output_structure_should_create_proper_summary_json_structure",
+        "name": "should create proper summary.json structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_determine_labels_for_TODO_type",
+        "name": "should determine labels for TODO type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 9
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_determine_labels_for_FIXME_type",
+        "name": "should determine labels for FIXME type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_apply_custom_label_mapping",
+        "name": "should apply custom label mapping",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_add_from-markdown_label_for_markdown_TODOs",
+        "name": "should add from-markdown label for markdown TODOs",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_apply_custom_default_labels",
+        "name": "should apply custom default labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_identify_bug_type",
+        "name": "should identify bug type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_identify_feature_type",
+        "name": "should identify feature type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_default_to_task_for_unknown_labels",
+        "name": "should default to task for unknown labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_correct_emoji_for_bug",
+        "name": "should return correct emoji for bug",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_correct_emoji_for_feature",
+        "name": "should return correct emoji for feature",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_default_emoji_for_unknown_type",
+        "name": "should return default emoji for unknown type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_validate_valid_label",
+        "name": "should validate valid label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_empty_label",
+        "name": "should reject empty label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_label_that_is_too_long",
+        "name": "should reject label that is too long",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_whitespace-only_label",
+        "name": "should reject whitespace-only label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_sanitize_label_with_spaces",
+        "name": "should sanitize label with spaces",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_convert_to_lowercase",
+        "name": "should convert to lowercase",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_remove_invalid_characters",
+        "name": "should remove invalid characters",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_truncate_long_labels",
+        "name": "should truncate long labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_trim_whitespace",
+        "name": "should trim whitespace",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getAllLabels_should_collect_all_unique_labels_from_TODOs",
+        "name": "should collect all unique labels from TODOs",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getAllLabels_should_not_duplicate_labels",
+        "name": "should not duplicate labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_readDashboard_should_read_and_parse_dashboard_data",
+        "name": "should read and parse dashboard data",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 18
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_readDashboard_should_throw_error_if_dashboard_file_does_not_exist",
+        "name": "should throw error if dashboard file does not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 22
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_low_confidence_when_feature_files_do_not_exist",
+        "name": "should return low confidence when feature files do not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_medium_confidence_when_feature_has_implementation_but_no_tests",
+        "name": "should return medium confidence when feature has implementation but no tests",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 11
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_high_confidence_when_feature_has_both_implementation_and_tests",
+        "name": "should return high confidence when feature has both implementation and tests",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 6
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_generate_report_with_no_issues_when_all_shipped_features_exist",
+        "name": "should generate report with no issues when all shipped features exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 7
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_detect_false_positives_when_shipped_features_do_not_exist",
+        "name": "should detect false positives when shipped features do not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_skip_completed_features_detection_when_no_inProgress_features",
+        "name": "should skip completed features detection when no inProgress features",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_recommend_features_for_Next_Up_based_on_dependencies",
+        "name": "should recommend features for Next Up based on dependencies",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_recommend_features_when_dependencies_are_met",
+        "name": "should recommend features when dependencies are met",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_format_report_as_markdown",
+        "name": "should format report as markdown",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_show_up_to_date_status_when_dashboard_is_accurate",
+        "name": "should show up to date status when dashboard is accurate",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 5
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_show_warnings_when_dashboard_has_issues",
+        "name": "should show warnings when dashboard has issues",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_generateTodoHash_should_generate_consistent_hash_for_same_TODO",
+        "name": "should generate consistent hash for same TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 9
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_generateTodoHash_should_generate_different_hashes_for_different_TODOs",
+        "name": "should generate different hashes for different TODOs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_loadState_should_return_default_state_when_file_does_not_exist",
+        "name": "should return default state when file does not exist",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_loadState_should_load_existing_state_from_file",
+        "name": "should load existing state from file",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_saveState_should_save_state_to_file",
+        "name": "should save state to file",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_saveState_should_create_directory_if_it_does_not_exist",
+        "name": "should create directory if it does not exist",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_isProcessed_should_return_true_for_processed_TODO",
+        "name": "should return true for processed TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_isProcessed_should_return_false_for_unprocessed_TODO",
+        "name": "should return false for unprocessed TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_addProcessedTodo_should_add_processed_TODO_to_state",
+        "name": "should add processed TODO to state",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_addProcessedTodo_should_update_metadata_correctly_for_failed_status",
+        "name": "should update metadata correctly for failed status",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_filterNewTodos_should_filter_out_processed_TODOs",
+        "name": "should filter out processed TODOs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_getStateStats_should_calculate_statistics_correctly",
+        "name": "should calculate statistics correctly",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_cleanupOldEntries_should_remove_old_entries_without_issue_URLs",
+        "name": "should remove old entries without issue URLs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_cleanupOldEntries_should_keep_old_entries_with_issue_URLs",
+        "name": "should keep old entries with issue URLs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_create_issues_successfully_in_dry_run_mode",
+        "name": "should create issues successfully in dry run mode",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 36
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_handle_multiple_TODOs",
+        "name": "should handle multiple TODOs",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 7
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_update_state_with_processed_TODOs",
+        "name": "should update state with processed TODOs",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createSingleIssue_should_create_a_single_issue_successfully",
+        "name": "should create a single issue successfully",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 2
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-10-22T22:19:46.444Z",
+    "package": "manager",
+    "totalTests": 60,
+    "passed": 60,
+    "failed": 0,
+    "skipped": 0,
+    "duration": 5705,
+    "tests": [
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_determine_labels_for_TODO_type",
+        "name": "should determine labels for TODO type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 12
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_determine_labels_for_FIXME_type",
+        "name": "should determine labels for FIXME type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_apply_custom_label_mapping",
+        "name": "should apply custom label mapping",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_add_from-markdown_label_for_markdown_TODOs",
+        "name": "should add from-markdown label for markdown TODOs",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_determineLabels_should_apply_custom_default_labels",
+        "name": "should apply custom default labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_identify_bug_type",
+        "name": "should identify bug type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_identify_feature_type",
+        "name": "should identify feature type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getIssueType_should_default_to_task_for_unknown_labels",
+        "name": "should default to task for unknown labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_correct_emoji_for_bug",
+        "name": "should return correct emoji for bug",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_correct_emoji_for_feature",
+        "name": "should return correct emoji for feature",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getTypeEmoji_should_return_default_emoji_for_unknown_type",
+        "name": "should return default emoji for unknown type",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_validate_valid_label",
+        "name": "should validate valid label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_empty_label",
+        "name": "should reject empty label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_label_that_is_too_long",
+        "name": "should reject label that is too long",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_validateLabel_should_reject_whitespace-only_label",
+        "name": "should reject whitespace-only label",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_sanitize_label_with_spaces",
+        "name": "should sanitize label with spaces",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_convert_to_lowercase",
+        "name": "should convert to lowercase",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_remove_invalid_characters",
+        "name": "should remove invalid characters",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_truncate_long_labels",
+        "name": "should truncate long labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 5
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_sanitizeLabel_should_trim_whitespace",
+        "name": "should trim whitespace",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getAllLabels_should_collect_all_unique_labels_from_TODOs",
+        "name": "should collect all unique labels from TODOs",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/labelManager_test_ts:LabelManager_getAllLabels_should_not_duplicate_labels",
+        "name": "should not duplicate labels",
+        "suite": "labelManager",
+        "package": "manager",
+        "file": "tests/labelManager.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_generateTodoHash_should_generate_consistent_hash_for_same_TODO",
+        "name": "should generate consistent hash for same TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 72
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_generateTodoHash_should_generate_different_hashes_for_different_TODOs",
+        "name": "should generate different hashes for different TODOs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_loadState_should_return_default_state_when_file_does_not_exist",
+        "name": "should return default state when file does not exist",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_loadState_should_load_existing_state_from_file",
+        "name": "should load existing state from file",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 5
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_saveState_should_save_state_to_file",
+        "name": "should save state to file",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_saveState_should_create_directory_if_it_does_not_exist",
+        "name": "should create directory if it does not exist",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_isProcessed_should_return_true_for_processed_TODO",
+        "name": "should return true for processed TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_isProcessed_should_return_false_for_unprocessed_TODO",
+        "name": "should return false for unprocessed TODO",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_addProcessedTodo_should_add_processed_TODO_to_state",
+        "name": "should add processed TODO to state",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_addProcessedTodo_should_update_metadata_correctly_for_failed_status",
+        "name": "should update metadata correctly for failed status",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_filterNewTodos_should_filter_out_processed_TODOs",
+        "name": "should filter out processed TODOs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_getStateStats_should_calculate_statistics_correctly",
+        "name": "should calculate statistics correctly",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_cleanupOldEntries_should_remove_old_entries_without_issue_URLs",
+        "name": "should remove old entries without issue URLs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/stateTracker_test_ts:StateTracker_cleanupOldEntries_should_keep_old_entries_with_issue_URLs",
+        "name": "should keep old entries with issue URLs",
+        "suite": "stateTracker",
+        "package": "manager",
+        "file": "tests/stateTracker.test.ts",
+        "status": "passed",
+        "duration": 0
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_readDashboard_should_read_and_parse_dashboard_data",
+        "name": "should read and parse dashboard data",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 47
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_readDashboard_should_throw_error_if_dashboard_file_does_not_exist",
+        "name": "should throw error if dashboard file does not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 23
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_low_confidence_when_feature_files_do_not_exist",
+        "name": "should return low confidence when feature files do not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_medium_confidence_when_feature_has_implementation_but_no_tests",
+        "name": "should return medium confidence when feature has implementation but no tests",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_checkFeatureExists_should_return_high_confidence_when_feature_has_both_implementation_and_tests",
+        "name": "should return high confidence when feature has both implementation and tests",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_generate_report_with_no_issues_when_all_shipped_features_exist",
+        "name": "should generate report with no issues when all shipped features exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 6
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_detect_false_positives_when_shipped_features_do_not_exist",
+        "name": "should detect false positives when shipped features do not exist",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_skip_completed_features_detection_when_no_inProgress_features",
+        "name": "should skip completed features detection when no inProgress features",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_recommend_features_for_Next_Up_based_on_dependencies",
+        "name": "should recommend features for Next Up based on dependencies",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_generateReport_should_recommend_features_when_dependencies_are_met",
+        "name": "should recommend features when dependencies are met",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_format_report_as_markdown",
+        "name": "should format report as markdown",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_show_up_to_date_status_when_dashboard_is_accurate",
+        "name": "should show up to date status when dashboard is accurate",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 5
+      },
+      {
+        "testId": "manager:tests/DashboardSync_test_ts:DashboardSync_formatReport_should_show_warnings_when_dashboard_has_issues",
+        "name": "should show warnings when dashboard has issues",
+        "suite": "DashboardSync",
+        "package": "manager",
+        "file": "tests/DashboardSync.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_Constructor_should_create__test-status_directory_structure",
+        "name": "should create .test-status directory structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 9
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_Constructor_should_detect_package_name_from_package_json",
+        "name": "should detect package name from package.json",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 2
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_generate_and_save_test_results",
+        "name": "should generate and save test results",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 9
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_handle_failed_tests_correctly",
+        "name": "should handle failed tests correctly",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_onRunComplete_should_save_history_file_with_date",
+        "name": "should save history file with date",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_File_output_structure_should_create_proper_latest_json_structure",
+        "name": "should create proper latest.json structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 4
+      },
+      {
+        "testId": "manager:tests/TestStatusReporter_test_ts:TestStatusReporter_File_output_structure_should_create_proper_summary_json_structure",
+        "name": "should create proper summary.json structure",
+        "suite": "TestStatusReporter",
+        "package": "manager",
+        "file": "tests/TestStatusReporter.test.ts",
+        "status": "passed",
+        "duration": 10
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_create_issues_successfully_in_dry_run_mode",
+        "name": "should create issues successfully in dry run mode",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 26
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_handle_multiple_TODOs",
+        "name": "should handle multiple TODOs",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 3
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createIssuesFromTodos_should_update_state_with_processed_TODOs",
+        "name": "should update state with processed TODOs",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 1
+      },
+      {
+        "testId": "manager:tests/issueCreator_test_ts:IssueCreator_createSingleIssue_should_create_a_single_issue_successfully",
+        "name": "should create a single issue successfully",
+        "suite": "issueCreator",
+        "package": "manager",
+        "file": "tests/issueCreator.test.ts",
+        "status": "passed",
+        "duration": 1
+      }
+    ]
   }
 ]

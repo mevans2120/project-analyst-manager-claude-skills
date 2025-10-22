@@ -129,15 +129,15 @@ export class RoadmapExporter {
         : 0
     };
 
-    // Build dependency chains
-    const dependencyChains = features.map(f => ({
+    // Build dependency chains (always include all features)
+    const dependencyChains = allFeatures.map(f => ({
       feature: f.id,
       dependencies: f.dependencies || [],
       blocks: f.blocks || []
     }));
 
     return {
-      project: this.registry.getMetadata().project,
+      project: this.registry.getProjectInfo(),
       features: { planned, inProgress, completed, blocked },
       stats,
       dependencyChains
@@ -256,7 +256,7 @@ export class RoadmapExporter {
    * Render feature list in Markdown
    */
   private renderFeatureList(lines: string[], features: Feature[]): void {
-    const projectCode = this.registry.getMetadata().project.code;
+    const projectCode = this.registry.getProjectInfo().code;
 
     for (const feature of features) {
       lines.push(`#### ${feature.name} (${projectCode}-${feature.number})`);
