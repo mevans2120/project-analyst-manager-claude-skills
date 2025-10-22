@@ -43,6 +43,7 @@ node_modules/
 !jest.config.js
 !.eslintrc.js
 !dashboard/data.js.template
+!dashboard/data.js
 
 # Backup directories
 .claude-backup-*/
