@@ -88,7 +88,6 @@ export class PMRoadmap extends BaseComponent {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: var(--spacing-xl, 32px);
         margin-bottom: 48px;
-        grid-auto-rows: 1fr;
       }
 
       .stats-grid pm-stat-card {

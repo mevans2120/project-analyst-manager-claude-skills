@@ -38,15 +38,16 @@ export class PMStatCard extends BaseComponent {
     css`
       .stat-card {
         background: var(--bg-secondary, #161b22);
-        padding: var(--spacing-lg, 24px);
+        padding: var(--spacing-md, 16px);
         border-radius: var(--radius-md, 6px);
         border: 1px solid var(--border-primary, #30363d);
         text-align: center;
         transition: all 0.2s ease;
         display: flex;
         flex-direction: column;
-        height: 100%;
+        justify-content: center;
         cursor: pointer;
+        min-height: 120px;
       }
 
       .stat-card:hover {
@@ -71,14 +72,14 @@ export class PMStatCard extends BaseComponent {
       }
 
       .stat-icon {
-        margin-bottom: var(--spacing-sm, 8px);
+        margin-bottom: var(--spacing-xs, 4px);
         display: flex;
         justify-content: center;
         align-items: center;
       }
 
       .stat-number {
-        font-size: 36px;
+        font-size: 32px;
         font-weight: bold;
         margin-bottom: var(--spacing-xs, 4px);
         line-height: 1;
