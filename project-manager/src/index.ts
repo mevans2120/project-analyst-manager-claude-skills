@@ -7,6 +7,7 @@ export * from './types';
 export * from './core/stateTracker';
 export * from './core/issueCreator';
 export * from './core/DashboardSync';
+export * from './core/ScreenshotDocumenter';
 export * from './utils/githubClient';
 export * from './utils/labelManager';
 export * from './formatters/reportGenerator';

@@ -6,12 +6,15 @@ import { TodoItem, ProcessedTodo, GithubConfig, LabelMapping, StateFile } from '
 import { GitHubClient, formatIssueTitle, formatIssueBody } from '../utils/githubClient';
 import { determineLabels } from '../utils/labelManager';
 import { generateTodoHash, addProcessedTodo } from './stateTracker';
+import { ScreenshotDocumenter, ScreenshotOptions } from './ScreenshotDocumenter';
 
 export interface IssueCreationOptions {
   githubConfig: GithubConfig;
   labelMapping?: LabelMapping;
   checkDuplicates?: boolean;
   dryRun?: boolean;
+  /** Optional screenshot documenter for visual evidence */
+  screenshotOptions?: ScreenshotOptions;
 }
 
 export interface IssueCreationResult {
@@ -34,12 +37,19 @@ export async function createIssuesFromTodos(
     githubConfig,
     labelMapping,
     checkDuplicates = true,
-    dryRun = false
+    dryRun = false,
+    screenshotOptions
   } = options;
 
   const created: ProcessedTodo[] = [];
   const failed: ProcessedTodo[] = [];
   const skipped: ProcessedTodo[] = [];
+
+  // Initialize screenshot documenter if enabled
+  let screenshotDocumenter: ScreenshotDocumenter | null = null;
+  if (screenshotOptions?.enabled) {
+    screenshotDocumenter = new ScreenshotDocumenter(screenshotOptions);
+  }
 
   // Initialize GitHub client (unless dry run)
   let client: GitHubClient | null = null;
@@ -83,7 +93,7 @@ export async function createIssuesFromTodos(
         githubConfig.issueTitlePrefix
       );
 
-      const body = formatIssueBody(
+      let body = formatIssueBody(
         todo.content,
         todo.file,
         todo.line,
@@ -91,6 +101,22 @@ export async function createIssuesFromTodos(
         todo.priority,
         todo.rawText
       );
+
+      // Capture screenshots if enabled
+      if (screenshotDocumenter) {
+        try {
+          const screenshotResult = await screenshotDocumenter.captureForTodo(todo);
+          if (screenshotResult.success && screenshotResult.screenshots.length > 0) {
+            const screenshotsMarkdown = screenshotDocumenter.formatScreenshotsForIssue(
+              screenshotResult.screenshots
+            );
+            body += screenshotsMarkdown;
+          }
+        } catch (error: any) {
+          console.warn(`Failed to capture screenshots for ${todo.file}:${todo.line}:`, error.message);
+          // Continue with issue creation even if screenshots fail
+        }
+      }
 
       // Check for duplicates if enabled
       if (checkDuplicates && client && !dryRun) {
@@ -147,6 +173,15 @@ export async function createIssuesFromTodos(
         error.message
       );
       failed.push(state.processedTodos[state.processedTodos.length - 1]);
+    }
+  }
+
+  // Clean up screenshot documenter resources
+  if (screenshotDocumenter) {
+    try {
+      await screenshotDocumenter.cleanup();
+    } catch (error: any) {
+      console.warn('Failed to cleanup screenshot documenter:', error.message);
     }
   }
 
