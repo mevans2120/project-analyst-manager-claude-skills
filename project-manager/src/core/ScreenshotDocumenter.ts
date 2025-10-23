@@ -11,10 +11,8 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { PlaywrightDriver } from '../../../shared/src/core/PlaywrightDriver';
-import { ScreenshotCapture } from '../../../shared/src/core/ScreenshotCapture';
-import { VisualAnalyzer } from '../../../shared/src/core/FeatureExtractor';
-import type { ViewportPreset, Viewport } from '../../../shared/src/types/screenshot';
+import { PlaywrightDriver, ScreenshotCapture, VisualAnalyzer } from '@project-suite/shared';
+import type { ViewportPreset, Viewport } from '@project-suite/shared';
 import type { TodoItem } from '../types';
 
 export interface ScreenshotOptions {
