@@ -427,6 +427,9 @@ const productRoadmap = {
         "name": "Analyzer - Completion Detection Enhancement",
         "category": "Analyzer",
         "phase": "Phase 2",
+        "priority": "P1",
+        "size": "M",
+        "tokenEstimate": 200000,
         "dependencies": ["analyzer-v15"],
         "value": "Enhanced TODO completion analysis - git commit correlation, 95%+ confidence scoring, archived file detection, bulk cleanup suggestions"
       },
@@ -436,6 +439,9 @@ const productRoadmap = {
         "name": "Analyzer - Specification Document Parsing",
         "category": "Analyzer",
         "phase": "Phase 2",
+        "priority": "P1",
+        "size": "L",
+        "tokenEstimate": 400000,
         "dependencies": ["analyzer-v15"],
         "value": "Parse markdown specifications and planning docs - extract requirements, map to implemented features, calculate implementation percentages"
       },
@@ -445,6 +451,9 @@ const productRoadmap = {
         "name": "Analyzer - Implementation Gap Analysis",
         "category": "Analyzer",
         "phase": "Phase 2",
+        "priority": "P2",
+        "size": "S",
+        "tokenEstimate": 100000,
         "dependencies": ["analyzer-spec-parsing"],
         "value": "Identify gaps between planned and implemented features - confidence-based feature detection, spec vs code mapping, gap reports"
       },
@@ -454,6 +463,9 @@ const productRoadmap = {
         "name": "Manager - Update Existing Issues",
         "category": "Manager",
         "phase": "Phase 3",
+        "priority": "P1",
+        "size": "M",
+        "tokenEstimate": 200000,
         "dependencies": ["manager-v10"],
         "value": "Update GitHub issues when TODOs change - detect modifications, update descriptions, add comments, close when completed"
       },
@@ -463,6 +475,9 @@ const productRoadmap = {
         "name": "Manager - Automatic Issue Linking",
         "category": "Manager",
         "phase": "Phase 3",
+        "priority": "P2",
+        "size": "S",
+        "tokenEstimate": 100000,
         "dependencies": ["manager-v10"],
         "value": "Link related issues automatically - detect dependencies in TODO comments, create parent/child relationships, cross-reference similar issues"
       },
@@ -472,6 +487,9 @@ const productRoadmap = {
         "name": "Manager - Documentation Auto-Reorganization",
         "category": "Manager",
         "phase": "Phase 3",
+        "priority": "P3",
+        "size": "XS",
+        "tokenEstimate": 50000,
         "dependencies": ["manager-v10"],
         "value": "Automatically reorganize planning documents - archive by date, organize by status, maintain documentation index, detect stale docs"
       },
@@ -481,6 +499,9 @@ const productRoadmap = {
         "name": "Planner - Advanced Feature Validation",
         "category": "Planner",
         "phase": "Phase 1",
+        "priority": "P2",
+        "size": "S",
+        "tokenEstimate": 100000,
         "dependencies": ["planner-registry"],
         "value": "Validate feature definitions - check dependencies exist, detect circular dependencies, validate implementation estimates, consistency checks"
       },

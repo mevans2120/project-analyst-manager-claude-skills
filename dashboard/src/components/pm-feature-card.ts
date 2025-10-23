@@ -195,6 +195,19 @@ export class PMFeatureCard extends BaseComponent {
     return 'neutral';
   }
 
+  private getSizeVariant(size?: string): 'error' | 'warning' | 'info' | 'neutral' {
+    if (!size) return 'neutral';
+    if (size === 'XL' || size === 'L') return 'warning';
+    if (size === 'M') return 'info';
+    return 'neutral';
+  }
+
+  private formatTokens(tokens?: number): string {
+    if (!tokens) return '';
+    if (tokens >= 1000) return `${(tokens / 1000).toFixed(0)}k tokens`;
+    return `${tokens} tokens`;
+  }
+
   private handleDragStart(e: DragEvent): void {
     if (!this.feature) return;
 
@@ -280,7 +293,7 @@ export class PMFeatureCard extends BaseComponent {
       return html`<div class="feature-card">No feature data</div>`;
     }
 
-    const { id, number, name, category, phase, priority, dependencies, value, shippedDate } = this.feature;
+    const { id, number, name, category, phase, priority, size, tokenEstimate, dependencies, value, shippedDate } = this.feature;
     const isShipped = !!shippedDate;
 
     return html`
@@ -320,6 +333,13 @@ export class PMFeatureCard extends BaseComponent {
               size="sm"
             ></pm-badge>
           ` : ''}
+          ${size ? html`
+            <pm-badge
+              label="Size: ${size}"
+              variant="${this.getSizeVariant(size)}"
+              size="sm"
+            ></pm-badge>
+          ` : ''}
           ${isShipped ? html`
             <pm-badge
               label="Shipped"
@@ -355,6 +375,12 @@ export class PMFeatureCard extends BaseComponent {
             <pm-icon name="Layers" size="sm"></pm-icon>
             <span>${phase}</span>
           </div>
+          ${tokenEstimate ? html`
+            <div class="feature-meta">
+              <pm-icon name="Zap" size="sm"></pm-icon>
+              <span>${this.formatTokens(tokenEstimate)}</span>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;

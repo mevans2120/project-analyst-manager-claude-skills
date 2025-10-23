@@ -9,6 +9,8 @@ export interface ProjectInfo {
   phase: string;
 }
 
+export type TShirtSize = 'XS' | 'S' | 'M' | 'L' | 'XL';
+
 export interface Feature {
   id: string;
   number?: number;
@@ -16,6 +18,8 @@ export interface Feature {
   category: string;
   phase: string;
   priority?: 'P0' | 'P1' | 'P2' | 'P3';
+  size?: TShirtSize;
+  tokenEstimate?: number;
   dependencies?: string[];
   value: string;
   shippedDate?: string;

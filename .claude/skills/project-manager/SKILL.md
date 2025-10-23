@@ -26,6 +26,7 @@ Invoke this skill when the user:
 - **Dependency Tracking**: Manage feature dependencies, detect circular deps
 - **Status Management**: Track features through planning → development → shipped
 - **Single Source of Truth**: CSV-based registry with full history
+- **T-Shirt Sizing**: Track implementation effort using token-based estimates
 
 ### 2. Roadmap Generation (PM-9)
 - **Markdown Export**: Beautiful roadmaps with progress bars and tables
@@ -130,6 +131,43 @@ npx ts-node src/cli.ts registry validate-dependencies
 
 # View dependency graph
 npx ts-node src/cli.ts registry graph -o dependency-graph.md
+```
+
+#### T-Shirt Sizing for Effort Estimation
+
+The Project Suite uses token-based effort estimation instead of traditional time/team size estimates. This approach aligns with Claude's capabilities and provides more accurate scoping.
+
+**Size Categories:**
+
+| Size | Token Estimate | Example Task |
+|------|---------------|--------------|
+| **XS** | 50k tokens | Bug fix, config change, simple implementation |
+| **S** | 100k tokens | Feature implementation, small test suite |
+| **M** | 200k tokens | Large test suite, complex feature |
+| **L** | 400k tokens | Full module implementation |
+| **XL** | >400k tokens | Must be broken down into smaller features |
+
+**Sizing Guidelines:**
+- Code complexity and lines to write
+- Test coverage requirements
+- Integration points and dependencies
+- Documentation needs
+- Configuration and setup
+
+**Best Practices:**
+- Features sized XL should be decomposed into multiple smaller features
+- Most features should fall in the S-M range (100k-200k tokens)
+- XS features are good for quick wins and bug fixes
+- L features may need multiple implementation sessions
+
+**Add sizing when creating features:**
+```bash
+npx ts-node src/cli.ts registry add \
+  --name "User Authentication" \
+  --category "Auth" \
+  --size "M" \
+  --token-estimate 200000 \
+  --description "Login/signup with email and password"
 ```
 
 ### Step 3: Generate Roadmaps
@@ -337,9 +375,9 @@ Labels are automatically applied based on:
 
 ### Feature Registry (CSV)
 ```csv
-id,name,category,phase,status,priority,description,dependencies,tags
-PM-42,User Login,Auth,Phase 1,in-progress,P0,"Email/password authentication",PM-15,"security,mvp"
-PM-43,Dashboard,UI,Phase 1,backlog,P1,"Main dashboard view",PM-42,"ui,analytics"
+id,name,category,phase,status,priority,size,tokenEstimate,description,dependencies,tags
+PM-42,User Login,Auth,Phase 1,in-progress,P0,S,100000,"Email/password authentication",PM-15,"security,mvp"
+PM-43,Dashboard,UI,Phase 1,backlog,P1,M,200000,"Main dashboard view",PM-42,"ui,analytics"
 ```
 
 ### Roadmap (Markdown)
@@ -348,13 +386,14 @@ PM-43,Dashboard,UI,Phase 1,backlog,P1,"Main dashboard view",PM-42,"ui,analytics"
 
 ## Phase 1 (5 features)
 Progress: ████████░░ 80% (4/5 complete)
+**Effort**: 500k tokens (2 S, 2 M, 1 L)
 
 ### ✅ User Login (PM-42)
-**Status**: Shipped | **Priority**: P0
+**Status**: Shipped | **Priority**: P0 | **Size**: S (100k tokens)
 Email/password authentication with JWT tokens
 
 ### 🚧 Dashboard (PM-43)
-**Status**: In Progress | **Priority**: P1
+**Status**: In Progress | **Priority**: P1 | **Size**: M (200k tokens)
 Main dashboard with analytics and charts
 ```
 
@@ -369,7 +408,13 @@ Email/password authentication with JWT tokens
 - **Category**: Auth
 - **Phase**: Phase 1
 - **Priority**: P0
+- **Size**: S (100k tokens)
 - **Dependencies**: PM-15 (Authentication Service)
+
+## Effort Estimate
+**T-Shirt Size**: S
+**Token Estimate**: 100,000 tokens
+**Complexity**: Feature implementation with small test suite
 
 ## Screenshots
 ### Desktop View

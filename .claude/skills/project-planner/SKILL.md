@@ -30,6 +30,7 @@ Invoke this skill when the user:
 - **Feature Tracking**: Track implementation status, categories, dependencies
 - **Bulk Operations**: Import/export features, merge registries
 - **Validation**: Ensure feature data consistency
+- **T-Shirt Sizing**: Estimate implementation effort using token-based sizing
 
 ### 3. Roadmap Export
 - **Markdown Roadmaps**: Generate formatted markdown roadmaps
@@ -87,7 +88,52 @@ const features = await discovery.analyze('/path/to/project', {
 });
 ```
 
-### Step 3: Feature Registry Management
+### Step 3: T-Shirt Sizing Estimates
+
+The Project Suite uses token-based effort estimation instead of traditional time/team size estimates. This approach aligns with Claude's capabilities and provides more accurate scoping.
+
+#### Size Categories
+
+| Size | Token Estimate | Example Task |
+|------|---------------|--------------|
+| **XS** | 50k tokens | Bug fix, config change, simple implementation |
+| **S** | 100k tokens | Feature implementation, small test suite |
+| **M** | 200k tokens | Large test suite, complex feature |
+| **L** | 400k tokens | Full module implementation |
+| **XL** | >400k tokens | Must be broken down into smaller features |
+
+#### Sizing Guidelines
+
+**When sizing features, consider:**
+- Code complexity and lines to write
+- Test coverage requirements
+- Integration points and dependencies
+- Documentation needs
+- Configuration and setup
+
+**Best Practices:**
+- Features sized XL should be decomposed into multiple smaller features
+- Most features should fall in the S-M range (100k-200k tokens)
+- XS features are good for quick wins and bug fixes
+- L features may need multiple implementation sessions
+
+#### Adding Size to Registry
+
+```typescript
+registry.addFeature({
+  id: 'PM-123',
+  name: 'User Authentication',
+  category: 'Security',
+  phase: 'Phase 1',
+  priority: 'high',
+  status: 'backlog',
+  size: 'M',  // T-shirt size
+  tokenEstimate: 200000,  // 200k tokens
+  description: 'Implement JWT-based authentication'
+});
+```
+
+### Step 4: Feature Registry Management
 
 #### Load Features from CSV
 ```typescript
@@ -226,10 +272,10 @@ async function analyzeAndExportRoadmap(projectPath: string) {
 
 ### CSV Registry Format
 ```csv
-id,name,category,phase,priority,status,description,source,dependencies
-F-1,User Login,Auth,Phase 1,high,implemented,JWT authentication,code/routes.ts,
-F-2,Dashboard,UI,Phase 1,high,implemented,Main dashboard view,code/Dashboard.tsx,F-1
-F-3,API Rate Limiting,Backend,Phase 2,medium,planned,Rate limit endpoints,code/middleware.ts,
+id,name,category,phase,priority,status,size,tokenEstimate,description,source,dependencies
+F-1,User Login,Auth,Phase 1,high,implemented,S,100000,JWT authentication,code/routes.ts,
+F-2,Dashboard,UI,Phase 1,high,implemented,M,200000,Main dashboard view,code/Dashboard.tsx,F-1
+F-3,API Rate Limiting,Backend,Phase 2,medium,planned,XS,50000,Rate limit endpoints,code/middleware.ts,
 ```
 
 ### Markdown Roadmap Format
@@ -237,25 +283,31 @@ F-3,API Rate Limiting,Backend,Phase 2,medium,planned,Rate limit endpoints,code/m
 # Product Roadmap
 
 ## Phase 1 - Core Features (5 features)
+**Effort**: 500k tokens (2 S, 2 M, 1 L)
+
 ### ✅ Completed (3)
-- **User Login** (Auth) - JWT authentication
-- **Dashboard** (UI) - Main dashboard view
-- **Profile** (UI) - User profile page
+- **User Login** (Auth) - JWT authentication [Size: S, 100k tokens]
+- **Dashboard** (UI) - Main dashboard view [Size: M, 200k tokens]
+- **Profile** (UI) - User profile page [Size: S, 100k tokens]
 
 ### 🚧 In Progress (2)
-- **Settings** (UI) - User settings management
-- **Notifications** (Features) - Real-time notifications
+- **Settings** (UI) - User settings management [Size: M, 200k tokens]
+- **Notifications** (Features) - Real-time notifications [Size: L, 400k tokens]
 
 ## Phase 2 - Enhanced Features (3 features)
+**Effort**: 250k tokens (1 XS, 1 S, 1 M)
+
 ### 📋 Planned (3)
-- **API Rate Limiting** (Backend) - Rate limit endpoints
-- **Advanced Search** (Features) - Full-text search
-- **Export Data** (Features) - CSV/JSON export
+- **API Rate Limiting** (Backend) - Rate limit endpoints [Size: XS, 50k tokens]
+- **Advanced Search** (Features) - Full-text search [Size: S, 100k tokens]
+- **Export Data** (Features) - CSV/JSON export [Size: S, 100k tokens]
 
 ## Statistics
 - **Total Features**: 8
 - **Completion Rate**: 37.5%
 - **High Priority**: 3 features
+- **Total Effort**: 750k tokens
+- **Completed Effort**: 400k tokens (53%)
 ```
 
 ## Integration with Other Skills
