@@ -89,7 +89,7 @@ if [ -z "$GITHUB_TOKEN" ]; then
 fi
 
 # Verify config exists
-cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
+cd "{{INSTALL_DIR}}/project-manager"
 if [ ! -f "project-manager.config.json" ]; then
   echo "Config needed. Creating from template..."
   cp project-manager.config.example.json project-manager.config.json
@@ -100,7 +100,7 @@ fi
 
 #### Add/Update Features
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-planner"
+cd "{{INSTALL_DIR}}/project-planner"
 
 # Add a new feature
 npx ts-node src/cli.ts registry add \
@@ -135,7 +135,7 @@ npx ts-node src/cli.ts registry graph -o dependency-graph.md
 ### Step 3: Generate Roadmaps
 
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-planner"
+cd "{{INSTALL_DIR}}/project-planner"
 
 # Generate Markdown roadmap
 npx ts-node src/cli.ts export roadmap \
@@ -166,7 +166,7 @@ npx ts-node src/cli.ts export roadmap \
 
 #### From Features
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
+cd "{{INSTALL_DIR}}/project-manager"
 
 # Create issues from feature registry
 npx ts-node src/cli.ts create-issues \
@@ -195,7 +195,7 @@ npm run manage create-issues -- -i analysis-results.json
 ### Step 5: Visual Documentation
 
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
+cd "{{INSTALL_DIR}}/project-manager"
 
 # Capture screenshots for feature
 npx ts-node src/cli.ts capture-screenshots \
@@ -217,7 +217,7 @@ npx ts-node src/cli.ts scan-and-create-issues \
 ### Step 6: Generate Reports
 
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
+cd "{{INSTALL_DIR}}/project-manager"
 
 # Daily status report
 npm run manage report

@@ -92,16 +92,16 @@ mkdir -p "${SKILLS_DIR}/project-manager"
 mkdir -p "${SKILLS_DIR}/project-planner"
 
 # Copy and update skill definitions
-# Replace hardcoded path with installed location
-sed "s|/Users/michaelevans/project-suite-claude-skills|${INSTALL_DIR}|g" \
+# Replace placeholder with installed location
+sed "s|{{INSTALL_DIR}}|${INSTALL_DIR}|g" \
     "${REPO_DIR}/.claude/skills/project-analyzer/SKILL.md" > "${SKILLS_DIR}/project-analyzer/SKILL.md"
 echo "✓ project-analyzer skill installed"
 
-sed "s|/Users/michaelevans/project-suite-claude-skills|${INSTALL_DIR}|g" \
+sed "s|{{INSTALL_DIR}}|${INSTALL_DIR}|g" \
     "${REPO_DIR}/.claude/skills/project-manager/SKILL.md" > "${SKILLS_DIR}/project-manager/SKILL.md"
 echo "✓ project-manager skill installed"
 
-sed "s|/Users/michaelevans/project-suite-claude-skills|${INSTALL_DIR}|g" \
+sed "s|{{INSTALL_DIR}}|${INSTALL_DIR}|g" \
     "${REPO_DIR}/.claude/skills/project-planner/SKILL.md" > "${SKILLS_DIR}/project-planner/SKILL.md"
 echo "✓ project-planner skill installed"
 

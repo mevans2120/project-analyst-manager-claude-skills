@@ -68,10 +68,10 @@ All three skills are installed in:
 - **Project**: `.claude/skills/` (available only in this project)
 - **Personal** (after copying): `~/.claude/skills/` (available everywhere)
 
-The actual tools are located at:
-- `/Users/michaelevans/project-suite-claude-skills/project-analyzer/`
-- `/Users/michaelevans/project-suite-claude-skills/project-manager/`
-- `/Users/michaelevans/project-suite-claude-skills/project-planner/`
+After installation, the tools are located at:
+- `~/.project-suite/analyzer/` (or your custom install location)
+- `~/.project-suite/manager/`
+- `~/.project-suite/planner/`
 
 ## Output Locations
 

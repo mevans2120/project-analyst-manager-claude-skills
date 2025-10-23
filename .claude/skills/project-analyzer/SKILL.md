@@ -77,7 +77,7 @@ Ask the user what type of analysis is needed:
 
 #### Option A: Code-Based Discovery
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-planner"
+cd "{{INSTALL_DIR}}/project-planner"
 
 # Analyze React/Node.js codebase
 npx ts-node src/cli.ts discover code <repository-path> -o features.csv
@@ -91,7 +91,7 @@ npx ts-node src/cli.ts discover code <repository-path> -o features.csv
 
 #### Option B: Web-Based Discovery
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-planner"
+cd "{{INSTALL_DIR}}/project-planner"
 
 # Analyze live website
 npx ts-node src/cli.ts discover web <url> -o features.csv
@@ -105,7 +105,7 @@ npx ts-node src/cli.ts discover web <url> -o features.csv
 
 #### Option C: TODO Scanning
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-analyzer"
+cd "{{INSTALL_DIR}}/project-analyzer"
 
 # Standard TODO scan
 npm run analyze -- -p <repository-path> -o todos.json --format json
@@ -117,7 +117,7 @@ npx ts-node src/cli.ts cleanup <repository-path> -f markdown -o cleanup-report.m
 ### Step 3: Production Verification
 
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-analyzer"
+cd "{{INSTALL_DIR}}/project-analyzer"
 
 # Tier 1: URL verification
 npx ts-node src/cli.ts verify <production-url> --tier 1 -o verification.json
@@ -135,7 +135,7 @@ npx ts-node src/cli.ts verify <production-url> --all-tiers -o complete-verificat
 ### Step 4: Visual Testing
 
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-manager"
+cd "{{INSTALL_DIR}}/project-manager"
 
 # Multi-viewport screenshots
 npx ts-node src/cli.ts screenshot <url> --viewports mobile,tablet,desktop -o screenshots/
@@ -150,7 +150,7 @@ npx ts-node src/cli.ts scan-ui <url> -o ui-bugs.json
 ### Step 5: Deployment Validation
 
 ```bash
-cd "/Users/michaelevans/project-suite-claude-skills/project-analyzer"
+cd "{{INSTALL_DIR}}/project-analyzer"
 
 # Compare staging vs production
 npx ts-node src/cli.ts compare-deployment \
@@ -310,7 +310,7 @@ F-3,API Rate Limiting,Backend,Phase 2,planned,Rate limit API endpoints,todo
 
 ## Technical Details
 
-- **Location**: `/Users/michaelevans/project-suite-claude-skills/`
+- **Location**: `{{INSTALL_DIR}}/`
   - `project-analyzer/` - TODO scanning, completion analysis
   - `project-planner/` - Feature discovery (code & web)
   - `project-manager/` - Visual testing, screenshots

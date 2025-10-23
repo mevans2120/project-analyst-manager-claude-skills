@@ -50,7 +50,7 @@ Ask the user what they need:
 
 #### Discover Features from React Codebase
 ```typescript
-import { CodeDiscovery } from '/Users/michaelevans/project-suite-claude-skills/project-planner';
+import { CodeDiscovery } from '{{INSTALL_DIR}}/project-planner';
 
 const discovery = new CodeDiscovery();
 const features = await discovery.discoverFromReact('/path/to/react/app', {
@@ -66,7 +66,7 @@ await registry.saveFeatures(features, 'features.csv');
 
 #### Discover Features from Express Codebase
 ```typescript
-import { CodeDiscovery } from '/Users/michaelevans/project-suite-claude-skills/project-planner';
+import { CodeDiscovery } from '{{INSTALL_DIR}}/project-planner';
 
 const discovery = new CodeDiscovery();
 const features = await discovery.discoverFromExpress('/path/to/express/app', {
@@ -78,7 +78,7 @@ const features = await discovery.discoverFromExpress('/path/to/express/app', {
 
 #### Analyze Any JavaScript/TypeScript Project
 ```typescript
-import { CodeDiscovery } from '/Users/michaelevans/project-suite-claude-skills/project-planner';
+import { CodeDiscovery } from '{{INSTALL_DIR}}/project-planner';
 
 const discovery = new CodeDiscovery();
 const features = await discovery.analyze('/path/to/project', {
@@ -91,7 +91,7 @@ const features = await discovery.analyze('/path/to/project', {
 
 #### Load Features from CSV
 ```typescript
-import { CSVFeatureRegistry } from '/Users/michaelevans/project-suite-claude-skills/project-planner';
+import { CSVFeatureRegistry } from '{{INSTALL_DIR}}/project-planner';
 
 const registry = new CSVFeatureRegistry();
 const features = await registry.loadFeatures('features.csv');
@@ -128,7 +128,7 @@ const criticalFeatures = registry.getFeaturesByPriority('high');
 
 #### Export to Markdown
 ```typescript
-import { RoadmapExporter } from '/Users/michaelevans/project-suite-claude-skills/project-planner';
+import { RoadmapExporter } from '{{INSTALL_DIR}}/project-planner';
 
 const exporter = new RoadmapExporter();
 const markdown = await exporter.exportToMarkdown(features, {
@@ -159,7 +159,7 @@ import {
   CodeDiscovery,
   CSVFeatureRegistry,
   RoadmapExporter
-} from '/Users/michaelevans/project-suite-claude-skills/project-planner';
+} from '{{INSTALL_DIR}}/project-planner';
 
 async function analyzeAndExportRoadmap(projectPath: string) {
   // 1. Discover features from code
@@ -272,7 +272,7 @@ F-3,API Rate Limiting,Backend,Phase 2,medium,planned,Rate limit endpoints,code/m
 
 ## Technical Details
 
-- **Location**: `/Users/michaelevans/project-suite-claude-skills/project-planner/`
+- **Location**: `{{INSTALL_DIR}}/project-planner/`
 - **Language**: TypeScript/Node.js
 - **Dependencies**:
   - `@babel/parser` - Code parsing

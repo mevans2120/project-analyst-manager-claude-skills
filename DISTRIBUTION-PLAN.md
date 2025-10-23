@@ -5,7 +5,7 @@ Make it dead simple for other developers to install and use these skills globall
 
 ## Current Problems for Distribution
 
-1. **Hardcoded paths** in skill definitions point to `/Users/michaelevans/...`
+1. **Hardcoded paths** in skill definitions point to developer's local machine
 2. **Source TypeScript** - users would need to build
 3. **Dependencies** - npm install in 3 directories
 4. **Playwright browsers** - separate install step
@@ -53,13 +53,12 @@ npm install -g @project-suite/skills
 
 **Skill definitions would reference:**
 ```bash
-# Instead of hardcoded path:
-/Users/michaelevans/project-suite-claude-skills/project-analyzer
+# Instead of hardcoded dev path:
+{{INSTALL_DIR}}/project-analyzer
 
-# Use installed location:
-$(dirname $(which project-suite-analyze))/../lib/analyzer
-# Or simpler:
+# Gets replaced during install with:
 ~/.project-suite/analyzer
+# Or user's custom install location
 ```
 
 ---
@@ -115,13 +114,13 @@ echo "✨ Installing skills to ${SKILLS_DIR}..."
 mkdir -p "${SKILLS_DIR}"
 
 # Update skill paths to point to installed location
-sed "s|/Users/michaelevans/project-suite-claude-skills|${INSTALL_DIR}|g" \
+sed "s|{{INSTALL_DIR}}|${INSTALL_DIR}|g" \
     .claude/skills/project-analyzer/SKILL.md > "${SKILLS_DIR}/project-analyzer/SKILL.md"
 
-sed "s|/Users/michaelevans/project-suite-claude-skills|${INSTALL_DIR}|g" \
+sed "s|{{INSTALL_DIR}}|${INSTALL_DIR}|g" \
     .claude/skills/project-manager/SKILL.md > "${SKILLS_DIR}/project-manager/SKILL.md"
 
-sed "s|/Users/michaelevans/project-suite-claude-skills|${INSTALL_DIR}|g" \
+sed "s|{{INSTALL_DIR}}|${INSTALL_DIR}|g" \
     .claude/skills/project-planner/SKILL.md > "${SKILLS_DIR}/project-planner/SKILL.md"
 
 echo "✅ Installation complete!"
