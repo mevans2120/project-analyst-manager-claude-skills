@@ -57,3 +57,6 @@ test-reports/
 
 # Project state files
 .project-state.json
+
+# Development documentation
+dev-docs/
