@@ -359,4 +359,11 @@ export class PlaywrightDriver {
   isLaunched(): boolean {
     return this.browser !== null && this.page !== null;
   }
+
+  /**
+   * Get the current page (for advanced usage)
+   */
+  getPage(): Page | null {
+    return this.page;
+  }
 }

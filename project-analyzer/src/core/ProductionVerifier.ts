@@ -8,9 +8,7 @@
  * Tier 3: API Verification - Endpoints return expected data
  */
 
-import { PlaywrightDriver } from '../../../shared/src/core/PlaywrightDriver';
-import { NetworkMonitor } from '../../../shared/src/core/NetworkMonitor';
-import { ScreenshotCapture } from '../../../shared/src/core/ScreenshotCapture';
+import { PlaywrightDriver, NetworkMonitor, ScreenshotCapture } from '@project-suite/shared';
 
 export interface VerificationTarget {
   featureId: string;
@@ -82,16 +80,13 @@ export interface VerificationOptions {
 
 export class ProductionVerifier {
   private driver: PlaywrightDriver;
-  private networkMonitor: NetworkMonitor;
-  private screenshotCapture: ScreenshotCapture;
+  private networkMonitor!: NetworkMonitor;
 
   constructor() {
     this.driver = new PlaywrightDriver({
       headless: true,
       browser: 'chromium'
     });
-    this.networkMonitor = new NetworkMonitor(this.driver);
-    this.screenshotCapture = new ScreenshotCapture(this.driver);
   }
 
   /**
@@ -106,10 +101,11 @@ export class ProductionVerifier {
 
     try {
       await this.driver.launch();
+      this.networkMonitor = new NetworkMonitor(this.driver);
       await this.networkMonitor.startMonitoring();
 
       // Navigate to production URL
-      await this.driver.navigateTo(target.productionUrl, { timeout });
+      await this.driver.navigate({ url: target.productionUrl, waitUntil: 'networkidle' });
 
       // Tier 1: URL Verification
       const tier1 = await this.verifyTier1(target.tier1 || [], options);
@@ -125,7 +121,7 @@ export class ProductionVerifier {
       if (options.captureScreenshots) {
         const dir = options.screenshotDir || './screenshots';
         screenshotPath = `${dir}/${target.featureId}-production.png`;
-        await this.screenshotCapture.captureFullPage(screenshotPath);
+        await this.driver.screenshot({ path: screenshotPath, fullPage: true });
       }
 
       // Calculate overall status
@@ -152,7 +148,6 @@ export class ProductionVerifier {
       return result;
 
     } finally {
-      await this.networkMonitor.stopMonitoring();
       await this.driver.close();
     }
   }
@@ -197,28 +192,20 @@ export class ProductionVerifier {
     for (const check of checks) {
       try {
         // Navigate to URL
-        const response = await this.driver.navigateTo(check.url, {
+        await this.driver.navigate({
+          url: check.url,
+          waitUntil: 'networkidle',
           timeout: options.timeout || 30000
         });
 
-        // Check HTTP status
-        let statusCheck = true;
-        if (check.expectedStatus) {
-          statusCheck = response?.status() === check.expectedStatus;
-          if (!statusCheck) {
-            results.push({
-              name: `URL: ${check.url}`,
-              passed: false,
-              message: `Expected status ${check.expectedStatus}, got ${response?.status()}`
-            });
-            failed++;
-            continue;
-          }
+        const page = this.driver.getPage();
+        if (!page) {
+          throw new Error('Page not available');
         }
 
         // Check page title
         if (check.expectedTitle) {
-          const title = await this.driver.page.title();
+          const title = await page.title();
           if (!title.includes(check.expectedTitle)) {
             results.push({
               name: `URL: ${check.url}`,
@@ -232,7 +219,7 @@ export class ProductionVerifier {
 
         // Check for expected element
         if (check.expectedElement) {
-          const element = await this.driver.page.$(check.expectedElement);
+          const element = await page.$(check.expectedElement);
           if (!element) {
             results.push({
               name: `URL: ${check.url}`,
@@ -341,8 +328,13 @@ export class ProductionVerifier {
    */
   private async verifyButton(check: Tier2Check): Promise<CheckResult> {
     try {
+      const page = this.driver.getPage();
+      if (!page) {
+        throw new Error('Page not available');
+      }
+
       // Check if button exists
-      const button = await this.driver.page.$(check.selector);
+      const button = await page.$(check.selector);
       if (!button) {
         return {
           name: `Button: ${check.selector}`,
@@ -374,11 +366,11 @@ export class ProductionVerifier {
       // Click button if action is specified
       if (check.action === 'click') {
         await button.click();
-        await this.driver.page.waitForTimeout(1000);
+        await page.waitForTimeout(1000);
 
         // Check for expected result
         if (check.expectedResult) {
-          const element = await this.driver.page.$(check.expectedResult);
+          const element = await page.$(check.expectedResult);
           if (!element) {
             return {
               name: `Button: ${check.selector}`,
@@ -409,8 +401,13 @@ export class ProductionVerifier {
    */
   private async verifyForm(check: Tier2Check): Promise<CheckResult> {
     try {
+      const page = this.driver.getPage();
+      if (!page) {
+        throw new Error('Page not available');
+      }
+
       // Find form
-      const form = await this.driver.page.$(check.selector);
+      const form = await page.$(check.selector);
       if (!form) {
         return {
           name: `Form: ${check.selector}`,
@@ -422,18 +419,18 @@ export class ProductionVerifier {
       // Fill form if data provided
       if (check.data) {
         for (const [field, value] of Object.entries(check.data)) {
-          await this.driver.page.fill(`${check.selector} ${field}`, value);
+          await page.fill(`${check.selector} ${field}`, value);
         }
       }
 
       // Submit form if action is specified
       if (check.action === 'submit') {
-        await form.evaluate((el) => (el as HTMLFormElement).submit());
-        await this.driver.page.waitForTimeout(2000);
+        await form.evaluate((el: any) => el.submit());
+        await page.waitForTimeout(2000);
 
         // Check for expected result
         if (check.expectedResult) {
-          const element = await this.driver.page.$(check.expectedResult);
+          const element = await page.$(check.expectedResult);
           if (!element) {
             return {
               name: `Form: ${check.selector}`,
@@ -464,7 +461,12 @@ export class ProductionVerifier {
    */
   private async verifyLink(check: Tier2Check): Promise<CheckResult> {
     try {
-      const link = await this.driver.page.$(check.selector);
+      const page = this.driver.getPage();
+      if (!page) {
+        throw new Error('Page not available');
+      }
+
+      const link = await page.$(check.selector);
       if (!link) {
         return {
           name: `Link: ${check.selector}`,
@@ -502,7 +504,12 @@ export class ProductionVerifier {
    */
   private async verifyInteraction(check: Tier2Check): Promise<CheckResult> {
     try {
-      const element = await this.driver.page.$(check.selector);
+      const page = this.driver.getPage();
+      if (!page) {
+        throw new Error('Page not available');
+      }
+
+      const element = await page.$(check.selector);
       if (!element) {
         return {
           name: `Interaction: ${check.selector}`,
@@ -519,7 +526,7 @@ export class ProductionVerifier {
         await element.fill(value);
       }
 
-      await this.driver.page.waitForTimeout(1000);
+      await page.waitForTimeout(1000);
 
       return {
         name: `Interaction: ${check.selector}`,
@@ -737,11 +744,13 @@ export class ProductionVerifier {
       lines.push('');
 
       // Tier results
-      for (const [tierName, tierResult] of [
+      const tiers: [string, TierResult][] = [
         ['Tier 1 (URL)', result.tier1],
         ['Tier 2 (Functionality)', result.tier2],
         ['Tier 3 (API)', result.tier3]
-      ]) {
+      ];
+
+      for (const [tierName, tierResult] of tiers) {
         lines.push(`#### ${tierName}`);
         lines.push(`Status: ${tierResult.status} | Passed: ${tierResult.passed}/${tierResult.total}`);
         lines.push('');

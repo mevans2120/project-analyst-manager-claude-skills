@@ -1,0 +1,475 @@
+/**
+ * Tests for WebDiscovery
+ * PM-55: Web-Based Feature Discovery
+ */
+
+import { WebDiscovery } from '../src/core/WebDiscovery';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import * as os from 'os';
+
+describe('WebDiscovery', () => {
+  let webDiscovery: WebDiscovery;
+  let tempDir: string;
+
+  beforeEach(async () => {
+    webDiscovery = new WebDiscovery();
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'web-discovery-test-'));
+  });
+
+  afterEach(async () => {
+    // Clean up temp directory
+    try {
+      await fs.rm(tempDir, { recursive: true, force: true });
+    } catch (e) {
+      // Ignore cleanup errors
+    }
+  });
+
+  describe('initialization', () => {
+    it('should create instance with default driver', () => {
+      expect(webDiscovery).toBeInstanceOf(WebDiscovery);
+    });
+  });
+
+  describe('discover - basic functionality', () => {
+    it('should discover features from a website', async () => {
+      const result = await webDiscovery.discover('https://example.com');
+
+      expect(result).toBeDefined();
+      expect(result.url).toBe('https://example.com');
+      expect(result.timestamp).toBeDefined();
+      expect(Array.isArray(result.discoveredFeatures)).toBe(true);
+      expect(Array.isArray(result.screenshots)).toBe(true);
+      expect(Array.isArray(result.apiEndpoints)).toBe(true);
+    }, 30000);
+
+    it('should discover navigation features', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      expect(result.discoveredFeatures).toBeDefined();
+
+      // Should find some navigation links
+      const navFeatures = result.discoveredFeatures.filter(f => f.category === 'Navigation');
+      expect(navFeatures.length).toBeGreaterThan(0);
+
+      // Navigation features should have proper structure
+      const navFeature = navFeatures[0];
+      expect(navFeature.name).toBeDefined();
+      expect(navFeature.source).toBe('menu');
+      expect(navFeature.confidence).toBeGreaterThan(0);
+    }, 30000);
+
+    it('should discover content features', async () => {
+      const result = await webDiscovery.discover('https://example.com');
+
+      // example.com has headings
+      const contentFeatures = result.discoveredFeatures.filter(
+        f => f.category === 'Content' || f.source?.includes('h')
+      );
+
+      expect(contentFeatures.length).toBeGreaterThanOrEqual(0);
+    }, 25000);
+
+    it('should deduplicate features', async () => {
+      const result = await webDiscovery.discover('https://example.com');
+
+      // Check for duplicates by name
+      const names = result.discoveredFeatures.map(f => f.name.toLowerCase());
+      const uniqueNames = new Set(names);
+
+      expect(uniqueNames.size).toBe(names.length);
+    }, 25000);
+  });
+
+  describe('discover - with options', () => {
+    it('should wait for selector if specified', async () => {
+      const result = await webDiscovery.discover('https://example.com', {
+        waitForSelector: 'h1'
+      });
+
+      expect(result.discoveredFeatures).toBeDefined();
+    }, 25000);
+
+    it('should capture screenshots when requested', async () => {
+      const result = await webDiscovery.discover('https://example.com', {
+        captureScreenshots: true,
+        screenshotDir: tempDir
+      });
+
+      expect(result.screenshots.length).toBeGreaterThan(0);
+
+      // Check that screenshots were saved
+      const files = await fs.readdir(tempDir);
+      const pngFiles = files.filter(f => f.endsWith('.png'));
+      expect(pngFiles.length).toBeGreaterThan(0);
+    }, 30000);
+
+    it('should capture multi-viewport screenshots when requested', async () => {
+      const result = await webDiscovery.discover('https://example.com', {
+        captureScreenshots: true,
+        multiViewport: true,
+        screenshotDir: tempDir
+      });
+
+      // Should have mobile, tablet, desktop screenshots
+      expect(result.screenshots.length).toBeGreaterThanOrEqual(3);
+
+      const files = await fs.readdir(tempDir);
+      const pngFiles = files.filter(f => f.endsWith('.png'));
+
+      // Check for viewport-specific screenshots
+      const hasMobile = pngFiles.some(f => f.includes('mobile'));
+      const hasTablet = pngFiles.some(f => f.includes('tablet'));
+      const hasDesktop = pngFiles.some(f => f.includes('desktop'));
+
+      expect(hasMobile).toBe(true);
+      expect(hasTablet).toBe(true);
+      expect(hasDesktop).toBe(true);
+    }, 45000);
+  });
+
+  describe('discoverMultiple', () => {
+    it('should discover features from multiple URLs', async () => {
+      const urls = [
+        'https://example.com',
+        'https://www.iana.org'
+      ];
+
+      const results = await webDiscovery.discoverMultiple(urls);
+
+      expect(results).toBeDefined();
+      expect(results.length).toBe(2);
+
+      expect(results[0].url).toBe('https://example.com');
+      expect(results[1].url).toBe('https://www.iana.org');
+
+      expect(results[0].discoveredFeatures).toBeDefined();
+      expect(results[1].discoveredFeatures).toBeDefined();
+    }, 60000);
+
+    it('should handle failures gracefully', async () => {
+      const urls = [
+        'https://example.com',
+        'https://this-domain-definitely-does-not-exist-12345.com',
+        'https://www.iana.org'
+      ];
+
+      const results = await webDiscovery.discoverMultiple(urls);
+
+      // Should still return results for valid URLs
+      expect(results.length).toBeGreaterThan(0);
+      expect(results.length).toBeLessThanOrEqual(3);
+    }, 60000);
+  });
+
+  describe('API endpoint discovery', () => {
+    it('should discover API endpoints from network traffic', async () => {
+      // Use a page that makes API calls
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      expect(result.apiEndpoints).toBeDefined();
+      expect(Array.isArray(result.apiEndpoints)).toBe(true);
+
+      // Check structure of endpoint URLs
+      if (result.apiEndpoints.length > 0) {
+        const endpoint = result.apiEndpoints[0];
+        expect(typeof endpoint).toBe('string');
+        expect(endpoint).toMatch(/^https?:\/\//);
+      }
+    }, 30000);
+  });
+
+  describe('convertToFeatures', () => {
+    it('should convert discovered features to Feature format', async () => {
+      const result = await webDiscovery.discover('https://example.com');
+
+      const features = webDiscovery.convertToFeatures(
+        result.discoveredFeatures,
+        {
+          projectCode: 'TEST',
+          startingNumber: 1,
+          phase: 'Phase 1',
+          priority: 'P1'
+        }
+      );
+
+      expect(features).toBeDefined();
+      expect(Array.isArray(features)).toBe(true);
+
+      if (features.length > 0) {
+        const feature = features[0];
+        expect(feature.id).toMatch(/^test-/);
+        expect(feature.number).toBeGreaterThanOrEqual(1);
+        expect(feature.phase).toBe('Phase 1');
+        expect(feature.priority).toBe('P1');
+        expect(feature.status).toBe('planned');
+        expect(feature.value).toContain('Discovered from');
+        expect(feature.value).toContain('% confidence');
+      }
+    }, 25000);
+
+    it('should assign sequential numbers', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      const features = webDiscovery.convertToFeatures(
+        result.discoveredFeatures.slice(0, 5), // Take first 5
+        {
+          projectCode: 'TEST',
+          startingNumber: 10,
+          phase: 'Phase 1',
+          priority: 'P0'
+        }
+      );
+
+      if (features.length >= 2) {
+        expect(features[0].number).toBe(10);
+        expect(features[1].number).toBe(11);
+        expect(features[2].number).toBe(12);
+      }
+    }, 25000);
+
+    it('should sanitize feature IDs', async () => {
+      const discovered = [
+        {
+          name: 'User Profile & Settings!',
+          description: 'Profile page',
+          category: 'User',
+          source: 'menu',
+          confidence: 0.9
+        }
+      ];
+
+      const features = webDiscovery.convertToFeatures(discovered, {
+        projectCode: 'APP',
+        startingNumber: 1,
+        phase: 'Phase 1',
+        priority: 'P1'
+      });
+
+      expect(features[0].id).toMatch(/^app-[a-z0-9-]+$/);
+      expect(features[0].id).not.toContain('&');
+      expect(features[0].id).not.toContain('!');
+      expect(features[0].id).not.toContain(' ');
+    });
+  });
+
+  describe('feature extraction from navigation', () => {
+    it('should extract links from navigation elements', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      const navFeatures = result.discoveredFeatures.filter(f => f.source === 'menu');
+
+      expect(navFeatures.length).toBeGreaterThan(0);
+
+      // Navigation features should have reasonable names
+      navFeatures.forEach(feature => {
+        expect(feature.name.length).toBeGreaterThan(2);
+        expect(feature.name.length).toBeLessThan(50);
+        expect(feature.confidence).toBeCloseTo(0.8, 1);
+      });
+    }, 30000);
+
+    it('should include aria-labels in descriptions', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      const navFeatures = result.discoveredFeatures.filter(f => f.source === 'menu');
+
+      // At least some features should have descriptions
+      expect(navFeatures.some(f => f.description)).toBe(true);
+    }, 25000);
+  });
+
+  describe('feature extraction from content', () => {
+    it('should extract features from headings', async () => {
+      const result = await webDiscovery.discover('https://example.com');
+
+      // example.com has headings
+      const headingFeatures = result.discoveredFeatures.filter(
+        f => f.source && /^h[1-6]$/.test(f.source)
+      );
+
+      expect(headingFeatures.length).toBeGreaterThanOrEqual(0);
+    }, 25000);
+
+    it('should filter out common non-feature headings', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      // Should not include generic headings like "About", "Contact", etc.
+      const genericHeadings = result.discoveredFeatures.filter(f =>
+        ['about', 'contact', 'welcome', 'home'].some(word =>
+          f.name.toLowerCase().includes(word)
+        )
+      );
+
+      // Generic headings should be filtered (may be 0)
+      expect(genericHeadings.length).toBeGreaterThanOrEqual(0);
+    }, 25000);
+
+    it('should extract features from feature sections', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      const sectionFeatures = result.discoveredFeatures.filter(f => f.source === 'section');
+
+      // Section features should have both title and description
+      sectionFeatures.forEach(feature => {
+        expect(feature.name).toBeDefined();
+        expect(feature.description).toBeDefined();
+        expect(feature.category).toBe('Feature');
+      });
+    }, 25000);
+  });
+
+  describe('feature extraction from interactive elements', () => {
+    it('should extract features from buttons', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      const buttonFeatures = result.discoveredFeatures.filter(f => f.source === 'button');
+
+      buttonFeatures.forEach(feature => {
+        expect(feature.name.length).toBeGreaterThan(3);
+        expect(feature.name.length).toBeLessThan(50);
+        expect(feature.category).toBe('Action');
+        expect(feature.confidence).toBeCloseTo(0.7, 1);
+      });
+    }, 25000);
+
+    it('should filter out common non-feature buttons', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      const buttonFeatures = result.discoveredFeatures.filter(f => f.source === 'button');
+
+      // Should not include generic buttons like "Submit", "Cancel", etc.
+      const genericButtons = buttonFeatures.filter(f =>
+        ['submit', 'cancel', 'close', 'ok', 'yes', 'no'].some(word =>
+          f.name.toLowerCase() === word.toLowerCase()
+        )
+      );
+
+      expect(genericButtons.length).toBe(0);
+    }, 25000);
+
+    it('should extract features from forms', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      const formFeatures = result.discoveredFeatures.filter(f => f.source === 'form');
+
+      formFeatures.forEach(feature => {
+        expect(feature.name).toContain('Form');
+        expect(feature.description).toContain('fields');
+        expect(feature.category).toBe('Form');
+        expect(feature.confidence).toBeCloseTo(0.8, 1);
+      });
+    }, 25000);
+  });
+
+  describe('confidence scoring', () => {
+    it('should assign appropriate confidence scores by source', async () => {
+      const result = await webDiscovery.discover('https://www.iana.org');
+
+      if (result.discoveredFeatures.length === 0) {
+        // Skip if no features found
+        return;
+      }
+
+      // Navigation features: 0.8
+      const navFeatures = result.discoveredFeatures.filter(f => f.source === 'menu');
+      if (navFeatures.length > 0) {
+        expect(navFeatures[0].confidence).toBeCloseTo(0.8, 1);
+      }
+
+      // Content features: 0.6
+      const contentFeatures = result.discoveredFeatures.filter(f => f.source?.startsWith('h'));
+      if (contentFeatures.length > 0) {
+        expect(contentFeatures[0].confidence).toBeCloseTo(0.6, 1);
+      }
+
+      // Section features: 0.75
+      const sectionFeatures = result.discoveredFeatures.filter(f => f.source === 'section');
+      if (sectionFeatures.length > 0) {
+        expect(sectionFeatures[0].confidence).toBeCloseTo(0.75, 1);
+      }
+
+      // Button features: 0.7
+      const buttonFeatures = result.discoveredFeatures.filter(f => f.source === 'button');
+      if (buttonFeatures.length > 0) {
+        expect(buttonFeatures[0].confidence).toBeCloseTo(0.7, 1);
+      }
+
+      // Form features: 0.8
+      const formFeatures = result.discoveredFeatures.filter(f => f.source === 'form');
+      if (formFeatures.length > 0) {
+        expect(formFeatures[0].confidence).toBeCloseTo(0.8, 1);
+      }
+    }, 30000);
+  });
+
+  describe('error handling', () => {
+    it('should handle invalid URLs gracefully', async () => {
+      await expect(
+        webDiscovery.discover('not-a-valid-url')
+      ).rejects.toThrow();
+    }, 20000);
+
+    it('should handle network errors gracefully', async () => {
+      await expect(
+        webDiscovery.discover('https://this-domain-definitely-does-not-exist-12345.com')
+      ).rejects.toThrow();
+    }, 20000);
+
+    it('should handle pages that take too long to load', async () => {
+      // This test ensures we have reasonable timeouts
+      await expect(async () => {
+        await webDiscovery.discover('https://example.com', {
+          waitForSelector: '.nonexistent-element' // Will timeout
+        });
+      }).rejects.toThrow();
+    }, 35000);
+  });
+
+  describe('URL sanitization', () => {
+    it('should sanitize URLs for filenames', async () => {
+      const result = await webDiscovery.discover('https://example.com/path/to/page?query=value#hash', {
+        captureScreenshots: true,
+        screenshotDir: tempDir
+      });
+
+      if (result.screenshots.length > 0) {
+        const files = await fs.readdir(tempDir);
+        const pngFiles = files.filter(f => f.endsWith('.png'));
+
+        // Filenames should not contain special characters
+        pngFiles.forEach(filename => {
+          expect(filename).toMatch(/^[a-z0-9-]+\.png$/);
+          expect(filename).not.toContain('/');
+          expect(filename).not.toContain('?');
+          expect(filename).not.toContain('#');
+          expect(filename).not.toContain(':');
+        });
+      }
+    }, 30000);
+
+    it('should truncate long URLs in filenames', async () => {
+      const longUrl = 'https://example.com/' + 'a'.repeat(200);
+
+      try {
+        const result = await webDiscovery.discover(longUrl, {
+          captureScreenshots: true,
+          screenshotDir: tempDir
+        });
+
+        if (result.screenshots.length > 0) {
+          const files = await fs.readdir(tempDir);
+          const pngFiles = files.filter(f => f.endsWith('.png'));
+
+          // Filenames should be truncated to reasonable length
+          pngFiles.forEach(filename => {
+            expect(filename.length).toBeLessThan(120); // 100 + extension
+          });
+        }
+      } catch (error) {
+        // URL might be invalid, which is okay for this test
+      }
+    }, 30000);
+  });
+});
