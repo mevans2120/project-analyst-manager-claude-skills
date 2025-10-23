@@ -350,6 +350,241 @@ program
     }
   });
 
+// Analyze designs command
+program
+  .command('analyze-designs')
+  .description('Extract features from design files, moodboards, wireframes, and screenshots')
+  .option('--designs <files...>', 'Design file paths (PNG, JPG, etc.)')
+  .option('--moodboards <files...>', 'Moodboard image paths')
+  .option('--wireframes <files...>', 'Wireframe image paths')
+  .option('--screenshots <files...>', 'Screenshot image paths')
+  .option('-o, --output <path>', 'Output CSV file path', 'features.csv')
+  .option('-f, --format <format>', 'Output format (csv, json, markdown)', 'csv')
+  .option('--include-low-confidence', 'Include features with confidence < 70%', false)
+  .option('--project-name <name>', 'Project name for context')
+  .option('--platform <platform>', 'Target platform (web, mobile, desktop)', 'web')
+  .option('--domain <domain>', 'Industry/domain')
+  .action(async (options) => {
+    console.log('🎨 Analyzing design files...');
+
+    try {
+      const { ProjectAnalyzer } = await import('./index');
+
+      // Validate that at least one source is provided
+      if (!options.designs && !options.moodboards && !options.wireframes && !options.screenshots) {
+        console.error('❌ Error: At least one source type must be provided (--designs, --moodboards, --wireframes, or --screenshots)');
+        process.exit(1);
+      }
+
+      // Create analyzer
+      const analyzer = new ProjectAnalyzer(process.cwd());
+
+      // Build analysis options
+      const analysisOptions = {
+        designFiles: options.designs,
+        moodboards: options.moodboards,
+        wireframes: options.wireframes,
+        screenshots: options.screenshots,
+        includeLowConfidence: options.includeLowConfidence
+      };
+
+      // Build context
+      const context = {
+        projectName: options.projectName,
+        platform: options.platform as any,
+        domain: options.domain
+      };
+
+      console.log(`📁 Analyzing ${(options.designs?.length || 0) + (options.moodboards?.length || 0) + (options.wireframes?.length || 0) + (options.screenshots?.length || 0)} file(s)...`);
+
+      // Analyze designs
+      const result = await analyzer.analyzeDesigns(analysisOptions, context);
+
+      console.log(`✅ Found ${result.features.length} features`);
+      console.log(`   Average confidence: ${result.summary.averageConfidence}%`);
+
+      // Export based on format
+      const { formatFeaturesAsCSV, formatFeaturesAsJSON, formatFeaturesAsMarkdown, writeFeaturesToFile } = await import('./formatters/featureFormatter');
+
+      let formatted: string;
+      switch (options.format) {
+        case 'json':
+          formatted = formatFeaturesAsJSON(result);
+          break;
+        case 'markdown':
+          formatted = formatFeaturesAsMarkdown(result);
+          break;
+        default:
+          formatted = formatFeaturesAsCSV(result, { includeHeaders: true, sortBy: 'category' });
+      }
+
+      // Write output
+      const outputPath = path.resolve(options.output);
+      await writeFeaturesToFile(result, outputPath, options.format as any);
+
+      console.log(`📄 Output written to: ${outputPath}`);
+      console.log('\n📊 Summary by Category:');
+      for (const [category, count] of Object.entries(result.summary.byCategory)) {
+        console.log(`   ${category}: ${count}`);
+      }
+
+    } catch (error) {
+      console.error('❌ Error analyzing designs:', error);
+      process.exit(1);
+    }
+  });
+
+// Analyze website command
+program
+  .command('analyze-website <url>')
+  .description('Extract features from a live website')
+  .option('-o, --output <path>', 'Output CSV file path', 'features.csv')
+  .option('-f, --format <format>', 'Output format (csv, json, markdown)', 'csv')
+  .option('--crawl-depth <depth>', 'Crawl depth for linked pages', '0')
+  .option('--capture-screenshots', 'Capture screenshots of analyzed pages', false)
+  .option('--analyze-interactions', 'Analyze interactive elements', true)
+  .option('--analyze-apis', 'Analyze API calls via network monitoring', false)
+  .option('--include-low-confidence', 'Include features with confidence < 70%', false)
+  .option('--project-name <name>', 'Project name for context')
+  .action(async (url, options) => {
+    console.log(`🌐 Analyzing website: ${url}`);
+
+    try {
+      const { ProjectAnalyzer } = await import('./index');
+
+      // Create analyzer
+      const analyzer = new ProjectAnalyzer(process.cwd());
+
+      // Build analysis options
+      const analysisOptions = {
+        urls: [url],
+        crawlDepth: parseInt(options.crawlDepth),
+        captureScreenshots: options.captureScreenshots,
+        analyzeInteractions: options.analyzeInteractions,
+        analyzeAPIs: options.analyzeApis,
+        includeLowConfidence: options.includeLowConfidence
+      };
+
+      // Build context
+      const context = options.projectName ? {
+        projectName: options.projectName,
+        platform: 'web' as any
+      } : undefined;
+
+      console.log('🔍 Extracting features...');
+
+      // Analyze website
+      const result = await analyzer.analyzeWebsites(analysisOptions, context);
+
+      console.log(`✅ Found ${result.features.length} features`);
+      console.log(`   Average confidence: ${result.summary.averageConfidence}%`);
+
+      // Export based on format
+      const { formatFeaturesAsCSV, formatFeaturesAsJSON, formatFeaturesAsMarkdown, writeFeaturesToFile } = await import('./formatters/featureFormatter');
+
+      // Write output
+      const outputPath = path.resolve(options.output);
+      await writeFeaturesToFile(result, outputPath, options.format as any);
+
+      console.log(`📄 Output written to: ${outputPath}`);
+      console.log('\n📊 Summary by Category:');
+      for (const [category, count] of Object.entries(result.summary.byCategory)) {
+        console.log(`   ${category}: ${count}`);
+      }
+
+      if (result.warnings && result.warnings.length > 0) {
+        console.log('\n⚠️  Warnings:');
+        result.warnings.forEach(w => console.log(`   - ${w}`));
+      }
+
+    } catch (error) {
+      console.error('❌ Error analyzing website:', error);
+      process.exit(1);
+    }
+  });
+
+// Analyze all (designs + website) command
+program
+  .command('analyze-all')
+  .description('Combined analysis: designs + website')
+  .option('--designs <files...>', 'Design file paths')
+  .option('--moodboards <files...>', 'Moodboard image paths')
+  .option('--wireframes <files...>', 'Wireframe image paths')
+  .option('--screenshots <files...>', 'Screenshot image paths')
+  .option('--url <url>', 'Website URL to analyze')
+  .option('-o, --output <path>', 'Output CSV file path', 'features.csv')
+  .option('-f, --format <format>', 'Output format (csv, json, markdown)', 'csv')
+  .option('--include-low-confidence', 'Include features with confidence < 70%', false)
+  .option('--project-name <name>', 'Project name for context')
+  .option('--platform <platform>', 'Target platform (web, mobile, desktop)', 'web')
+  .action(async (options) => {
+    console.log('🎨🌐 Performing combined analysis...');
+
+    try {
+      const { ProjectAnalyzer } = await import('./index');
+
+      // Validate inputs
+      const hasDesigns = options.designs || options.moodboards || options.wireframes || options.screenshots;
+      const hasWebsite = options.url;
+
+      if (!hasDesigns && !hasWebsite) {
+        console.error('❌ Error: At least one source must be provided (designs or --url)');
+        process.exit(1);
+      }
+
+      // Create analyzer
+      const analyzer = new ProjectAnalyzer(process.cwd());
+
+      // Build options
+      const designOptions = hasDesigns ? {
+        designFiles: options.designs,
+        moodboards: options.moodboards,
+        wireframes: options.wireframes,
+        screenshots: options.screenshots,
+        includeLowConfidence: options.includeLowConfidence
+      } : undefined;
+
+      const websiteOptions = hasWebsite ? {
+        urls: [options.url],
+        includeLowConfidence: options.includeLowConfidence
+      } : undefined;
+
+      const context = {
+        projectName: options.projectName,
+        platform: options.platform as any
+      };
+
+      console.log('🔍 Analyzing all sources...');
+
+      // Perform combined analysis
+      const result = await analyzer.analyzeFull(designOptions, websiteOptions, context);
+
+      console.log(`✅ Found ${result.features.length} features`);
+      console.log(`   Average confidence: ${result.summary.averageConfidence}%`);
+
+      // Export
+      const { writeFeaturesToFile } = await import('./formatters/featureFormatter');
+      const outputPath = path.resolve(options.output);
+      await writeFeaturesToFile(result, outputPath, options.format as any);
+
+      console.log(`📄 Output written to: ${outputPath}`);
+      console.log('\n📊 Summary:');
+      console.log(`   Total features: ${result.summary.totalFeatures}`);
+      console.log(`   By source:`);
+      for (const [source, count] of Object.entries(result.summary.bySource)) {
+        console.log(`     ${source}: ${count}`);
+      }
+      console.log(`   By category:`);
+      for (const [category, count] of Object.entries(result.summary.byCategory)) {
+        console.log(`     ${category}: ${count}`);
+      }
+
+    } catch (error) {
+      console.error('❌ Error during combined analysis:', error);
+      process.exit(1);
+    }
+  });
+
 // Watch command (placeholder for future implementation)
 program
   .command('watch [path]')

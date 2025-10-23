@@ -1,4 +1,4 @@
-# Installing Project Analyst & Manager Skills
+# Installing Project Suite Skills
 
 These skills are currently installed in this project's `.claude/skills/` directory, which means they're only available when working within this project.
 
@@ -10,6 +10,7 @@ To make these skills available in **all** your Claude Code sessions (so you can 
 # Copy skills to your personal Claude directory
 cp -r .claude/skills/project-analyzer ~/.claude/skills/
 cp -r .claude/skills/project-manager ~/.claude/skills/
+cp -r .claude/skills/project-planner ~/.claude/skills/
 ```
 
 **After copying**, the skills will be available everywhere!
@@ -26,6 +27,7 @@ ls -la ~/.claude/skills/
 # You should see:
 # project-analyzer/
 # project-manager/
+# project-planner/
 ```
 
 ### For Project Skills (Local)
@@ -34,28 +36,42 @@ ls -la .claude/skills/
 # You should see:
 # project-analyzer/
 # project-manager/
+# project-planner/
 ```
 
 ## Using the Skills
 
 Once installed, just ask Claude naturally:
 
+**Project Analyzer:**
 - "Analyze the TODOs in this project"
 - "Find all FIXMEs in ~/my-other-project"
-- "Create GitHub issues from these TODOs"
 - "Which TODOs are already completed?"
+- "Analyze the design files in ./designs and export to CSV"
+- "Extract features from https://example.com"
+
+**Project Manager:**
+- "Create GitHub issues from these TODOs"
+- "Generate a project status report"
+- "Capture screenshots of the dashboard"
+
+**Project Planner:**
+- "Discover features from my React codebase"
+- "Generate a roadmap from features.csv"
+- "Analyze my Express API endpoints"
 
 Claude will automatically invoke the appropriate skill based on your request!
 
 ## Skill Locations
 
-Both skills are installed in:
+All three skills are installed in:
 - **Project**: `.claude/skills/` (available only in this project)
 - **Personal** (after copying): `~/.claude/skills/` (available everywhere)
 
-The actual analyzer and manager tools are located at:
+The actual tools are located at:
 - `/Users/michaelevans/project-suite-claude-skills/project-analyzer/`
 - `/Users/michaelevans/project-suite-claude-skills/project-manager/`
+- `/Users/michaelevans/project-suite-claude-skills/project-planner/`
 
 ## Output Locations
 
@@ -75,10 +91,12 @@ Uses configuration from `project-manager/project-manager.config.json` and saves 
 ## Requirements
 
 - Node.js 18+ installed
-- Dependencies installed in both tool directories:
+- Playwright browsers for website analysis: `npx playwright install`
+- Dependencies installed in all tool directories:
   ```bash
   cd project-analyzer && npm install
   cd ../project-manager && npm install
+  cd ../project-planner && npm install
   ```
 
 ## Troubleshooting
@@ -104,6 +122,7 @@ To update the skills after changes:
 # Update personal skills
 cp -r .claude/skills/project-analyzer ~/.claude/skills/
 cp -r .claude/skills/project-manager ~/.claude/skills/
+cp -r .claude/skills/project-planner ~/.claude/skills/
 ```
 
 ## Uninstalling
@@ -112,12 +131,14 @@ cp -r .claude/skills/project-manager ~/.claude/skills/
 ```bash
 rm -rf ~/.claude/skills/project-analyzer
 rm -rf ~/.claude/skills/project-manager
+rm -rf ~/.claude/skills/project-planner
 ```
 
 ### Remove Project Skills
 ```bash
 rm -rf .claude/skills/project-analyzer
 rm -rf .claude/skills/project-manager
+rm -rf .claude/skills/project-planner
 ```
 
 ## For Team Members
