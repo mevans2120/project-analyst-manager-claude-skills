@@ -38,7 +38,7 @@ Three powerful skills that work together to automate your project management wor
 ### One-Line Install
 
 ```bash
-git clone https://github.com/your-username/project-suite-claude-skills.git
+git clone https://github.com/mevans2120/project-suite-claude-skills.git
 cd project-suite-claude-skills
 ./install.sh
 ```
@@ -287,6 +287,18 @@ This project follows strict naming conventions documented in `CONVENTIONS.md`:
 - **Archive Policy**: Move superseded docs to `archive/`
 
 See `CONVENTIONS.md` for complete standards.
+
+---
+
+## Related Projects
+
+This is part of a suite of Claude Code skills for development automation:
+
+- **[Design Suite](https://github.com/mevans2120/design-suite-claude-skills)** - Design system management, component libraries, and design token automation
+- **[Dev Suite](https://github.com/mevans2120/dev-suite-claude-skills)** - Development workflow automation, testing, and code quality tools
+- **[Project Suite](https://github.com/mevans2120/project-suite-claude-skills)** (this repo) - Project management, TODOs, and issue tracking
+
+Each suite can be installed independently or combined for comprehensive development automation.
 
 ---
 
