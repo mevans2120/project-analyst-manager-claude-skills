@@ -1,28 +1,37 @@
 {
-  "name": "hybrid-memory-bank-plugin",
-  "version": "0.2.0",
-  "description": "Hybrid memory system for Claude Code combining automated JSON storage with human documentation",
-  "main": "src/index.js",
+  "name": "project-suite-claude-skills",
+  "version": "1.0.0",
+  "description": "Production-ready Claude Code skills for automated project management",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "project-analyzer",
+    "project-manager",
+    "project-planner",
+    "dashboard"
+  ],
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "lint": "echo 'Linting not configured yet'"
+    "test": "npm run test --workspaces",
+    "build": "npm run build --workspaces",
+    "install-all": "./install.sh"
   },
   "keywords": [
     "claude-code",
-    "plugin",
-    "memory",
-    "context",
-    "documentation",
-    "session-management",
-    "hybrid-memory"
+    "project-management",
+    "github-issues",
+    "todo-analyzer",
+    "feature-discovery",
+    "production-verification",
+    "playwright",
+    "automation"
   ],
-  "author": "Michael Evans",
+  "author": "",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   },
-  "devDependencies": {
-    "jest": "^29.7.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/project-suite-claude-skills"
   }
 }

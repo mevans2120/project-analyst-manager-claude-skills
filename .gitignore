@@ -60,3 +60,11 @@ test-reports/
 
 # Development documentation
 dev-docs/
+
+# Old project artifacts (removed)
+src/
+.claude/hooks/
+shared/web-viewer/
+
+# Personal development notes
+memory-bank/
